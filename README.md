@@ -34,4 +34,4 @@ The local skill would then extend the global one — `/afb-tdd` in that project 
 
 ## Feedback
 
-Like any TDD-er, I would love feedback! If you have examples / tweaks / conventions / patterns / anti-patterns / pirate jokes to share, please fork the repo and open up a PR!   
+Like any TDD-er, I would love feedback! If you have examples / tweaks / conventions / patterns / anti-patterns / pirate jokes to share, please fork the repo and open up a PR!

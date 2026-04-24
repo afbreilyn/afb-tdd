@@ -63,3 +63,6 @@ See [languages/frontend.md](references/conventions/frontend.md) for frontend tes
 See [languages/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup. Reference this from your project skill if your project uses Vitest.
 See [testing-anti-patterns.md](references/testing-anti-patterns.md) for guidance on what not to do with mocks and test structure.
 See [tdd-checklist.md](references/tdd-checklist.md) for the completion checklist and a "when stuck" reference.
+
+## Commits
+Do not attribute commits to yourself or list Claude as a co-author 

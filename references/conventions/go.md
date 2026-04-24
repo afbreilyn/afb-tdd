@@ -48,6 +48,29 @@ func TestFakeMyRepo(t *testing.T)     { RunMyRepoContract(t, fakes.NewFakeMyRepo
 func TestPostgresMyRepo(t *testing.T) { RunMyRepoContract(t, postgres.NewMyRepo(setupTestDB(t))) }
 ```
 
+## Map Non-Determinism
+
+Go map iteration order is random. Any function that converts a map to a string (or slice) will produce non-deterministic output unless you sort first. **Write a multi-value test to drive this out** — a single-entry map test will pass whether or not you sort, masking the bug.
+
+```go
+// ❌ WRONG: passes for single entry, flaky for two+
+func (e Foo) String() string {
+    var parts []string
+    for k := range e.Fields {
+        parts = append(parts, k)
+    }
+    return strings.Join(parts, ", ")
+}
+
+// ✅ CORRECT: sort first
+func (e Foo) String() string {
+    fields := slices.Sorted(maps.Keys(e.Fields))
+    return strings.Join(fields, ", ")
+}
+```
+
+The rule: if the behaviour involves a map with multiple keys, always write a test with at least two entries to prove the order is deterministic.
+
 ## Transparent Fakes
 
 Make fake output a deterministic function of its input so tests can assert on both sides.

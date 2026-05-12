@@ -5,13 +5,5 @@
   "author": {
     "name": "afb",
     "email": "aaron.foster@breilyn.com"
-  },
-  "category": "development",
-  "skills": [
-    {
-      "name": "afb-tdd",
-      "description": "Interactive red-green-refactor TDD workflow. Invoke when writing new features or fixing bugs test-first.",
-      "path": "SKILL.md"
-    }
-  ]
+  }
 }

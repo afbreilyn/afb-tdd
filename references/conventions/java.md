@@ -136,7 +136,7 @@ void process_whenValid_thenMutates() {
 }
 ```
 
-**External HTTP:** use WireMock (injected with `@Qualifier`), not `@MockBean`.
+**External HTTP:** use WireMock.
 
 ## Unit vs Integration
 

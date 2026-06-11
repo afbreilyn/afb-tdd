@@ -36,7 +36,7 @@ The local skill would then extend the global one — `/afb-tdd` in that project 
 
 Like any TDD-er, I would love feedback! If you have examples / tweaks / conventions / patterns / anti-patterns / pirate jokes to share, please fork the repo and open up a PR!
 
-## Liscence
+## License
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 ## Acknowledgments

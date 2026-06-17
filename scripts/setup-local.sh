@@ -328,6 +328,9 @@ emit_list() { # prefix, space-separated items
   echo "                      test isolation/parallelism — which apply?"
   echo "  Q8 Commits        : Any project commit-message format or pre-commit"
   echo "                      hooks beyond the global 'no co-author' rule?"
+  echo "  Q9 External docs  : Any docs outside this repo I should know about —"
+  echo "                      Notion, Google Docs, ADRs / decision records, design"
+  echo "                      docs, runbooks? Paste links; note which are authoritative."
 } > "$DIGEST_FILE"
 
 # ===========================================================================
@@ -397,6 +400,8 @@ EOF
     done
     echo
   fi
+  echo
+  echo "External / linked docs: <!-- NEEDS CONFIRMATION (Q9): Notion / Google Docs / ADRs / decision records — paste links; may need an MCP connector or pasted content to read -->"
 
   # ---- Outside-in slice order scaffold ----
   echo

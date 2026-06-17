@@ -18,6 +18,6 @@ By default this includes a test-suite audit (step 4). If the user asked for a qu
 
 4. **If the digest contains `DEEP_AUDIT=requested`**, run the test-suite audit now: fan out one agent per module listed under **LOCATED FOR DEEP AUDIT**. Each agent first reads the project's own style rules (located in step 2), then audits that module's test files against them and returns (a) gold-standard exemplar files with `file:line`, (b) shipped violations grouped by area, (c) the single worst file to not imitate. Fold the results into the draft's **Test helpers & gold-standard files**, **Known deviations**, and **Don't imitate this file** sections. (With `--simple` the `DEEP_AUDIT` marker and those sections are absent — skip this step.)
 
-5. Ask the human the **ASK THE HUMAN** questions (Q5–Q8) from the digest in one `AskUserQuestion` round, using the script's proposed defaults; apply the answers.
+5. Ask the human the **ASK THE HUMAN** questions (Q5–Q9) from the digest in one `AskUserQuestion` round, using the script's proposed defaults; apply the answers. Q9's links go into the Architecture **External / linked docs** line — record them as pointers (they may need an MCP connector or the user to paste content; don't try to inline them).
 
 6. Write the finished file to `.claude/skills/afb-tdd/SKILL.md`, delete `SKILL.md.draft` and `DIGEST.txt`, then confirm that `/afb-tdd` in this repo now runs the local version and show the resolved full-suite command.

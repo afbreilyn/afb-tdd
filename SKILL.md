@@ -5,6 +5,8 @@ user-invocable: true
 allowed-tools: Bash
 ---
 
+**If this skill was invoked as `/afb-tdd setup`, follow the [Setup Mode](#setup-mode-afb-tdd-setup) section below instead of the red-green loop — then stop.** Otherwise, ignore Setup Mode and start here.
+
 ## Before You Start
 
 Determine which layer to begin at (see [test-patterns.md](references/test-patterns.md)):
@@ -83,9 +85,9 @@ See [test-patterns.md](references/test-patterns.md) for outside-in layer orderin
 See [languages/go.md](references/conventions/go.md) for Go-specific test conventions — testify, suites, fakes, transparent fakes, time control.
 See [languages/frontend.md](references/conventions/frontend.md) for frontend test conventions — selectors, structure, factories, async patterns.
 See [languages/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup. Reference this from your project skill if your project uses Vitest.
-See [languages/java.md](references/conventions/vitest.md) for Java-specific conventions. Reference this from your project skill if your project uses Junit5.
+See [languages/java.md](references/conventions/java.md) for Java-specific conventions. Reference this from your project skill if your project uses Junit5.
 See [testing-anti-patterns.md](references/testing-anti-patterns.md) for guidance on what not to do with mocks and test structure.
 See [tdd-checklist.md](references/tdd-checklist.md) for the completion checklist and a "when stuck" reference.
 
 ## Commits
-Do not attribute commits to yourself or list Claude as a co-author 
+Do not attribute commits to yourself or list Claude as a co-author

@@ -14,10 +14,11 @@
 # global conventions if it has none) rather than inlining them — rich but link-based,
 # so each TDD cycle loads a small, relevant context.
 #
-# Usage: setup-local.sh [--force] [--deep]
-#   --force   regenerate even if a local SKILL.md already exists
-#   --deep    also inventory the test suite so Setup Mode can run a gold-standard /
-#             known-deviations audit (the audit itself is done by the skill, not here)
+# Usage: setup-local.sh [--force] [--simple]
+#   --force    regenerate even if a local SKILL.md already exists
+#   --simple   skip the test-suite audit inventory (by DEFAULT it's included, so
+#              Setup Mode runs the gold-standard / known-deviations audit). Aliases:
+#              --shallow
 
 set -euo pipefail
 
@@ -25,11 +26,12 @@ GLOBAL_CONV="~/.claude/skills/afb-tdd/references/conventions"
 R="../../.."   # path from .claude/skills/afb-tdd/SKILL.md back to the repo root
 
 FORCE=0
-DEEP=0
+DEEP=1   # the deep audit is the default; --simple opts out
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=1 ;;
-    --deep)  DEEP=1 ;;
+    --deep)  DEEP=1 ;;             # explicit; also the default
+    --simple|--shallow) DEEP=0 ;;  # opt out of the test audit
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done

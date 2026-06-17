@@ -5,7 +5,7 @@ user-invocable: true
 allowed-tools: Bash
 ---
 
-**Setup vs. the loop:** if invoked as `/afb-tdd setup`, **or** if the user asks — now or in any follow-up — to *set up*, *bootstrap*, or *initialize* a project-local afb-tdd skill, then do not run the red-green loop: read [references/setup-mode.md](references/setup-mode.md), follow it, then stop. (Pass `--deep` if they want a thorough audit.) Otherwise, ignore setup and start the loop here.
+**Setup vs. the loop:** if invoked as `/afb-tdd setup`, **or** if the user asks — now or in any follow-up — to *set up*, *bootstrap*, or *initialize* a project-local afb-tdd skill, then do not run the red-green loop: read [references/setup-mode.md](references/setup-mode.md), follow it, then stop. (The test-suite audit runs by default; pass `--simple` if they want a quick scaffold without it.) Otherwise, ignore setup and start the loop here.
 
 ## Before You Start
 

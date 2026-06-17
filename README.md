@@ -22,7 +22,7 @@ This runs a detector that inspects your repo — languages, test runner, the ful
 
 If your repo has its own rule files, the generated skill links **those** as the source of truth (and drops the global conventions). Otherwise it links **only the conventions matching your stack** (a Go repo links `go.md` and nothing else). Either way it links rather than inlines, so every `/afb-tdd` cycle afterwards only loads a small, relevant context instead of re-discovering your repo.
 
-Add `--deep` for a more thorough setup — `/afb-tdd setup --deep` fans out a robit audit of your existing test suite and adds gold-standard exemplar files (with `file:line`), a "known deviations" list, and a "don't imitate this file" callout. It's opt-in cause it costs more up front tokens — but I think it's worth it to not propogate anti-patterns. 
+The setup fans out a robit audit of your existing test suite and adds gold-standard exemplar files (with `file:line`), a "known deviations" list, and a "don't imitate this file" callout. It costs more up front tokens, but it's the default cause it's worth it to not propogate anti-patterns. In a hurry? `/afb-tdd setup --simple` skips the audit and just scaffolds. 
 
 `/afb-tdd` in that project then runs the local version, which inherits the core workflow. Re-run with `--force` to regenerate (just like any claude skill). 
 

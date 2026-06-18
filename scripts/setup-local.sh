@@ -14,11 +14,13 @@
 # global conventions if it has none) rather than inlining them — rich but link-based,
 # so each TDD cycle loads a small, relevant context.
 #
-# Usage: setup-local.sh [--force] [--simple]
-#   --force    regenerate even if a local SKILL.md already exists
-#   --simple   skip the test-suite audit inventory (by DEFAULT it's included, so
-#              Setup Mode runs the gold-standard / known-deviations audit). Aliases:
-#              --shallow
+# Usage: setup-local.sh [--force] [--simple] [--polyrepo|--no-polyrepo]
+#   --force        regenerate even if a local SKILL.md already exists
+#   --simple       skip the test-suite audit inventory (by DEFAULT it's included, so
+#                  Setup Mode runs the gold-standard / known-deviations audit). Aliases:
+#                  --shallow
+#   --polyrepo     force polyrepo mode (delegate to setup-polyrepo.sh)
+#   --no-polyrepo  force single-repo mode even if child git repos are present
 
 set -euo pipefail
 
@@ -27,14 +29,37 @@ R="../../.."   # path from .claude/skills/afb-tdd/SKILL.md back to the repo root
 
 FORCE=0
 DEEP=1   # the deep audit is the default; --simple opts out
+POLY=auto   # auto | force | off
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=1 ;;
     --deep)  DEEP=1 ;;             # explicit; also the default
     --simple|--shallow) DEEP=0 ;;  # opt out of the test audit
+    --polyrepo) POLY=force ;;
+    --no-polyrepo) POLY=off ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
+
+# --- polyrepo detection (first, off CWD; ignores this dir's own git state) --
+# A polyrepo is a container holding >=2 independent git repos as immediate
+# children. We detect that before the single-repo git guard so it works even
+# when the container itself has no .git. Submodules (in .gitmodules) don't count.
+if [ "$POLY" != off ]; then
+  POLY_MEMBERS=0
+  SUBMODULES=""
+  [ -f .gitmodules ] && SUBMODULES=$(grep -oE 'path[[:space:]]*=[[:space:]]*.*' .gitmodules 2>/dev/null | sed -E 's/.*=[[:space:]]*//' || true)
+  for d in */; do
+    d="${d%/}"
+    [ -e "$d/.git" ] || continue
+    if [ -n "$SUBMODULES" ] && printf '%s\n' "$SUBMODULES" | grep -qx "$d"; then continue; fi
+    POLY_MEMBERS=$((POLY_MEMBERS + 1))
+  done
+  if [ "$POLY" = force ] || [ "$POLY_MEMBERS" -ge 2 ]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    exec bash "$SCRIPT_DIR/setup-polyrepo.sh" "$@"
+  fi
+fi
 
 # --- locate the repo -------------------------------------------------------
 if ! REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null); then

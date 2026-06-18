@@ -10,6 +10,8 @@ By default this includes a test-suite audit (step 4). If the user asked for a qu
    ```
    If that path doesn't exist (plugin install), locate it: `bash "$(find ~/.claude -path '*afb-tdd*/scripts/setup-local.sh' 2>/dev/null | head -1)"`. If it reports a local skill already exists, tell the user (re-run with `--force`) and stop.
 
+   **Polyrepo:** if `.claude/skills/afb-tdd/DIGEST.txt` begins with `POLYREPO=true`, the detector found ≥2 child git repos and delegated to `setup-polyrepo.sh` — follow [polyrepo-setup-mode.md](polyrepo-setup-mode.md) instead of the steps below. (To force single-repo treatment of a folder-of-repos, re-run the detector with `--no-polyrepo`.)
+
 2. Read `.claude/skills/afb-tdd/DIGEST.txt` and `.claude/skills/afb-tdd/SKILL.md.draft`. Then read **only** the files the digest lists under **PROJECT KNOWLEDGE FOUND** — the project's own style rules, instruction files (`CLAUDE.md` etc.), and the named README architecture sections. That fixed list is your entire context budget for this step; do not open anything else.
 
 3. Fill the draft from what you just read, resolving every `# TODO(...)` / `NEEDS CONFIRMATION` marker:

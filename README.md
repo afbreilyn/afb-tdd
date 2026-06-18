@@ -26,6 +26,16 @@ The setup fans out a robit audit of your existing test suite and adds gold-stand
 
 `/afb-tdd` in that project then runs the local version, which inherits the core workflow. Re-run with `--force` to regenerate (just like any claude skill). 
 
+### Polyrepo — a container of repos
+
+Run `/afb-tdd setup` at the root of a **polyrepo** (a directory holding two or more independent git repos as children) and it notices the child repos, proposes a **top-level cross-repo skill**, and — once you confirm scope — sets up each member repo too. You end up with one local skill per member plus a top-level index that a single-repo skill can't capture:
+
+- the **domain** in the language of the business,
+- the **cross-repo dependency graph** — who calls whom, over what transport, what shares a database, what must change in lockstep,
+- **contract-testing guidance** for the seams between repos (where a consumer's fake of a provider silently drifts), including a proposal for where to add contracts when none exist yet.
+
+The detector surfaces the cheap signals for you — shared compose services, sibling host/port env vars, orchestrator scripts, existing OpenAPI/Pact/schema artifacts — as *candidates*; you confirm the graph and the contract strategy. Each member is then set up with the ordinary single-repo flow (its own commands, conventions, and optional test audit), and the questions are batched so you aren't prompted once per repo. If a folder-of-repos should be treated as a single repo instead, pass `--no-polyrepo`.
+
 <details>
 <summary>What it generates (and the manual fallback)</summary>
 

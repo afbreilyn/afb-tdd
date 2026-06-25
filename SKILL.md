@@ -52,25 +52,27 @@ When starting a new behaviour, work in this order:
 
 ## Component Extraction
 
-When extracting a component out of an existing page or parent component:
+When extracting a component out of an existing page or parent component, assert the **contract, not the boundary**. The parent's job is to pass a piece of data down and see it represented in the output — it should not care *which* child component renders it.
 
-1. Add `data-testid="<component-name>"` to the extracted component's root element.
-2. In the **parent's test file**, write a test that asserts `getByTestId('<component-name>')` is in the document — verifying the parent still renders it.
-3. The parent-level test must **not** assert on the component's internal content — that belongs in the component's own test file.
+1. In the **parent's test file**, pass in a distinguishing piece of data and assert that data is **visible** in the rendered output (`getByText` / `getByRole`). Do not assert on the component's identity or structure.
+2. Choose data that is unique enough to query unambiguously and that the parent genuinely owns. A name or label works; a bare boolean or a value that also appears elsewhere on the page does not.
+3. Redraw the ownership boundary carefully: the parent asserts only *that its data shows up*; the child's own test file owns *how* it's formatted, styled, and laid out. Don't assert the wrapping element, tag, or classes in the parent — that just relocates the brittleness.
 
 ```tsx
-// ✅ Parent test — presence only, no internal content
-it('renders the sidebar', () => {
-  render(<Dashboard />);
-  expect(screen.getByTestId('sidebar')).toBeInTheDocument();
+// ✅ Parent test — asserts the data it passes down is represented, agnostic to the child
+it('shows the signed-in user', () => {
+  render(<Dashboard user={{ name: 'Ada' }} />);
+  expect(screen.getByText('Ada')).toBeInTheDocument();
 });
 
-// ✅ Component test — owns the content assertions
+// ✅ Component test — owns the content and structure assertions
 it('renders all main navigation links', () => {
   render(<Sidebar />);
   expect(screen.getByRole('link', { name: /dashboard/i })).toBeVisible();
 });
 ```
+
+**Fallback — `data-testid`:** only when there is no user-visible data to key on (a purely presentational extraction like an icon or divider, or localized / non-accessible text). Then add `data-testid="<component-name>"` to the extracted component's root and assert `getByTestId('<component-name>')` is in the document — presence only, never internal content.
 
 ## Rules
 - NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.

@@ -156,6 +156,7 @@ Consider: integration tests with real components are often simpler than complex 
 | Incomplete mocks | Mirror real API completely |
 | Tests as afterthought | TDD — tests first |
 | Over-complex mocks | Consider integration tests |
+| Trusting a green-on-arrival legacy test | Sabotage production to force the red, then restore — or delete it |
 
 ## Anti-Pattern 6: Never Watching the Test Fail
 
@@ -210,6 +211,37 @@ describe("submitApplication", () => {
 ```
 
 A useful heuristic: for every happy-path test, ask "what are all the ways this can fail?" and write a test for each answer.
+
+---
+
+## Anti-Pattern 8: Trusting a Driven Test You Never Watched Fail
+
+This is Anti-Pattern 6's evil twin, and it only bites in **driving-tests / Green→Red→Green** mode (see [driving-tests.md](driving-tests.md)). When you write a test against code that *already exists*, it goes green on arrival — and that green is worthless. It might be passing because of a cache, a stubbed collaborator, a tautological assertion, or because the code path it claims to cover is never reached.
+
+```typescript
+// ❌ BAD: "characterized" legacy behaviour, never sabotaged
+it("applies the loyalty discount", () => {
+  const total = checkout(cartWith(loyaltyMember));
+  expect(total).toBe(90); // passes immediately — but does it touch the discount code at all?
+});
+// Comment out the discount line in production... and this test still passes.
+// It was never coupled to the behaviour. It is a green lie.
+```
+
+In red-green you get the failure for free (the code doesn't exist yet). In legacy code you must **manufacture** it: sabotage the production line that should make the test red, watch it fail for the reason you predicted, then restore. Flipping the *assertion* is not enough — that only proves the test runs. You must mutate **production** to prove the test is causally coupled to the behaviour.
+
+```
+Gate function (driving-tests mode):
+  AFTER a freshly-written test passes on existing code:
+  1. Predict the smallest production change that should flip THIS test, and the exact failure.
+  2. Apply it (comment out / negate / stub the return). Run.
+  IF this test goes red for the predicted reason: restore, and now trust it.
+  IF it stays green: it does not test that behaviour — annotate the code DRIVE:UNTESTABLE,
+     DELETE the hollow test, and log the finding. Do not keep a green you couldn't break.
+  IF it reds for a different reason: stop — you don't yet understand the path.
+```
+
+**The rule:** A driven test you have not watched go red is not a safety net — it's a green lie that will let a refactor silently break behaviour. No commented-out production logic survives the cycle (grep for `DRIVE:SABOTAGE`).
 
 ---
 

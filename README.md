@@ -4,6 +4,27 @@ An interactive Claude Code skill to do red-green-refactor style TDD. The robit w
 
 The `SKILL.md` itself does a pretty good job of explaining the logic.
 
+It runs **two loops**:
+
+- **Red → Green → Refactor** — the default, for *new* behaviour and bug fixes. The test is red first because the code doesn't exist yet.
+- **Green → Red → Green** ("driving tests") — for *existing, untested* or *legacy* code. See below.
+
+## Driving tests into legacy code (`/afb-tdd drive`)
+
+The worst part of untangling an old codebase is that things have weird downstream consequences — you don't know what's relying on what. So before you change anything, you want a net you can *trust*.
+
+The problem: when the code already exists, a freshly-written test passes on arrival, and that green proves nothing — it might pass because of a cache, a stub, a tautology, or a code path it never actually reaches. In red-green you get the failure for free; in legacy code you have to **manufacture** it.
+
+So the robit drives tests in like pylons, and yanks on each one to confirm it holds:
+
+1. **Green** — write a test for the behaviour you believe the existing code has; run it; it passes.
+2. **Red** — declare a *called shot*, then sabotage the production line that *should* make it fail (comment it out / negate it / stub the return). Run. The test must go red **for the predicted reason** — that proves it's actually coupled to the behaviour. Whatever *else* goes red is a free map of hidden dependencies.
+3. **Green** — restore production, confirm green. The test is now trusted.
+
+Two honest outcomes per cycle: a **trusted test**, or — when sabotage *can't* force a red — an **untestable finding** (the code is left intact, annotated `// DRIVE:UNTESTABLE — <reason>`, and the hollow test deleted). Those flagged spots are the scariest places to refactor, so the marker is a warning to future-you. Temporary sabotage is tagged `// DRIVE:SABOTAGE` and grep-gated so none survives the cycle — no commented-out production logic ever ships.
+
+Invoke with `/afb-tdd drive`, or just talk about getting *untested* / *legacy* code under test and the skill picks this loop. Full details in [references/driving-tests.md](references/driving-tests.md).
+
 ## How to do the thing:
 
 ### Global — use as-is

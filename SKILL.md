@@ -1,11 +1,13 @@
 ---
 name: afb-tdd
-description: Interactive red-green-refactor TDD workflow. Invoke when writing new features or fixing bugs test-first.
+description: Interactive TDD. Red-green-refactor for new features and bug fixes; green-red-green ("driving tests") for getting existing untested or legacy code into a trustable state. Invoke when writing tests first, or when extending untested or legacy code.
 user-invocable: true
 allowed-tools: Bash
 ---
 
 **Setup vs. the loop:** if invoked as `/afb-tdd setup`, **or** if the user asks — now or in any follow-up — to *set up*, *bootstrap*, or *initialize* a project-local afb-tdd skill, then do not run the red-green loop: read [references/setup-mode.md](references/setup-mode.md), follow it, then stop. (The test-suite audit runs by default; pass `--simple` if they want a quick scaffold without it.) Otherwise, ignore setup and start the loop here.
+
+**Driving tests vs. the loop:** if invoked as `/afb-tdd drive`, **or** when the work is getting *existing, untested* or *legacy* code under test (characterizing/pinning code that already exists, not writing new behaviour), read [references/driving-tests.md](references/driving-tests.md), run its **Green → Red → Green** loop, then stop. Unsure? Ask *does the production code already exist?* — if yes and untested, drive; if new behaviour, stay here.
 
 ## Before You Start
 

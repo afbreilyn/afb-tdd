@@ -10,14 +10,15 @@ EVALS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HISTORY="$EVALS_DIR/results/history.jsonl"
 [ -s "$HISTORY" ] || { echo "no runs recorded yet (results/history.jsonl is empty)"; exit 0; }
 
-echo "| run | date | skill | gates | judge | mutation | cost |"
-echo "|---|---|---|---|---|---|---|"
+echo "| run | date | skill | model | gates | judge | mutation | cost |"
+echo "|---|---|---|---|---|---|---|---|"
 
 PREV_GATES=""
 while IFS= read -r line; do
   run=$(jq -r '.label // .run_id' <<<"$line")
   date=$(jq -r .date <<<"$line")
   sha=$(jq -r .skill_sha <<<"$line")
+  model=$(jq -r '.model // "?"' <<<"$line" | sed 's/^claude-//')
   gates=$(jq -r '.gate_pass_rate' <<<"$line")
   judge=$(jq -r '.judge_mean // "-"' <<<"$line")
   mutation=$(jq -r '.mutation_mean // "-"' <<<"$line")
@@ -31,6 +32,6 @@ while IFS= read -r line; do
   fi
   PREV_GATES="$gates"
 
-  printf '| %s | %s | %s | %.2f%s | %s | %s | $%.2f |\n' \
-    "$run" "$date" "$sha" "$gates" "$trend" "$judge" "$mutation" "$cost"
+  printf '| %s | %s | %s | %s | %.2f%s | %s | %s | $%.2f |\n' \
+    "$run" "$date" "$sha" "$model" "$gates" "$trend" "$judge" "$mutation" "$cost"
 done < "$HISTORY"

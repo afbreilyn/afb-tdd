@@ -128,10 +128,13 @@ run_one() { # run_one <task> <rep>
   git -C "$work" tag final
 
   # claude-output.json is EMPTY when the timeout killed claude — default all fields.
-  local session_id cost turns duration
+  local session_id cost turns duration model_used
   session_id="$(jq -r '.session_id // empty' "$art/claude-output.json" 2>/dev/null || true)"
   cost="$(jq -r '.total_cost_usd // 0' "$art/claude-output.json" 2>/dev/null || true)"
   turns="$(jq -r '.num_turns // 0' "$art/claude-output.json" 2>/dev/null || true)"
+  # The RESOLVED model (aliases like "sonnet" and the managed-settings default
+  # are opaque): take the model that incurred the most cost.
+  model_used="$(jq -r '.modelUsage // {} | to_entries | max_by(.value.costUSD // 0) | .key // empty' "$art/claude-output.json" 2>/dev/null || true)"
   [ -n "$cost" ] || cost=0
   [ -n "$turns" ] || turns=0
   duration=$(( $(date +%s) - start ))
@@ -177,8 +180,10 @@ run_one() { # run_one <task> <rep>
     --argjson completed "$([ "$rc" = 0 ] && echo true || echo false)" \
     --arg reason "$([ "$rc" = 124 ] && echo timeout || echo "exit_$rc")" \
     --arg session "$session_id" --argjson cost "$cost" --argjson turns "$turns" --argjson duration "$duration" \
+    --arg model_used "$model_used" \
     '{completed: $completed, reason: (if $completed then "ok" else $reason end),
-      session_id: $session, cost_usd: $cost, num_turns: $turns, duration_s: $duration} + $grades' \
+      session_id: $session, cost_usd: $cost, num_turns: $turns, duration_s: $duration,
+      model_used: (if $model_used == "" then null else $model_used end)} + $grades' \
     > "$rep_dir/grades.json"
 
   echo "    done in ${duration}s, \$$cost, $turns turns (running total \$$TOTAL_COST)"
@@ -218,7 +223,8 @@ done | jq -s \
     }
   }) | from_entries |
   { run_id: $run_id, label: $label, date: $date, skill_sha: $sha, skill_dirty: $dirty,
-    claude_code_version: $cc, model: $model, tasks: .,
+    claude_code_version: $cc,
+    model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model), tasks: .,
     totals: {
       gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),

@@ -5,7 +5,7 @@
   "skill_sha": "d123fe4",
   "skill_dirty": true,
   "claude_code_version": "2.1.202 (Claude Code)",
-  "model": "sonnet",
+  "model": "claude-sonnet-5",
   "tasks": {
     "go-bugfix-expiry": {
       "reps": [

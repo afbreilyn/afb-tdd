@@ -4,6 +4,9 @@
 #
 # Reverts the production-file changes (keeping test changes), reruns the suite,
 # and passes only if the suite now fails — ideally naming a newly added test.
+# The gate is deliberately "suite fails", not "a new test is named": reverting
+# prod files usually breaks imports/compilation, which fails the whole file
+# without naming any test. new_test_named_in_failures is kept as a soft signal.
 # Restores the workdir to `final` afterwards.
 #
 # Emits: {"revert": {"pass": bool, "suite_failed_after_revert": bool,

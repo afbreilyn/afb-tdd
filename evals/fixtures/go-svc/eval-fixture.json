@@ -1,0 +1,12 @@
+{
+  "test_cmd": "go test ./...",
+  "test_run_cmd_regex": "go test",
+  "single_fail_pattern": "(^|\\s)(FAIL|--- FAIL)",
+  "prod_globs": ["**/*.go"],
+  "test_globs": ["**/*_test.go", "**/fakes/**", "**/contract/**", "domaintest/**"],
+  "deps_setup": "go mod download",
+  "exemplifies": [
+    "references/conventions/go.md",
+    "references/test-patterns.md"
+  ]
+}

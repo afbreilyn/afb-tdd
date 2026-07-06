@@ -1,0 +1,20 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 1500,
+  "max_turns": 150,
+  "extra_checks": [
+    {
+      "name": "frozen_clock_used_in_tests",
+      "glob": "service/*_test.go",
+      "require_regex": "FrozenClock",
+      "min_count": 1,
+      "why": "time-dependent behaviour must be tested with a controlled clock"
+    },
+    {
+      "name": "no_wall_clock_in_service",
+      "glob": "service/access.go",
+      "forbid_regex": "time\\.Now\\(\\)",
+      "why": "production code must use the injected clock"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "fixture": "ts-vitest",
+  "timeout_s": 1500,
+  "max_turns": 150,
+  "extra_checks": [
+    {
+      "name": "tld_bug_repro_test_exists",
+      "glob": "src/**/*.test.ts",
+      "require_regex": "a@b|no.?tld|without a dot",
+      "min_count": 1,
+      "why": "a bug fix must include a test reproducing the reported input"
+    }
+  ]
+}

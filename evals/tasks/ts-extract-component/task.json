@@ -1,0 +1,13 @@
+{
+  "fixture": "ts-vitest",
+  "timeout_s": 1200,
+  "max_turns": 120,
+  "extra_checks": [
+    {
+      "name": "no_testid_in_parent",
+      "glob": "src/components/Dashboard.test.tsx",
+      "forbid_regex": "getByTestId|data-testid",
+      "why": "extraction must assert the contract via visible data, not the boundary"
+    }
+  ]
+}

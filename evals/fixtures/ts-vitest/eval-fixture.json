@@ -1,0 +1,14 @@
+{
+  "test_cmd": "npx vitest run",
+  "test_run_cmd_regex": "vitest|npm (run )?test",
+  "single_fail_pattern": "(FAIL|failed|✗|AssertionError)",
+  "prod_globs": ["src/**/*.ts", "src/**/*.tsx"],
+  "test_globs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/testing/**"],
+  "deps_setup": "npm ci",
+  "deps_marker": "node_modules",
+  "exemplifies": [
+    "references/conventions/frontend.md",
+    "references/conventions/vitest.md",
+    "references/test-patterns.md"
+  ]
+}

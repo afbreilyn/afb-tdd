@@ -1,0 +1,7 @@
+0c94821 final
+5d8c572 tdd(cycle 6): unsubscribe returns response_error for malformed bodies; extract shared validation
+dd3f7c8 tdd(cycle 5): unsubscribe returns not_subscribed_error for 404 not_subscribed body
+a54dd23 tdd(cycle 4): unsubscribe returns connection_error on network failure
+f573a4c tdd(cycle 3): unsubscribe returns unsubscribed on service confirmation
+c854911 tdd(cycle 2): unsubscribe returns topic_error for unknown topic
+ab6cb45 tdd(cycle 1): unsubscribe returns email_error for invalid email

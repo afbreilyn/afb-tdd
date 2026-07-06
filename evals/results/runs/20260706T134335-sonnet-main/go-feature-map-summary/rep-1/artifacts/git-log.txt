@@ -1,0 +1,4 @@
+bc1eb86 final
+7d953c6 tdd(cycle 3): Report.Summary sorts and joins multiple tags
+d35eb7e tdd(cycle 2): Report.Summary appends a single bracketed tag
+5d61a74 tdd(cycle 1): Report.Summary returns title when no tags

@@ -1,0 +1,3 @@
+db50280 final
+abddae0 tdd(cycle 2): distinguish already_subscribed from unexpected response
+a21e569 tdd(cycle 1): reject emails without a TLD in the domain

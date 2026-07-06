@@ -1,0 +1,5 @@
+48c5420 final
+8630e46 tdd(cycle 4): Report.Summary sorts and joins all tags
+9b07045 tdd(cycle 3): Report.Summary reads actual tag key/value
+debee22 tdd(cycle 2): Report.Summary fakes single-tag bracket suffix
+2659779 tdd(cycle 1): Report.Summary renders title with no tags

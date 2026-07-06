@@ -1,0 +1,4 @@
+4e81fe2 final
+248a99d tdd(cycle 3): Summary() sorts tags alphabetically by key for deterministic output
+975f684 tdd(cycle 2): Summary() renders a single tag as [key=value]
+2405972 tdd(cycle 1): Summary() returns title when a report has no tags

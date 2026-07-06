@@ -1,0 +1,3 @@
+5e782fc final
+f6af64d tdd(cycle 2): return already_subscribed for duplicate newsletter signups
+f571b20 tdd(cycle 1): reject email addresses without a TLD

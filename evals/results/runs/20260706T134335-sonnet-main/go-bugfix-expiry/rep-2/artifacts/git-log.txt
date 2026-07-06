@@ -1,0 +1,4 @@
+11af26f final
+9029bff tdd(cycle 3): IsSessionValid requires strictly-before expiry
+aa7007a tdd(cycle 2): IsSessionValid uses injected clock for comparison
+11e8203 tdd(cycle 1): GrantSession uses injected clock for expiry

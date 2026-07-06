@@ -1,0 +1,46 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "646cf442-6655-45b6-8505-11612b5434fe",
+  "cost_usd": 4.114624450000001,
+  "num_turns": 8,
+  "duration_s": 866,
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 5,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 1,
+    "test_runs": 15
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  }
+}

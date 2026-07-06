@@ -1,0 +1,46 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "b6bceaf1-db15-4942-84c9-6446a8c6e4e4",
+  "cost_usd": 5.287098399999996,
+  "num_turns": 137,
+  "duration_s": 1488,
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 6
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 6,
+    "cycle_commits": 9,
+    "prod_edits_without_red": 2,
+    "test_runs": 30
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  }
+}

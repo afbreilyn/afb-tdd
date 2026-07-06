@@ -1,0 +1,46 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "dd527e66-1f0b-4b7f-9653-e269d2814ba1",
+  "cost_usd": 1.9811095500000002,
+  "num_turns": 5,
+  "duration_s": 422,
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 3
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 3,
+    "prod_edits_without_red": 0,
+    "test_runs": 9
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 1,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0
+    },
+    "extra_checks": [
+      {
+        "name": "multi_entry_map_test",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  }
+}

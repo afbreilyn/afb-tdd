@@ -6,7 +6,7 @@ An adversarial reviewer that fires twice per TDD cycle — after Red and after G
 
 **When:** after Red step 3 (the failing run is verified) and after Green step 2 (the passing run is verified). Never during Refactor. Never twice at the same checkpoint.
 
-**How:** launch ONE read-only subagent (Explore type if available, otherwise general-purpose). The subagent must not modify any file. Prompt it with:
+**How:** launch ONE read-only subagent (Explore type if available, otherwise general-purpose) on the cheapest available model tier (`haiku`) — the rubric is closed and the context package small, so the sceptic doesn't need the session model. The subagent must not modify any file. Prompt it with:
 
 > You are the TDD sceptic. Read `<absolute path to this file>` and apply the {RED|GREEN} checkpoint rubric (Part B) to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
 
@@ -36,7 +36,7 @@ The sceptic may grep the test suite (for the duplicate-coverage check) but must 
 
 All findings and your responses appear verbatim in the user-facing report under a `Sceptic:` heading. **One round only** — the sceptic never reviews the fix; the user does, at the existing pause.
 
-**Model:** inherit the session model. (Tunable: a smaller model halves the cost but noisier findings are expensive downstream — every finding must be answered. Revisit once the evals can measure finding precision.)
+**Model:** `haiku` (the cheap tier), as above. If its findings prove too noisy — precision proxy = FIXED/(FIXED+REBUTTED) from the reports; the session-model reference point was ~43% on the 2026-07-06 eval run — escalate to the session model and re-measure with an eval run.
 
 ## Part B — Rubric
 

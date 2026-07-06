@@ -233,7 +233,8 @@ done | jq -s \
     }
   }' > "$SUMMARY"
 
-jq -c '{run_id, date, label, skill_sha, model, gate_pass_rate: .totals.gate_pass_rate,
+jq -c '{run_id, date, label, skill_sha, model, reps: ([.tasks[].reps | length] | add),
+        gate_pass_rate: .totals.gate_pass_rate,
         judge_mean: .totals.judge_mean, mutation_mean: .totals.mutation_mean,
         per_task: (.tasks | with_entries(.value = .value.rollup.gate_pass_rate)),
         cost_usd: .totals.cost_usd}' "$SUMMARY" >> "$EVALS_DIR/results/history.jsonl"

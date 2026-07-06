@@ -8,7 +8,7 @@ An adversarial reviewer that fires twice per TDD cycle — after Red and after G
 
 **How:** launch ONE read-only subagent (Explore type if available, otherwise general-purpose) on the cheapest available model tier (`haiku`) — the rubric is closed and the context package small, so the sceptic doesn't need the session model. The subagent must not modify any file. Prompt it with:
 
-> You are the TDD sceptic. Read `<absolute path to this file>` and apply the {RED|GREEN} checkpoint rubric (Part B) to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
+> You are the TDD sceptic. Read ONLY Parts B and C of `<absolute path to this file>` (Part A is plumbing for the main agent — skip it) and apply the {RED|GREEN} checkpoint rubric to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
 
 Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent (plugin install), `find ~/.claude -path '*afb-tdd*/references/sceptic.md' 2>/dev/null | head -1`.
 
@@ -19,8 +19,9 @@ Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent 
 - The actual failure output from the test run.
 - The path to the project-local `.claude/skills/afb-tdd/SKILL.md`, if one exists.
 - The path to `references/testing-anti-patterns.md`.
+- One line from you on existing coverage near this behaviour (feeds R7 — you know the suite; the sceptic does not explore it).
 
-The sceptic may grep the test suite (for the duplicate-coverage check) but must not explore beyond that.
+The sceptic reads only the files named above — no exploration, no suite grepping.
 
 **Context package — GREEN checkpoint:**
 - The production diff since red.
@@ -52,7 +53,7 @@ Severity semantics: **blocker** violates an Iron Law (testing-anti-patterns.md) 
 | R4 | **Wrong layer** — behaviour asserted where it can't genuinely be observed | violates the outside-in order in test-patterns.md; UI behaviour asserted in a unit test or vice versa | concern |
 | R5 | **Name/behaviour mismatch** — the name promises what the assertions don't verify | "and" in the name; name says "validates X" but asserts only truthiness | concern |
 | R6 | **Called-shot mismatch** — actual failure differs materially from the prediction | compare declaration vs run output; this is the enforcement of SKILL.md's stop condition | blocker |
-| R7 | **Duplicate coverage** — an existing test already pins this behaviour | grep the suite for the same assertion target | concern |
+| R7 | **Duplicate coverage** — an existing test already pins this behaviour | compare against the coverage note in the context package | concern |
 | R8 | **Not the smallest slice** — the test forces multiple behaviours/branches at once | more than one new concept must be implemented to go green | concern |
 
 ### GREEN checkpoint — critique the implementation

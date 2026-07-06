@@ -1,6 +1,6 @@
 # afb-tdd evals
 
-Measures the quality of tests the skill produces, so SKILL.md changes can be compared against a baseline instead of vibes. Hoot hoot! Think of this directory as Hooty: permanently attached to the house, always watching the door, and nobody — *nobody* — gets past without being interrogated.
+Measures the quality of tests the skill produces, so SKILL.md changes can be compared against a baseline instead of vibes.
 
 ## Quickstart
 
@@ -32,6 +32,10 @@ For each task in `evals/tasks/` × N reps: copy the fixture to a throwaway git r
 - `history.jsonl` — one line per run, append-only, **committed**. The long-term trend record; every line carries the skill's git sha.
 - `runs/<run-id>/summary.json` — full per-rep drill-down, **committed**. Raw diffs/transcripts stay in `runs/<run-id>/artifacts/` (gitignored).
 - `baseline.json` — copy of the currently accepted anchor run; the default reference for `compare.sh`.
+
+## Iterating cheaply
+
+While tweaking the skill, use the quick set: `run.sh --task go-transparent-fake -n 1` (the sceptic-heaviest task) plus `run.sh --task ts-feature-errors -n 1` — ~$5 for a directional read. Reserve the full all-tasks `-n 3` run (~$30) for promoting a baseline.
 
 ## Workflow after changing the skill
 

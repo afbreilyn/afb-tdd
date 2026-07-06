@@ -1,5 +1,5 @@
 .idea/
 evals/fixtures/ts-vitest/node_modules/
 evals/.cache/
-evals/results/runs/*/artifacts/
+evals/results/runs/**/artifacts/
 

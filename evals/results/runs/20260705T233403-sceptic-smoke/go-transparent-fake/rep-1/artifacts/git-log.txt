@@ -1,7 +1,0 @@
-d7cff1b final
-1cecf80 tdd(cycle 6): Login returns Session on correct credentials
-7cf2fa5 tdd(cycle 5): Login rejects wrong password as invalid credentials
-f41262a tdd(cycle 4): Login returns invalid credentials for unknown email
-b698598 tdd(cycle 3): Register stores hashed password via injected Hasher
-e3d69aa tdd(cycle 2): Register saves the user (triangulates fake)
-b44c55f tdd(cycle 1): Register returns no error (API shape)

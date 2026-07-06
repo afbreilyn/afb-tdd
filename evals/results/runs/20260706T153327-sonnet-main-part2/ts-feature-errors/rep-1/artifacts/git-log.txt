@@ -1,6 +1,0 @@
-480231b final
-85d5be6 tdd(cycle 5): unsubscribe returns connection_error on network failure
-6ec46e2 tdd(cycle 4): unsubscribe returns not_subscribed on 404 error body
-8d55031 tdd(cycle 3): unsubscribe returns unsubscribed on service confirmation
-2e8e626 tdd(cycle 2): unsubscribe returns topic_error for unknown topic
-e8eb3ee tdd(cycle 1): unsubscribe returns email_error for invalid email

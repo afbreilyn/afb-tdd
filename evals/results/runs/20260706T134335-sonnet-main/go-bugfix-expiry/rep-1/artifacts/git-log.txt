@@ -1,4 +1,0 @@
-1d9dc37 final
-507e2d5 tdd(cycle 3): fix off-by-one — session expiring exactly now is invalid
-6f88d18 tdd(cycle 2): IsSessionValid uses injected clock instead of wall-clock time.Now
-9da5498 tdd(cycle 1): AccessService uses injected clock for GrantSession expiry

@@ -1,6 +1,0 @@
-1e38d16 final
-f514200 tdd(cycle 5): unsubscribe returns connection_error on network failure
-81bc70b tdd(cycle 4): unsubscribe returns not_subscribed for 404 responses
-3409fc7 tdd(cycle 3): unsubscribe returns unsubscribed on success (fake it)
-c9e5d69 tdd(cycle 2): unsubscribe returns topic_error for unknown topic
-30232db tdd(cycle 1): unsubscribe returns email_error for invalid email

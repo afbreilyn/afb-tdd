@@ -1,5 +1,0 @@
-ec7b707 final
-0ec0409 tdd(cycle 4): extract SubscriberList from Dashboard
-8ced4cc tdd(cycle 3): SubscriberList links each subscriber's email address
-d874038 tdd(cycle 2): SubscriberList shows each subscriber's name
-18f444e tdd(cycle 1): SubscriberList renders accessible list container

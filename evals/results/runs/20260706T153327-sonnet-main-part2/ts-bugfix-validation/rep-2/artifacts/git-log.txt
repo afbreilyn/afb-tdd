@@ -1,3 +1,0 @@
-457c47b final
-6186a90 tdd(cycle 2): return a distinct already_subscribed result for duplicate subscriptions
-03ee2cc tdd(cycle 1): require a TLD in subscribe() email validation

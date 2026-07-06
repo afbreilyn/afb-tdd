@@ -1,3 +1,0 @@
-2525503 final
-000d529 tdd(cycle 2): expire session whose ExpiresAt equals clock.Now() (strict Before)
-76335ed tdd(cycle 1): inject clock.Clock into AccessService so expiry is testable

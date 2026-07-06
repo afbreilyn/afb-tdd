@@ -1,6 +1,0 @@
-e0570e3 final
-c64bd31 tdd(cycle 5): Login rejects wrong password with invalid credentials
-dab556a tdd(cycle 4): Login rejects unknown email with invalid credentials
-38c378e tdd(cycle 3): Login returns a session for correct credentials
-acb6a16 tdd(cycle 2): Register stores a hashed password
-119e9e9 tdd(cycle 1): Register succeeds for valid inputs

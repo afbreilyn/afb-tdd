@@ -1,6 +1,0 @@
-122f419 final
-8712720 tdd(cycle 5): SHA256Hasher and FakeHasher both satisfy Hasher contract
-f1c4445 tdd(cycle 4): Login returns a session for correct credentials
-9b64361 tdd(cycle 3): Login returns invalid credentials for wrong password
-5bb4c02 tdd(cycle 2): Login returns invalid credentials for unknown email
-d34aa60 tdd(cycle 1): Register hashes password before persisting user

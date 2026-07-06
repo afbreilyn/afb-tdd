@@ -1,6 +1,0 @@
-12e352b final
-aa10eb2 tdd(cycle 5): extract SubscriberList markup out of Dashboard
-dd739ef tdd(cycle 4): SubscriberList shows a subscriber's topics joined by comma
-4a0e7e7 tdd(cycle 3): SubscriberList links a subscriber's email address
-9578960 tdd(cycle 2): SubscriberList shows a subscriber's name
-6934eb3 tdd(cycle 1): SubscriberList renders empty list container

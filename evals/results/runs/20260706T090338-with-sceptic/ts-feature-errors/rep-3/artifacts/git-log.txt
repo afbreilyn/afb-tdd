@@ -1,6 +1,0 @@
-c0568c3 final
-c8b3b09 tdd(cycle 5): unsubscribe happy path and extract isValidEmail helper
-eda711d tdd(cycle 4): unsubscribe maps not_subscribed response to not_subscribed result
-8b21a3a tdd(cycle 3): unsubscribe maps network failure to connection_error
-85bfd83 tdd(cycle 2): unsubscribe validates topic
-6f8ac6e tdd(cycle 1): unsubscribe validates email format

@@ -1,6 +1,0 @@
-953300b final
-e61b607 tdd(cycle 5): wire SubscriberList into Dashboard
-b12757e tdd(cycle 4): SubscriberList shows topics comma-separated
-648c7e7 tdd(cycle 3): SubscriberList links each subscriber's email
-c8ad4ed tdd(cycle 2): SubscriberList shows each subscriber's name
-cd9d1c8 tdd(cycle 1): SubscriberList renders empty labelled list

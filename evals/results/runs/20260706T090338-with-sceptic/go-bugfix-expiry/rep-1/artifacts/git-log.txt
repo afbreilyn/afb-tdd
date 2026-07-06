@@ -1,3 +1,0 @@
-547037e final
-de5879e tdd(cycle 2): GrantSession sets expiry via injected clock
-4768018 tdd(cycle 1): session expiring at current instant is invalid

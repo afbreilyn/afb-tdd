@@ -1,0 +1,6 @@
+d2e0189 final
+f4e600e tdd(cycle 5): SubscriberList exposes accessible list name
+83e203d tdd(cycle 4): SubscriberList renders subscriber topics; extract into Dashboard
+a35c325 tdd(cycle 3): SubscriberList links each subscriber's email address
+110f0db tdd(cycle 2): SubscriberList renders each subscriber's name
+5666f0b tdd(cycle 1): SubscriberList renders no items for empty subscribers array

@@ -1,0 +1,85 @@
+diff --git a/src/newsletter.test.ts b/src/newsletter.test.ts
+index acd715e..9a6ef70 100644
+--- a/src/newsletter.test.ts
++++ b/src/newsletter.test.ts
+@@ -27,6 +27,12 @@ describe("subscribe", () => {
+     expect(result.kind).toBe("email_error");
+   });
+ 
++  it("returns email_error for an address without a TLD", async () => {
++    const result = await subscribe("a@b", "product");
++
++    expect(result.kind).toBe("email_error");
++  });
++
+   it("returns topic_error for an unknown topic", async () => {
+     const result = await subscribe("reader@example.com", "gossip");
+ 
+@@ -39,6 +45,21 @@ describe("subscribe", () => {
+     expect(result).toEqual({ kind: "subscribed", subscriberId: "sub-reader@example.com" });
+   });
+ 
++  it("returns already_subscribed when the service responds with 409", async () => {
++    server.use(
++      http.post("/api", () =>
++        HttpResponse.json({ error: "already_subscribed" }, { status: 409 }),
++      ),
++    );
++
++    const result = await subscribe("reader@example.com", "product");
++
++    expect(result).toEqual({
++      kind: "already_subscribed",
++      message: "reader@example.com is already subscribed to product",
++    });
++  });
++
+   it("returns connection_error when the service is unreachable", async () => {
+     server.use(http.post("/api", () => HttpResponse.error()));
+ 
+diff --git a/src/newsletter.ts b/src/newsletter.ts
+index d44e8c8..956a882 100644
+--- a/src/newsletter.ts
++++ b/src/newsletter.ts
+@@ -5,13 +5,14 @@ export type Topic = (typeof KNOWN_TOPICS)[number];
+ 
+ export type SubscribeResult =
+   | { kind: "subscribed"; subscriberId: string }
++  | { kind: "already_subscribed"; message: string }
+   | { kind: "email_error"; message: string }
+   | { kind: "topic_error"; message: string }
+   | { kind: "connection_error"; message: string }
+   | { kind: "response_error"; message: string };
+ 
+ export async function subscribe(email: string, topic: string): Promise<SubscribeResult> {
+-  if (!/^\S+@\S+$/.test(email)) {
++  if (!/^\S+@\S+\.\S+$/.test(email)) {
+     return { kind: "email_error", message: `"${email}" is not a valid email address` };
+   }
+   if (!KNOWN_TOPICS.includes(topic as Topic)) {
+@@ -25,12 +26,19 @@ export async function subscribe(email: string, topic: string): Promise<Subscribe
+     return { kind: "connection_error", message: "could not reach the newsletter service" };
+   }
+ 
+-  if (
+-    typeof body !== "object" ||
+-    body === null ||
+-    typeof (body as { subscriberId?: unknown }).subscriberId !== "string"
+-  ) {
++  if (typeof body !== "object" || body === null) {
+     return { kind: "response_error", message: "unexpected response from the newsletter service" };
+   }
+-  return { kind: "subscribed", subscriberId: (body as { subscriberId: string }).subscriberId };
++
++  const b = body as Record<string, unknown>;
++
++  if (b.error === "already_subscribed") {
++    return { kind: "already_subscribed", message: `${email} is already subscribed to ${topic}` };
++  }
++
++  if (typeof b.subscriberId !== "string") {
++    return { kind: "response_error", message: "unexpected response from the newsletter service" };
++  }
++
++  return { kind: "subscribed", subscriberId: b.subscriberId };
+ }

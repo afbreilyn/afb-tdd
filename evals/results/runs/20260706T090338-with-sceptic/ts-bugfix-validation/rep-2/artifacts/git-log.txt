@@ -1,0 +1,3 @@
+e0217fd final
+aeb74e3 tdd(cycle 2): return already_subscribed result for HTTP 409 duplicate subscription
+68e00ba tdd(cycle 1): reject email addresses without a dot in the domain

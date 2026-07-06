@@ -1,0 +1,5 @@
+9ac37f2 final
+08e0101 tdd(cycle 4): SubscriberList renders subscriber topics as comma-separated string
+adde0dc tdd(cycle 3): SubscriberList links subscriber email; Dashboard delegates to SubscriberList
+4dcfd73 tdd(cycle 2): SubscriberList renders each subscriber's name
+5bee230 tdd(cycle 1): SubscriberList renders accessible list container

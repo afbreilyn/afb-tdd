@@ -1,0 +1,100 @@
+diff --git a/service/access.go b/service/access.go
+index cf7cf5f..1ffa1db 100644
+--- a/service/access.go
++++ b/service/access.go
+@@ -5,6 +5,7 @@ import (
+ 	"fmt"
+ 	"time"
+ 
++	"evalfixture/clock"
+ 	"evalfixture/repository"
+ )
+ 
+@@ -17,10 +18,11 @@ type Session struct {
+ type AccessService struct {
+ 	users      repository.UserRepository
+ 	sessionTTL time.Duration
++	clock      clock.Clock
+ }
+ 
+-func NewAccessService(users repository.UserRepository, sessionTTL time.Duration) *AccessService {
+-	return &AccessService{users: users, sessionTTL: sessionTTL}
++func NewAccessService(users repository.UserRepository, sessionTTL time.Duration, clk clock.Clock) *AccessService {
++	return &AccessService{users: users, sessionTTL: sessionTTL, clock: clk}
+ }
+ 
+ func (s *AccessService) GrantSession(ctx context.Context, email string) (Session, error) {
+@@ -30,10 +32,10 @@ func (s *AccessService) GrantSession(ctx context.Context, email string) (Session
+ 	}
+ 	return Session{
+ 		Email:     user.Email(),
+-		ExpiresAt: time.Now().Add(s.sessionTTL),
++		ExpiresAt: s.clock.Now().Add(s.sessionTTL),
+ 	}, nil
+ }
+ 
+ func (s *AccessService) IsSessionValid(session Session) bool {
+-	return !session.ExpiresAt.Before(time.Now())
++	return session.ExpiresAt.After(s.clock.Now())
+ }
+diff --git a/service/access_test.go b/service/access_test.go
+index b681fd5..aac8828 100644
+--- a/service/access_test.go
++++ b/service/access_test.go
+@@ -7,6 +7,7 @@ import (
+ 
+ 	"github.com/stretchr/testify/suite"
+ 
++	"evalfixture/clock"
+ 	"evalfixture/domaintest"
+ 	"evalfixture/repository"
+ 	"evalfixture/repository/fakes"
+@@ -17,6 +18,7 @@ type accessServiceSuite struct {
+ 	suite.Suite
+ 	ctx     context.Context
+ 	users   *fakes.FakeUserRepository
++	clock   *clock.FrozenClock
+ 	service *service.AccessService
+ }
+ 
+@@ -30,7 +32,8 @@ func (s *accessServiceSuite) SetupSubTest() { s.init() }
+ func (s *accessServiceSuite) init() {
+ 	s.ctx = context.Background()
+ 	s.users = fakes.NewFakeUserRepository()
+-	s.service = service.NewAccessService(s.users, time.Hour)
++	s.clock = clock.NewFrozenClock(time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC))
++	s.service = service.NewAccessService(s.users, time.Hour, s.clock)
+ }
+ 
+ func (s *accessServiceSuite) Test_GrantSession_ReturnsSessionForKnownUser() {
+@@ -42,7 +45,7 @@ func (s *accessServiceSuite) Test_GrantSession_ReturnsSessionForKnownUser() {
+ 
+ 	s.NoError(err)
+ 	s.Equal("known@example.com", session.Email)
+-	s.False(session.ExpiresAt.IsZero())
++	s.True(session.ExpiresAt.Equal(s.clock.Now().Add(time.Hour)))
+ }
+ 
+ func (s *accessServiceSuite) Test_GrantSession_ErrorsForUnknownEmail() {
+@@ -52,13 +55,19 @@ func (s *accessServiceSuite) Test_GrantSession_ErrorsForUnknownEmail() {
+ }
+ 
+ func (s *accessServiceSuite) Test_IsSessionValid_FutureExpiry() {
+-	session := service.Session{Email: "known@example.com", ExpiresAt: time.Now().Add(time.Hour)}
++	session := service.Session{Email: "known@example.com", ExpiresAt: s.clock.Now().Add(time.Hour)}
+ 
+ 	s.True(s.service.IsSessionValid(session))
+ }
+ 
+ func (s *accessServiceSuite) Test_IsSessionValid_PastExpiry() {
+-	session := service.Session{Email: "known@example.com", ExpiresAt: time.Now().Add(-time.Hour)}
++	session := service.Session{Email: "known@example.com", ExpiresAt: s.clock.Now().Add(-time.Hour)}
++
++	s.False(s.service.IsSessionValid(session))
++}
++
++func (s *accessServiceSuite) Test_IsSessionValid_AtExactExpiry_IsInvalid() {
++	session := service.Session{Email: "known@example.com", ExpiresAt: s.clock.Now()}
+ 
+ 	s.False(s.service.IsSessionValid(session))
+ }

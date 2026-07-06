@@ -1,0 +1,6 @@
+ebeffa1 final
+cea37c3 tdd(cycle 5): unsubscribe returns success on service confirmation
+b8db799 tdd(cycle 4): unsubscribe returns not_subscribed on 404 not_subscribed body
+00aacd4 tdd(cycle 3): unsubscribe returns connection_error on network failure
+0657c01 tdd(cycle 2): unsubscribe returns topic_error for unknown topic
+aabb345 tdd(cycle 1): unsubscribe returns email_error for invalid email

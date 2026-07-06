@@ -1,0 +1,3 @@
+ba966e4 final
+21bf89d tdd(cycle 2): return already_subscribed result on 409 from newsletter service
+e829049 tdd(cycle 1): reject emails with no TLD (no dot in domain)

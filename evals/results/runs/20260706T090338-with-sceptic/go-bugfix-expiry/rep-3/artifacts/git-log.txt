@@ -1,0 +1,3 @@
+eab9059 final
+9ed2671 tdd(cycle 2): GrantSession derives ExpiresAt from injected clock
+147df00 tdd(cycle 1): reject session whose ExpiresAt equals current instant

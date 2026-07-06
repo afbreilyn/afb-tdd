@@ -1,0 +1,62 @@
+diff --git a/domain/report.go b/domain/report.go
+index 2abf1e3..e81d7c3 100644
+--- a/domain/report.go
++++ b/domain/report.go
+@@ -1,7 +1,26 @@
+ package domain
+ 
++import (
++	"fmt"
++	"maps"
++	"slices"
++	"strings"
++)
++
+ // Report is a titled document with free-form tags.
+ type Report struct {
+ 	Title string
+ 	Tags  map[string]string
+ }
++
++func (r Report) Summary() string {
++	if len(r.Tags) == 0 {
++		return r.Title
++	}
++	keys := slices.Sorted(maps.Keys(r.Tags))
++	pairs := make([]string, len(keys))
++	for i, k := range keys {
++		pairs[i] = fmt.Sprintf("%s=%s", k, r.Tags[k])
++	}
++	return fmt.Sprintf("%s [%s]", r.Title, strings.Join(pairs, ", "))
++}
+diff --git a/domain/report_test.go b/domain/report_test.go
+new file mode 100644
+index 0000000..1183212
+--- /dev/null
++++ b/domain/report_test.go
+@@ -0,0 +1,25 @@
++package domain_test
++
++import (
++	"testing"
++
++	"evalfixture/domain"
++	"github.com/stretchr/testify/assert"
++)
++
++func TestReportSummary(t *testing.T) {
++	t.Run("no tags", func(t *testing.T) {
++		r := domain.Report{Title: "Q1 Report", Tags: map[string]string{}}
++		assert.Equal(t, "Q1 Report", r.Summary())
++	})
++
++	t.Run("single tag", func(t *testing.T) {
++		r := domain.Report{Title: "Q1 Report", Tags: map[string]string{"env": "prod"}}
++		assert.Equal(t, "Q1 Report [env=prod]", r.Summary())
++	})
++
++	t.Run("multiple tags sorted", func(t *testing.T) {
++		r := domain.Report{Title: "Q1 Report", Tags: map[string]string{"team": "payments", "env": "prod"}}
++		assert.Equal(t, "Q1 Report [env=prod, team=payments]", r.Summary())
++	})
++}

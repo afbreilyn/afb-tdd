@@ -1,0 +1,4 @@
+93bf6a3 final
+5fbe2e7 tdd(cycle 6): Hasher contract tests with SHA256Hasher real implementation
+1dc3854 tdd(cycle 5): Login returns session or invalid credentials
+3e7f7a0 tdd(cycle 2): Register saves user with hashed password

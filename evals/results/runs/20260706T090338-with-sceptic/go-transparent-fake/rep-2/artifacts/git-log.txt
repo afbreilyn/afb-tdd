@@ -1,0 +1,7 @@
+265e7e7 final
+1b7d5c4 tdd(cycle 6): SHA256Hasher + Hasher contract; FakeHasher verified against contract
+e9fa218 tdd(cycle 5): Login returns ErrInvalidCredentials for wrong password
+7b48669 tdd(cycle 4): Login returns ErrInvalidCredentials for unknown email
+d64ed31 tdd(cycle 2b): Register hashes password and saves user; error path covered
+cc53afb tdd(cycle 2a): repository preserves password hash — domain.User gains passwordHash field
+d5ce8ce tdd(cycle 1): Register API shape — Hasher interface, FakeHasher, and Register stub

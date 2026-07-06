@@ -1,0 +1,429 @@
+diff --git a/domain/user.go b/domain/user.go
+index 4d83f82..0776d9e 100644
+--- a/domain/user.go
++++ b/domain/user.go
+@@ -3,19 +3,29 @@ package domain
+ // User is the domain aggregate for a registered user. Fields are unexported;
+ // construct with NewUser (unpersisted) or RehydrateUser (from storage).
+ type User struct {
+-	id    string
+-	email string
+-	orgID string
++	id           string
++	email        string
++	orgID        string
++	passwordHash string
+ }
+ 
+ func NewUser(email, orgID string) *User {
+ 	return &User{email: email, orgID: orgID}
+ }
+ 
++func NewUserWithPassword(email, orgID, passwordHash string) *User {
++	return &User{email: email, orgID: orgID, passwordHash: passwordHash}
++}
++
+ func RehydrateUser(id, email, orgID string) *User {
+ 	return &User{id: id, email: email, orgID: orgID}
+ }
+ 
+-func (u *User) ID() string    { return u.id }
+-func (u *User) Email() string { return u.email }
+-func (u *User) OrgID() string { return u.orgID }
++func RehydrateUserWithPassword(id, email, orgID, passwordHash string) *User {
++	return &User{id: id, email: email, orgID: orgID, passwordHash: passwordHash}
++}
++
++func (u *User) ID() string           { return u.id }
++func (u *User) Email() string        { return u.email }
++func (u *User) OrgID() string        { return u.orgID }
++func (u *User) PasswordHash() string { return u.passwordHash }
+diff --git a/hasher/contract/hasher.go b/hasher/contract/hasher.go
+new file mode 100644
+index 0000000..6f47dd7
+--- /dev/null
++++ b/hasher/contract/hasher.go
+@@ -0,0 +1,47 @@
++package contract
++
++import (
++	"testing"
++
++	"github.com/stretchr/testify/assert"
++
++	"evalfixture/hasher"
++)
++
++// RunHasherContract verifies any Hasher implementation. Run it against every
++// fake AND the real implementation so the fake cannot drift.
++func RunHasherContract(t *testing.T, h hasher.Hasher) {
++	t.Helper()
++
++	t.Run("Hash returns non-empty output", func(t *testing.T) {
++		result := h.Hash("anypassword")
++
++		assert.NotEmpty(t, result)
++	})
++
++	t.Run("same input always produces same hash", func(t *testing.T) {
++		first := h.Hash("password")
++		second := h.Hash("password")
++
++		assert.Equal(t, first, second)
++	})
++
++	t.Run("different inputs produce different hashes", func(t *testing.T) {
++		a := h.Hash("password1")
++		b := h.Hash("password2")
++
++		assert.NotEqual(t, a, b)
++	})
++
++	t.Run("Verify returns true for matching plain and hash", func(t *testing.T) {
++		hashed := h.Hash("mysecret")
++
++		assert.True(t, h.Verify("mysecret", hashed))
++	})
++
++	t.Run("Verify returns false for non-matching plain and hash", func(t *testing.T) {
++		hashed := h.Hash("correct")
++
++		assert.False(t, h.Verify("wrong", hashed))
++	})
++}
+diff --git a/hasher/fakes/hasher.go b/hasher/fakes/hasher.go
+new file mode 100644
+index 0000000..41b60c1
+--- /dev/null
++++ b/hasher/fakes/hasher.go
+@@ -0,0 +1,9 @@
++package fakes
++
++// FakeHasher is a transparent fake: output encodes input so tests can assert on both sides.
++type FakeHasher struct{}
++
++func NewFakeHasher() *FakeHasher { return &FakeHasher{} }
++
++func (f *FakeHasher) Hash(password string) string       { return "hashed:" + password }
++func (f *FakeHasher) Verify(plain, hashed string) bool { return "hashed:"+plain == hashed }
+diff --git a/hasher/fakes/hasher_test.go b/hasher/fakes/hasher_test.go
+new file mode 100644
+index 0000000..45e9813
+--- /dev/null
++++ b/hasher/fakes/hasher_test.go
+@@ -0,0 +1,12 @@
++package fakes_test
++
++import (
++	"testing"
++
++	"evalfixture/hasher/contract"
++	"evalfixture/hasher/fakes"
++)
++
++func TestFakeHasher(t *testing.T) {
++	contract.RunHasherContract(t, fakes.NewFakeHasher())
++}
+diff --git a/hasher/hasher.go b/hasher/hasher.go
+new file mode 100644
+index 0000000..9ae9a99
+--- /dev/null
++++ b/hasher/hasher.go
+@@ -0,0 +1,7 @@
++package hasher
++
++// Hasher hashes passwords and verifies candidates against stored hashes.
++type Hasher interface {
++	Hash(password string) string
++	Verify(plain, hashed string) bool
++}
+diff --git a/hasher/sha256/hasher.go b/hasher/sha256/hasher.go
+new file mode 100644
+index 0000000..18fa717
+--- /dev/null
++++ b/hasher/sha256/hasher.go
+@@ -0,0 +1,19 @@
++package sha256
++
++import (
++	"crypto/sha256"
++	"encoding/hex"
++)
++
++type Hasher struct{}
++
++func NewHasher() *Hasher { return &Hasher{} }
++
++func (h *Hasher) Hash(password string) string {
++	sum := sha256.Sum256([]byte(password))
++	return hex.EncodeToString(sum[:])
++}
++
++func (h *Hasher) Verify(plain, hashed string) bool {
++	return h.Hash(plain) == hashed
++}
+diff --git a/hasher/sha256/hasher_test.go b/hasher/sha256/hasher_test.go
+new file mode 100644
+index 0000000..7a832b7
+--- /dev/null
++++ b/hasher/sha256/hasher_test.go
+@@ -0,0 +1,12 @@
++package sha256_test
++
++import (
++	"testing"
++
++	"evalfixture/hasher/contract"
++	"evalfixture/hasher/sha256"
++)
++
++func TestSHA256Hasher(t *testing.T) {
++	contract.RunHasherContract(t, sha256.NewHasher())
++}
+diff --git a/repository/contract/user.go b/repository/contract/user.go
+index dd23edf..75e1f71 100644
+--- a/repository/contract/user.go
++++ b/repository/contract/user.go
+@@ -6,6 +6,7 @@ import (
+ 	"github.com/stretchr/testify/assert"
+ 	"github.com/stretchr/testify/require"
+ 
++	"evalfixture/domain"
+ 	"evalfixture/domaintest"
+ 	"evalfixture/repository"
+ )
+@@ -45,4 +46,15 @@ func RunUserRepositoryContract(t *testing.T, repo repository.UserRepository) {
+ 
+ 		assert.ErrorIs(t, err, repository.ErrNotFound)
+ 	})
++
++	t.Run("preserves password hash on save and retrieve", func(t *testing.T) {
++		user := domain.NewUserWithPassword("hash@example.com", "org-42", "hashed:sekret")
++		_, err := repo.Save(ctx, user)
++		require.NoError(t, err)
++
++		found, err := repo.GetByEmail(ctx, "hash@example.com")
++
++		require.NoError(t, err)
++		assert.Equal(t, "hashed:sekret", found.PasswordHash())
++	})
+ }
+diff --git a/repository/fakes/user.go b/repository/fakes/user.go
+index 9f3ea4b..da2e8e2 100644
+--- a/repository/fakes/user.go
++++ b/repository/fakes/user.go
+@@ -11,15 +11,21 @@ import (
+ // are a deterministic function of the input ("user-" + email) so tests can
+ // assert on both sides.
+ type FakeUserRepository struct {
+-	users map[string]*domain.User
++	users     map[string]*domain.User
++	saveError error
+ }
+ 
+ func NewFakeUserRepository() *FakeUserRepository {
+ 	return &FakeUserRepository{users: make(map[string]*domain.User)}
+ }
+ 
++func (r *FakeUserRepository) SetSaveError(err error) { r.saveError = err }
++
+ func (r *FakeUserRepository) Save(_ context.Context, user *domain.User) (*domain.User, error) {
+-	saved := domain.RehydrateUser("user-"+user.Email(), user.Email(), user.OrgID())
++	if r.saveError != nil {
++		return nil, r.saveError
++	}
++	saved := domain.RehydrateUserWithPassword("user-"+user.Email(), user.Email(), user.OrgID(), user.PasswordHash())
+ 	r.users[saved.Email()] = saved
+ 	return saved, nil
+ }
+diff --git a/repository/memstore/user.go b/repository/memstore/user.go
+index f97612a..5bba0b2 100644
+--- a/repository/memstore/user.go
++++ b/repository/memstore/user.go
+@@ -23,9 +23,10 @@ func NewUserRepository(dir string) *UserRepository {
+ }
+ 
+ type userRecord struct {
+-	ID    string `json:"id"`
+-	Email string `json:"email"`
+-	OrgID string `json:"org_id"`
++	ID           string `json:"id"`
++	Email        string `json:"email"`
++	OrgID        string `json:"org_id"`
++	PasswordHash string `json:"password_hash"`
+ }
+ 
+ func (r *UserRepository) Save(_ context.Context, user *domain.User) (*domain.User, error) {
+@@ -33,12 +34,12 @@ func (r *UserRepository) Save(_ context.Context, user *domain.User) (*domain.Use
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	record := userRecord{ID: "user-" + user.Email(), Email: user.Email(), OrgID: user.OrgID()}
++	record := userRecord{ID: "user-" + user.Email(), Email: user.Email(), OrgID: user.OrgID(), PasswordHash: user.PasswordHash()}
+ 	records[record.Email] = record
+ 	if err := r.store(records); err != nil {
+ 		return nil, err
+ 	}
+-	return domain.RehydrateUser(record.ID, record.Email, record.OrgID), nil
++	return domain.RehydrateUserWithPassword(record.ID, record.Email, record.OrgID, record.PasswordHash), nil
+ }
+ 
+ func (r *UserRepository) GetByEmail(_ context.Context, email string) (*domain.User, error) {
+@@ -50,7 +51,7 @@ func (r *UserRepository) GetByEmail(_ context.Context, email string) (*domain.Us
+ 	if !ok {
+ 		return nil, repository.ErrNotFound
+ 	}
+-	return domain.RehydrateUser(record.ID, record.Email, record.OrgID), nil
++	return domain.RehydrateUserWithPassword(record.ID, record.Email, record.OrgID, record.PasswordHash), nil
+ }
+ 
+ func (r *UserRepository) load() (map[string]userRecord, error) {
+diff --git a/service/access.go b/service/access.go
+index cf7cf5f..d3f605d 100644
+--- a/service/access.go
++++ b/service/access.go
+@@ -2,12 +2,17 @@ package service
+ 
+ import (
+ 	"context"
++	"errors"
+ 	"fmt"
+ 	"time"
+ 
++	"evalfixture/domain"
++	"evalfixture/hasher"
+ 	"evalfixture/repository"
+ )
+ 
++var ErrInvalidCredentials = errors.New("invalid credentials")
++
+ // Session grants access until ExpiresAt.
+ type Session struct {
+ 	Email     string
+@@ -16,11 +21,32 @@ type Session struct {
+ 
+ type AccessService struct {
+ 	users      repository.UserRepository
++	hasher     hasher.Hasher
+ 	sessionTTL time.Duration
+ }
+ 
+-func NewAccessService(users repository.UserRepository, sessionTTL time.Duration) *AccessService {
+-	return &AccessService{users: users, sessionTTL: sessionTTL}
++func NewAccessService(users repository.UserRepository, hasher hasher.Hasher, sessionTTL time.Duration) *AccessService {
++	return &AccessService{users: users, hasher: hasher, sessionTTL: sessionTTL}
++}
++
++func (s *AccessService) Register(ctx context.Context, email, orgID, password string) error {
++	user := domain.NewUserWithPassword(email, orgID, s.hasher.Hash(password))
++	_, err := s.users.Save(ctx, user)
++	return err
++}
++
++func (s *AccessService) Login(ctx context.Context, email, password string) (Session, error) {
++	user, err := s.users.GetByEmail(ctx, email)
++	if err != nil {
++		return Session{}, ErrInvalidCredentials
++	}
++	if !s.hasher.Verify(password, user.PasswordHash()) {
++		return Session{}, ErrInvalidCredentials
++	}
++	return Session{
++		Email:     user.Email(),
++		ExpiresAt: time.Now().Add(s.sessionTTL),
++	}, nil
+ }
+ 
+ func (s *AccessService) GrantSession(ctx context.Context, email string) (Session, error) {
+diff --git a/service/access_test.go b/service/access_test.go
+index b681fd5..17e606f 100644
+--- a/service/access_test.go
++++ b/service/access_test.go
+@@ -2,21 +2,24 @@ package service_test
+ 
+ import (
+ 	"context"
++	"errors"
+ 	"testing"
+ 	"time"
+ 
+ 	"github.com/stretchr/testify/suite"
+ 
+ 	"evalfixture/domaintest"
++	"evalfixture/hasher/fakes"
+ 	"evalfixture/repository"
+-	"evalfixture/repository/fakes"
++	repofakes "evalfixture/repository/fakes"
+ 	"evalfixture/service"
+ )
+ 
+ type accessServiceSuite struct {
+ 	suite.Suite
+ 	ctx     context.Context
+-	users   *fakes.FakeUserRepository
++	users   *repofakes.FakeUserRepository
++	hasher  *fakes.FakeHasher
+ 	service *service.AccessService
+ }
+ 
+@@ -29,8 +32,58 @@ func (s *accessServiceSuite) SetupSubTest() { s.init() }
+ 
+ func (s *accessServiceSuite) init() {
+ 	s.ctx = context.Background()
+-	s.users = fakes.NewFakeUserRepository()
+-	s.service = service.NewAccessService(s.users, time.Hour)
++	s.users = repofakes.NewFakeUserRepository()
++	s.hasher = fakes.NewFakeHasher()
++	s.service = service.NewAccessService(s.users, s.hasher, time.Hour)
++}
++
++func (s *accessServiceSuite) Test_Register_ReturnsNoErrorForValidInputs() {
++	err := s.service.Register(s.ctx, "new@example.com", "org-1", "password123")
++
++	s.NoError(err)
++}
++
++func (s *accessServiceSuite) Test_Register_PropagatesSaveError() {
++	s.users.SetSaveError(errors.New("storage full"))
++
++	err := s.service.Register(s.ctx, "new@example.com", "org-1", "password123")
++
++	s.ErrorContains(err, "storage full")
++}
++
++func (s *accessServiceSuite) Test_Register_StoresHashedPassword() {
++	err := s.service.Register(s.ctx, "new@example.com", "org-1", "password123")
++	s.Require().NoError(err)
++
++	stored, err := s.users.GetByEmail(s.ctx, "new@example.com")
++	s.Require().NoError(err)
++	s.Equal(s.hasher.Hash("password123"), stored.PasswordHash())
++}
++
++func (s *accessServiceSuite) Test_Login_ReturnsSessionForCorrectCredentials() {
++	err := s.service.Register(s.ctx, "alice@example.com", "org-1", "secret")
++	s.Require().NoError(err)
++
++	session, err := s.service.Login(s.ctx, "alice@example.com", "secret")
++
++	s.NoError(err)
++	s.Equal("alice@example.com", session.Email)
++	s.True(session.ExpiresAt.After(time.Now()))
++}
++
++func (s *accessServiceSuite) Test_Login_ReturnsErrInvalidCredentials_ForWrongPassword() {
++	err := s.service.Register(s.ctx, "alice@example.com", "org-1", "correct")
++	s.Require().NoError(err)
++
++	_, err = s.service.Login(s.ctx, "alice@example.com", "wrong")
++
++	s.ErrorIs(err, service.ErrInvalidCredentials)
++}
++
++func (s *accessServiceSuite) Test_Login_ReturnsErrInvalidCredentials_ForUnknownEmail() {
++	_, err := s.service.Login(s.ctx, "nobody@example.com", "any")
++
++	s.ErrorIs(err, service.ErrInvalidCredentials)
+ }
+ 
+ func (s *accessServiceSuite) Test_GrantSession_ReturnsSessionForKnownUser() {

@@ -1,0 +1,4 @@
+4628c45 final
+fd38161 tdd(cycle 3): Summary sorts tags alphabetically by key for stable output
+e569e64 tdd(cycle 2): Summary appends sorted key=value pairs in brackets when tags present
+f041e5d tdd(cycle 1): Summary returns title when report has no tags

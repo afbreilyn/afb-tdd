@@ -1,0 +1,6 @@
+32149b6 final
+501b71a tdd(cycle 5): unsubscribe returns connection_error on network failure
+4b6f704 tdd(cycle 4): lock in unsubscribed success result
+4e40937 tdd(cycle 3): unsubscribe returns not_subscribed on 404 not_subscribed response
+de7850e tdd(cycle 2): unsubscribe returns topic_error for unknown topic
+8ca100e tdd(cycle 1): unsubscribe returns email_error for invalid address

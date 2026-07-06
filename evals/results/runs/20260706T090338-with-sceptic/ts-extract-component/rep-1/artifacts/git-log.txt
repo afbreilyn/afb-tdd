@@ -1,0 +1,4 @@
+c583c0f final
+d5988f8 tdd(cycle 3): SubscriberList shows a subscriber's topics, extract from Dashboard
+7b90177 tdd(cycle 2): SubscriberList links a subscriber's email address
+677e476 tdd(cycle 1): SubscriberList renders a subscriber's name

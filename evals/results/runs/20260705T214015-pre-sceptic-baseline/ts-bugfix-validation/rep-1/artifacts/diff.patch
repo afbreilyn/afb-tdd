@@ -1,0 +1,101 @@
+diff --git a/src/api/client.ts b/src/api/client.ts
+index 23be8c7..e193993 100644
+--- a/src/api/client.ts
++++ b/src/api/client.ts
+@@ -3,11 +3,20 @@ export interface ApiRequest {
+   params: Record<string, unknown>;
+ }
+ 
++export class ApiError extends Error {
++  constructor(public status: number, public body: unknown) {
++    super(`API error ${status}`);
++  }
++}
++
+ export async function postApi(method: string, params: Record<string, unknown>): Promise<unknown> {
+   const response = await fetch("/api", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ method, params } satisfies ApiRequest),
+   });
++  if (!response.ok) {
++    throw new ApiError(response.status, await response.json());
++  }
+   return response.json();
+ }
+diff --git a/src/newsletter.test.ts b/src/newsletter.test.ts
+index acd715e..66cc48a 100644
+--- a/src/newsletter.test.ts
++++ b/src/newsletter.test.ts
+@@ -27,6 +27,12 @@ describe("subscribe", () => {
+     expect(result.kind).toBe("email_error");
+   });
+ 
++  it("returns email_error for an address without a dot in the domain", async () => {
++    const result = await subscribe("a@b", "product");
++
++    expect(result).toEqual({ kind: "email_error", message: '"a@b" is not a valid email address' });
++  });
++
+   it("returns topic_error for an unknown topic", async () => {
+     const result = await subscribe("reader@example.com", "gossip");
+ 
+@@ -39,6 +45,21 @@ describe("subscribe", () => {
+     expect(result).toEqual({ kind: "subscribed", subscriberId: "sub-reader@example.com" });
+   });
+ 
++  it("returns already_subscribed when the service responds with 409", async () => {
++    server.use(
++      http.post("/api", () =>
++        HttpResponse.json({ error: "already_subscribed" }, { status: 409 }),
++      ),
++    );
++
++    const result = await subscribe("reader@example.com", "product");
++
++    expect(result).toEqual({
++      kind: "already_subscribed",
++      message: "reader@example.com is already subscribed to product",
++    });
++  });
++
+   it("returns connection_error when the service is unreachable", async () => {
+     server.use(http.post("/api", () => HttpResponse.error()));
+ 
+diff --git a/src/newsletter.ts b/src/newsletter.ts
+index d44e8c8..73e6276 100644
+--- a/src/newsletter.ts
++++ b/src/newsletter.ts
+@@ -1,17 +1,18 @@
+-import { postApi } from "./api/client";
++import { postApi, ApiError } from "./api/client";
+ 
+ export const KNOWN_TOPICS = ["product", "engineering", "design"] as const;
+ export type Topic = (typeof KNOWN_TOPICS)[number];
+ 
+ export type SubscribeResult =
+   | { kind: "subscribed"; subscriberId: string }
++  | { kind: "already_subscribed"; message: string }
+   | { kind: "email_error"; message: string }
+   | { kind: "topic_error"; message: string }
+   | { kind: "connection_error"; message: string }
+   | { kind: "response_error"; message: string };
+ 
+ export async function subscribe(email: string, topic: string): Promise<SubscribeResult> {
+-  if (!/^\S+@\S+$/.test(email)) {
++  if (!/^\S+@\S+\.\S+$/.test(email)) {
+     return { kind: "email_error", message: `"${email}" is not a valid email address` };
+   }
+   if (!KNOWN_TOPICS.includes(topic as Topic)) {
+@@ -21,7 +22,10 @@ export async function subscribe(email: string, topic: string): Promise<Subscribe
+   let body: unknown;
+   try {
+     body = await postApi("newsletter.subscribe", { email, topic });
+-  } catch {
++  } catch (e) {
++    if (e instanceof ApiError && e.status === 409) {
++      return { kind: "already_subscribed", message: `${email} is already subscribed to ${topic}` };
++    }
+     return { kind: "connection_error", message: "could not reach the newsletter service" };
+   }
+ 

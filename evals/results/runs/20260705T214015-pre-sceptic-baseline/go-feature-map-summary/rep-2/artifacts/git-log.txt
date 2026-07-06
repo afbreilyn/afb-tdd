@@ -1,0 +1,2 @@
+0d21e53 final
+6060c2e tdd(cycle 1-2): Summary renders title with sorted key=value tags

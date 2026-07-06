@@ -1,0 +1,3 @@
+2bcaab5 final
+fa9f6ce tdd(cycle 2): handle 409 already_subscribed with a distinct result
+8b83494 tdd(cycle 1): reject emails without a TLD

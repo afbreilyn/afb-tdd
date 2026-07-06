@@ -1,0 +1,6 @@
+ead0b90 final
+12e09e2 tdd(cycle 5): unsubscribe returns connection_error when service is unreachable
+e4e312c tdd(cycle 4): unsubscribe returns not_subscribed on 404 not_subscribed response
+d4991ae tdd(cycle 3): unsubscribe returns success when service confirms removal
+ba9ad23 tdd(cycle 2): unsubscribe returns topic_error for unknown topic
+619ac77 tdd(cycle 1): unsubscribe returns email_error for invalid email

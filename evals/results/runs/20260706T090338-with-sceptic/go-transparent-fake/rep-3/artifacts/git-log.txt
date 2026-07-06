@@ -1,0 +1,6 @@
+32927d5 final
+857285b tdd(cycle 5): Login rejects wrong password with invalid credentials
+0ba2690 tdd(cycle 4): Login returns session for valid credentials
+d976257 tdd(cycle 3): Login rejects unknown email with invalid credentials
+941461b tdd(cycle 2): Hasher contract tests with SHA256 real implementation
+8c2f5d2 tdd(cycle 1): Register hashes password and stores hash on user

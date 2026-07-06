@@ -1,0 +1,3 @@
+58507c8 final
+410af3a tdd(cycle 2): Summary appends sorted key=value tags in brackets
+fa1f61f tdd(cycle 1): Summary returns title when no tags

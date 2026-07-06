@@ -17,6 +17,8 @@ Determine which layer to begin at (see [test-patterns.md](references/test-patter
 
 Then follow this strict red-green-refactor loop. Do not skip or combine steps.
 
+**Autonomous mode:** when invoked as `/afb-tdd --auto`, or when running non-interactively (headless `-p`), do not pause for user confirmation at the end of Red/Green/Refactor. Still produce the same report at each pause point (called shot, failure output, results), then continue. At the end of each Refactor step, make a git commit with message `tdd(cycle N): <behaviour>`. Every other rule is unchanged.
+
 ## Test Sequencing
 
 When starting a new behaviour, work in this order:
@@ -35,13 +37,15 @@ When starting a new behaviour, work in this order:
 2. Write exactly one failing test — the smallest slice of behaviour that adds value.
 3. Run the tests yourself. Check whether the test fails for the right reason (not due to a typo or syntax error).
    - If it passes immediately, or fails for the wrong reason, delete the test and start over with the same goal. Do not leave broken test code for the user to deal with.
-4. Report the failure output and confirm it's failing correctly, then wait for the user to confirm before continuing.
+4. **Sceptic** (mandatory — never skip): launch one read-only subagent following the RED checkpoint in [sceptic.md](references/sceptic.md). Address every finding: fix blockers and rerun the test; rebut anything you disagree with. One round only — never re-sceptic a fix.
+5. Report the failure output and confirm it's failing correctly, then wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, or `CLEAN`.
 
 ## Green
-1. Write the minimum implementation to make the test pass. Nothing more. Hardcode if possible, don't make it handle future scenarios.
+1. Write the minimum implementation to make the test pass. Nothing more. Hardcode if possible, don't make it handle future scenarios. State which you're doing: **Fake It** (will triangulate next cycle) or **Obvious Implementation**.
 2. Run the tests yourself. Check whether the new test passes and all other tests remain green.
    - If something unexpected is failing, fix it before reporting to the user.
-3. Report the results and wait for the user to confirm before continuing.
+3. **Sceptic**: same as Red step 4, but the GREEN checkpoint in [sceptic.md](references/sceptic.md).
+4. Report the results and wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, or `CLEAN`.
 
 ## Refactor
 1. Now that tests are green, clean up thoroughly — names, duplication, extraction of well-named helpers. Do not defer this to a later cycle.
@@ -83,11 +87,12 @@ it('renders all main navigation links', () => {
 - If you find yourself thinking "just this once" about skipping a step, that is a red flag. Stop and restart the cycle properly.
 - Each cycle is deliberately small. This is especially important when working with an AI assistant: small context = higher accuracy. Don't batch cycles together.
 
+See [sceptic.md](references/sceptic.md) for the adversarial review rubric (shared with the eval judge).
 See [test-patterns.md](references/test-patterns.md) for outside-in layer ordering, contract testing fakes, and when to use each type of test double.
-See [languages/go.md](references/conventions/go.md) for Go-specific test conventions — testify, suites, fakes, transparent fakes, time control.
-See [languages/frontend.md](references/conventions/frontend.md) for frontend test conventions — selectors, structure, factories, async patterns.
-See [languages/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup. Reference this from your project skill if your project uses Vitest.
-See [languages/java.md](references/conventions/java.md) for Java-specific conventions. Reference this from your project skill if your project uses Junit5.
+See [conventions/go.md](references/conventions/go.md) for Go-specific test conventions — testify, suites, fakes, transparent fakes, time control.
+See [conventions/frontend.md](references/conventions/frontend.md) for frontend test conventions — selectors, structure, factories, async patterns.
+See [conventions/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup. Reference this from your project skill if your project uses Vitest.
+See [conventions/java.md](references/conventions/java.md) for Java-specific conventions. Reference this from your project skill if your project uses Junit5.
 See [testing-anti-patterns.md](references/testing-anti-patterns.md) for guidance on what not to do with mocks and test structure.
 See [tdd-checklist.md](references/tdd-checklist.md) for the completion checklist and a "when stuck" reference.
 

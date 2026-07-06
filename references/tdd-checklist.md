@@ -12,6 +12,7 @@ Before marking work complete:
 - [ ] Edge cases and error paths are covered
 - [ ] Each test covers one behaviour (no AND in the test name)
 - [ ] Bug fixes have a test that would have caught the original bug
+- [ ] The sceptic ran at every Red and Green checkpoint; every finding was fixed or rebutted in the report
 
 If you cannot honestly and thoroughly check all the boxes, then you did not TDD. Start over.
 

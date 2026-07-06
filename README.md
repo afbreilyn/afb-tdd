@@ -68,6 +68,14 @@ Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude
 ```
 </details>
 
+## The Sceptic
+
+Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [references/sceptic.md](references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. It is part of the loop; there is no flag to turn it off.
+
+## Evals
+
+`evals/` measures the quality of what the skill actually produces — fixture repos, headless runs, deterministic gates (suite green, revert check, red-before-code from the transcript, convention greps), plus optional mutation testing and an LLM judge that scores against the same sceptic rubric. See [evals/results/README.md](evals/results/README.md) for how to run them and track quality over time.
+
 ## Feedback
 
 Like any TDD-er, I would love feedback! If you have examples / tweaks / conventions / patterns / anti-patterns / pirate jokes to share, please fork the repo and open up a PR!

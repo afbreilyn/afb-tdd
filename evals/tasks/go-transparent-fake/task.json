@@ -1,6 +1,6 @@
 {
   "fixture": "go-svc",
-  "timeout_s": 1800,
+  "timeout_s": 2700,
   "max_turns": 200,
   "extra_checks": [
     {

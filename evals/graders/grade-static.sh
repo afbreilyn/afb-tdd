@@ -4,8 +4,9 @@
 #
 # Built-in convention checks run over the ADDED diff lines (split by prod/test
 # file); the task's extra_checks add rule-specific greps. Built-in counts are
-# trend metrics; the gate is: every extra_check passes, and the two egregious
-# built-ins (jest usage, "and" in a test name) are zero.
+# trend metrics; the gate is: every extra_check passes and jest usage is zero.
+# ("and" in a test name is a count only — camel-case names like SortsAndJoins
+# describe one behaviour and made it a false-positive gate.)
 #
 # Emits: {"static": {"pass": bool, "counts": {...}, "extra_checks": [...]}}
 
@@ -75,7 +76,7 @@ while IFS= read -r check; do
 done < <(jq -c '.extra_checks[]?' "$TASK")
 
 PASS=true
-{ [ "$EXTRA_PASS" = true ] && [ "$AND_NAMES" -eq 0 ] && [ "$JEST_USAGE" -eq 0 ]; } || PASS=false
+{ [ "$EXTRA_PASS" = true ] && [ "$JEST_USAGE" -eq 0 ]; } || PASS=false
 
 jq -n --argjson pass "$PASS" --argjson extra "$EXTRA_RESULTS" \
   --argjson as_casts "$AS_CASTS" --argjson testid "$TESTID" --argjson and_names "$AND_NAMES" \

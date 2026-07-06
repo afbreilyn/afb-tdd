@@ -62,10 +62,12 @@ while IFS=$'\t' read -r id kind name detail; do
         if printf '%s' "$detail" | grep -qE "$TEST_RUN_RE"; then PENDING_TEST_RUN_ID="$id"; fi
         ;;
       Edit|Write|MultiEdit|NotebookEdit)
-        # Transcript paths may carry a /private prefix the workdir path lacks
-        # (macOS): strip everything up to and including the workdir basename.
+        # Transcript paths vary by model/session: absolute with a /private
+        # prefix the workdir path lacks (macOS), or relative with a leading ./ —
+        # normalise all of them to workdir-relative.
         rel="${detail#"$WORKDIR"/}"
         case "$rel" in /*) rel="${rel#*/"$(basename "$WORKDIR")"/}" ;; esac
+        rel="${rel#./}"
         case "$(classify_file "$rel" "$FIXTURE")" in
           test) TEST_EDIT_SEEN=true ;;
           prod)

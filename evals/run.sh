@@ -63,7 +63,7 @@ CLAUDE_VERSION="$(claude --version 2>/dev/null | head -1 || echo unknown)"
 TASKS=()
 for dir in "$EVALS_DIR"/tasks/*/; do
   name="$(basename "$dir")"
-  [ -n "$TASK_FILTER" ] && [ "$name" != "$TASK_FILTER" ] && continue
+  if [ -n "$TASK_FILTER" ] && ! printf ',%s,' "$TASK_FILTER" | grep -qF ",$name,"; then continue; fi
   TASKS+=("$name")
 done
 [ ${#TASKS[@]} -gt 0 ] || { echo "no tasks matched '${TASK_FILTER}'" >&2; exit 1; }
@@ -127,12 +127,15 @@ run_one() { # run_one <task> <rep>
   git -C "$work" -c user.name=eval -c user.email=eval@local commit -qm final --allow-empty
   git -C "$work" tag final
 
+  # claude-output.json is EMPTY when the timeout killed claude — default all fields.
   local session_id cost turns duration
   session_id="$(jq -r '.session_id // empty' "$art/claude-output.json" 2>/dev/null || true)"
-  cost="$(jq -r '.total_cost_usd // 0' "$art/claude-output.json" 2>/dev/null || echo 0)"
-  turns="$(jq -r '.num_turns // 0' "$art/claude-output.json" 2>/dev/null || echo 0)"
+  cost="$(jq -r '.total_cost_usd // 0' "$art/claude-output.json" 2>/dev/null || true)"
+  turns="$(jq -r '.num_turns // 0' "$art/claude-output.json" 2>/dev/null || true)"
+  [ -n "$cost" ] || cost=0
+  [ -n "$turns" ] || turns=0
   duration=$(( $(date +%s) - start ))
-  TOTAL_COST="$(echo "$TOTAL_COST + $cost" | bc)"
+  TOTAL_COST="$(awk -v a="$TOTAL_COST" -v b="$cost" 'BEGIN {printf "%.8f", a + b}')"
 
   # Transcript can appear slightly after the CLI exits.
   local transcript=""

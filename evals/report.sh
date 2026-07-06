@@ -10,19 +10,15 @@ EVALS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HISTORY="$EVALS_DIR/results/history.jsonl"
 [ -s "$HISTORY" ] || { echo "no runs recorded yet (results/history.jsonl is empty)"; exit 0; }
 
-echo "| run | date | skill | model | runs | gates | judge | mutation | cost | $/run |"
-echo "|---|---|---|---|---|---|---|---|---|---|"
+echo "| run | model | gates | runs | \$/run | cost |"
+echo "|---|---|---|---|---|---|"
 
 PREV_GATES=""
 while IFS= read -r line; do
   run=$(jq -r '.label // .run_id' <<<"$line")
-  date=$(jq -r .date <<<"$line")
-  sha=$(jq -r .skill_sha <<<"$line")
   model=$(jq -r '.model // "?"' <<<"$line" | sed 's/^claude-//')
   reps=$(jq -r '.reps // "?"' <<<"$line")
   gates=$(jq -r '.gate_pass_rate' <<<"$line")
-  judge=$(jq -r '.judge_mean // "-"' <<<"$line")
-  mutation=$(jq -r '.mutation_mean // "-"' <<<"$line")
   cost=$(jq -r '.cost_usd // 0' <<<"$line")
 
   trend=""
@@ -35,6 +31,6 @@ while IFS= read -r line; do
 
   per_run="?"
   [ "$reps" != "?" ] && [ "$reps" -gt 0 ] && per_run=$(awk -v c="$cost" -v r="$reps" 'BEGIN {printf "$%.2f", c/r}')
-  printf '| %s | %s | %s | %s | %s | %.2f%s | %s | %s | $%.2f | %s |\n' \
-    "$run" "$date" "$sha" "$model" "$reps" "$gates" "$trend" "$judge" "$mutation" "$cost" "$per_run"
+  printf '| %s | %s | %.2f%s | %s | %s | $%.2f |\n' \
+    "$run" "$model" "$gates" "$trend" "$reps" "$per_run" "$cost"
 done < "$HISTORY"

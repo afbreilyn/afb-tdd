@@ -21,6 +21,8 @@ if [ ${#PROD_FILES[@]} -eq 0 ]; then
 fi
 
 if [ -f "$WORKDIR/go.mod" ]; then
+  # go install drops binaries in GOPATH/bin, which is often not on PATH
+  have go && PATH="$PATH:$(go env GOPATH)/bin"
   have go-mutesting || { jq -n '{mutation: {skipped: "go-mutesting not installed"}}'; exit 0; }
   OUT=$(cd "$WORKDIR" && go-mutesting "${PROD_FILES[@]}" 2>&1 || true)
   SCORE=$(printf '%s' "$OUT" | sed -nE 's/.*The mutation score is ([0-9.]+).*/\1/p' | tail -1)

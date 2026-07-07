@@ -74,7 +74,7 @@ Every cycle gets adversarially reviewed twice — after Red (is the test tautolo
 
 ## Evals
 
-`evals/` measures the quality of what the skill actually produces — fixture repos, headless runs, deterministic gates (suite green, revert check, red-before-code from the transcript, convention greps), plus optional mutation testing and an LLM judge that scores against the same sceptic rubric. See [evals/results/README.md](evals/results/README.md) for how to run them and track quality over time.
+`evals/` measures the quality of what the skill actually produces — fixture repos, headless runs, deterministic gates (suite green, revert check, red-before-code from the transcript, convention greps), plus optional mutation testing and an LLM judge that scores against the same sceptic rubric. See [evals/README.md](evals/README.md) for how to run them and track quality over time.
 
 ## Feedback
 

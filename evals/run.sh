@@ -10,7 +10,7 @@
 # Usage: run.sh [--task <name>] [-n <reps>] [--with-mutation] [--with-judge]
 #               [--label <name>] [--model <model>] [--keep-workdirs]
 #
-# See results/README.md for the full workflow.
+# See README.md (this directory) for the full workflow.
 
 set -euo pipefail
 

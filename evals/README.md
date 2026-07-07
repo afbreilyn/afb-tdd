@@ -2,6 +2,16 @@
 
 Measures the quality of tests the skill produces, so SKILL.md changes can be compared against a baseline instead of vibes.
 
+We can't tell if the agent chooses the *right* behaviours to test. That's the human's job (for now!).
+
+"Quality" here means that the test is one that:
+- will fail when the implementation is removed
+- was written demonstrably before the code
+- resists the task's specific temptation
+- is written in the project's idiom
+
+The eval only trusts what it can check mechanically.
+
 ## Quickstart
 
 ```bash
@@ -29,9 +39,9 @@ For each task in `evals/tasks/` × N reps: copy the fixture to a throwaway git r
 
 ## Where results live
 
-- `history.jsonl` — one line per run, append-only, **committed**. The long-term trend record; every line carries the skill's git sha.
-- `runs/<run-id>/summary.json` — full per-rep drill-down, **committed**. Raw diffs/transcripts stay in `runs/<run-id>/artifacts/` (gitignored).
-- `baseline.json` — copy of the currently accepted anchor run; the default reference for `compare.sh`.
+- `results/history.jsonl` — one line per run, append-only, **committed**. The long-term trend record; every line carries the skill's git sha.
+- `results/runs/<run-id>/summary.json` — full per-rep drill-down, **committed**. Raw diffs/transcripts stay in `results/runs/<run-id>/artifacts/` (gitignored).
+- `results/baseline.json` — copy of the currently accepted anchor run; the default reference for `compare.sh`.
 
 ## Iterating cheaply
 

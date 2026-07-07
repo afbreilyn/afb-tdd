@@ -1,0 +1,49 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "a62881f5-4974-4b87-8f28-1bc13ebdefa0",
+  "cost_usd": 2.6110506000000004,
+  "num_turns": 58,
+  "duration_s": 1064,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 4,
+    "test_runs": 14
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  }
+}

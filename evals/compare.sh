@@ -21,7 +21,7 @@ arrow() { # arrow <ref> <cand>
 
 fmt() { [ "$1" = null ] && echo "  -  " || printf '%.2f' "$1"; }
 
-echo "reference: $(jq -r .run_id "$REF")   candidate: $(jq -r .run_id "$CAND")"
+echo "reference: $(jq -r .run_id "$REF") [$(jq -r '.candidate // "afb-tdd"' "$REF")]   candidate: $(jq -r .run_id "$CAND") [$(jq -r '.candidate // "afb-tdd"' "$CAND")]"
 echo
 printf '%-28s %8s %10s %3s\n' "metric" "ref" "candidate" ""
 printf '%-28s %8s %10s %3s\n' "----------------------------" "--------" "----------" "---"
@@ -29,6 +29,15 @@ printf '%-28s %8s %10s %3s\n' "----------------------------" "--------" "-------
 for metric in gate_pass_rate judge_mean mutation_mean; do
   r=$(jq -r ".totals.$metric" "$REF"); c=$(jq -r ".totals.$metric" "$CAND")
   printf '%-28s %8s %10s  %s\n' "$metric" "$(fmt "$r")" "$(fmt "$c")" "$(arrow "$r" "$c")"
+done
+
+echo
+printf '%-28s %8s %10s %3s\n' "per-gate pass rate" "ref" "candidate" ""
+printf '%-28s %8s %10s %3s\n' "----------------------------" "--------" "----------" "---"
+for gate in suite_green revert_check process_red_first static_checks; do
+  r=$(jq -r "[.tasks[].reps[].gates.$gate] | if length > 0 then (map(if . then 1 else 0 end) | add / length) else \"null\" end" "$REF")
+  c=$(jq -r "[.tasks[].reps[].gates.$gate] | if length > 0 then (map(if . then 1 else 0 end) | add / length) else \"null\" end" "$CAND")
+  printf '%-28s %8s %10s  %s\n' "$gate" "$(fmt "$r")" "$(fmt "$c")" "$(arrow "$r" "$c")"
 done
 
 echo

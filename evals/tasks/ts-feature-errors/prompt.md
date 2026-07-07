@@ -1,5 +1,3 @@
-Use the afb-tdd skill in autonomous mode: invoke `/afb-tdd --auto` for this task.
-
 Add an `unsubscribe(email: string, topic: string)` function to `src/newsletter.ts`.
 
 The backend method is `newsletter.unsubscribe`, called via POST /api like the existing subscribe flow. It must distinguish each of these outcomes as a named result variant:

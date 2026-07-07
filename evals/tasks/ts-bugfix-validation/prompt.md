@@ -1,5 +1,3 @@
-Use the afb-tdd skill in autonomous mode: invoke `/afb-tdd --auto` for this task.
-
 Users report two bugs in `subscribe()` in `src/newsletter.ts`:
 
 1. Email addresses without a dot in the domain, like `a@b`, are accepted. A valid address must have a TLD (e.g. `a@b.co`).

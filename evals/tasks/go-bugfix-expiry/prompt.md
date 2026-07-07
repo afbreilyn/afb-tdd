@@ -1,5 +1,3 @@
-Use the afb-tdd skill in autonomous mode: invoke `/afb-tdd --auto` for this task.
-
 Bug report for `AccessService` (in `service/access.go`):
 
 1. A session whose `ExpiresAt` equals the current instant is treated as valid. It should be expired — a session is valid strictly *before* its expiry.

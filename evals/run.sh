@@ -19,10 +19,11 @@ SKILL_DIR="$(dirname "$EVALS_DIR")"
 GRADERS="$EVALS_DIR/graders"
 source "$GRADERS/lib.sh"
 
-TASK_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0
+TASK_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
 while [ $# -gt 0 ]; do
   case "$1" in
     --task) TASK_FILTER="$2"; shift 2 ;;
+    --candidate) CANDIDATE="$2"; shift 2 ;;
     -n) REPS="$2"; shift 2 ;;
     --with-mutation) WITH_MUTATION=1; shift ;;
     --with-judge) WITH_JUDGE=1; shift ;;
@@ -36,6 +37,8 @@ done
 for tool in jq claude git; do
   have "$tool" || { echo "missing required tool: $tool" >&2; exit 1; }
 done
+CAND_DIR="$EVALS_DIR/candidates/$CANDIDATE"
+[ -f "$CAND_DIR/preamble.md" ] || { echo "unknown candidate '$CANDIDATE' (no $CAND_DIR/preamble.md)" >&2; exit 1; }
 TIMEOUT_BIN=timeout; have timeout || TIMEOUT_BIN=gtimeout
 have "$TIMEOUT_BIN" || { echo "missing timeout (brew install coreutils)" >&2; exit 1; }
 
@@ -98,6 +101,10 @@ run_one() { # run_one <task> <rep>
   work="$(mktemp -d "${TMPDIR:-/tmp}/afb-eval.XXXXXX")"
   tar -C "$fixture_dir" --exclude node_modules -cf - . | tar -C "$work" -xf -
   [ -d "$fixture_dir/node_modules" ] && ln -s "$fixture_dir/node_modules" "$work/node_modules"
+  if [ -d "$CAND_DIR/agents" ]; then
+    mkdir -p "$work/.claude/agents"
+    cp "$CAND_DIR/agents/"*.md "$work/.claude/agents/"
+  fi
 
   git -C "$work" init -q
   git -C "$work" -c user.name=eval -c user.email=eval@local add -A
@@ -118,7 +125,7 @@ run_one() { # run_one <task> <rep>
   local start rc=0
   start=$(date +%s)
   (cd "$work" && "$TIMEOUT_BIN" "$timeout_s" \
-      claude -p "$(cat "$task_dir/prompt.md")" \
+      claude -p "$(cat "$CAND_DIR/preamble.md")"$'\n\n'"$(cat "$task_dir/prompt.md")" \
         --dangerously-skip-permissions --output-format json \
         --max-turns "$max_turns" ${MODEL:+--model "$MODEL"} \
     ) > "$art/claude-output.json" 2> "$art/claude-stderr.txt" || rc=$?
@@ -204,7 +211,7 @@ find "$RUN_DIR" -name grades.json | sort | while IFS= read -r f; do
 done | jq -s \
   --arg run_id "$RUN_ID" --arg label "$LABEL" --arg sha "$SKILL_SHA" \
   --argjson dirty "$SKILL_DIRTY" --arg cc "$CLAUDE_VERSION" --arg model "${MODEL:-default}" \
-  --arg date "$(date +%Y-%m-%d)" '
+  --arg candidate "$CANDIDATE" --arg date "$(date +%Y-%m-%d)" '
   def gates(g): {
     suite_green: (g.suite.green // false),
     revert_check: (g.revert.pass // false),
@@ -223,7 +230,7 @@ done | jq -s \
     }
   }) | from_entries |
   { run_id: $run_id, label: $label, date: $date, skill_sha: $sha, skill_dirty: $dirty,
-    claude_code_version: $cc,
+    claude_code_version: $cc, candidate: $candidate,
     model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model), tasks: .,
     totals: {
       gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
@@ -233,7 +240,7 @@ done | jq -s \
     }
   }' > "$SUMMARY"
 
-jq -c '{run_id, date, label, skill_sha, model, reps: ([.tasks[].reps | length] | add),
+jq -c '{run_id, date, label, skill_sha, model, candidate, reps: ([.tasks[].reps | length] | add),
         gate_pass_rate: .totals.gate_pass_rate,
         judge_mean: .totals.judge_mean, mutation_mean: .totals.mutation_mean,
         per_task: (.tasks | with_entries(.value = .value.rollup.gate_pass_rate)),

@@ -74,5 +74,6 @@
     "judge_mean": null,
     "mutation_mean": null,
     "cost_usd": 4.190510150000001
-  }
+  },
+  "candidate": "afb-tdd"
 }

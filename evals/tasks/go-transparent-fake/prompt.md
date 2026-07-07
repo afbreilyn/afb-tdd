@@ -1,5 +1,3 @@
-Use the afb-tdd skill in autonomous mode: invoke `/afb-tdd --auto` for this task.
-
 Add password authentication to `AccessService` (in `service/access.go`):
 
 - `Register(ctx, email, orgID, password string) error` — stores the user with a hashed password (never the plaintext).

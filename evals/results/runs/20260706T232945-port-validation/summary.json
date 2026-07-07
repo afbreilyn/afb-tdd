@@ -2,7 +2,7 @@
   "run_id": "20260706T232945-port-validation",
   "label": "port-validation",
   "date": "2026-07-07",
-  "skill_sha": "995e3cb",
+  "skill_sha": "06ccc98",
   "skill_dirty": false,
   "claude_code_version": "2.1.202 (Claude Code)",
   "candidate": "afb-tdd",

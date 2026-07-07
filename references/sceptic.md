@@ -1,6 +1,6 @@
 # The Sceptic
 
-An adversarial reviewer that fires twice per TDD cycle — after Red and after Green — before the report to the user. It exists to catch the failure modes the author is blind to in the moment: tautological tests, weak assertions, over-implementation, quiet cheating. It is **mandatory**: part of the loop, like the red step itself. There is no flag to skip it.
+An adversarial reviewer that fires twice per TDD cycle — after Red and after Green — before the report to the user. It exists to catch the failure modes the author is blind to in the moment: tautological tests, weak assertions, over-implementation, quiet cheating. It is **on by default**; `/afb-tdd --no-sceptic` (or the user asking to skip it) disables it for the session. Skipping is never silent — every report still carries a `Sceptic: SKIPPED (--no-sceptic)` line.
 
 ## Part A — Invocation (instructions for the main agent)
 
@@ -36,6 +36,8 @@ The sceptic reads only the files named above — no exploration, no suite greppi
 - **DEFER** — genuinely the user's call; present it as a question. Blockers may not be deferred — fix or rebut. (In `--auto` mode there is no user to defer to: treat DEFER as REBUT-or-FIX, conservatively.)
 
 All findings and your responses appear verbatim in the user-facing report under a `Sceptic:` heading. **One round only** — the sceptic never reviews the fix; the user does, at the existing pause.
+
+**Skipping:** only on explicit user opt-out (`--no-sceptic` at invocation, or "skip the sceptic" at any point) — sticky for the rest of the session, always reported as `SKIPPED (--no-sceptic)`, never assumed and never silent.
 
 **Model:** `haiku` (the cheap tier), as above. If its findings prove too noisy — precision proxy = FIXED/(FIXED+REBUTTED) from the reports; the session-model reference point was ~43% on the 2026-07-06 eval run — escalate to the session model and re-measure with an eval run.
 

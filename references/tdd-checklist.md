@@ -13,6 +13,7 @@ Before marking work complete:
 - [ ] Each test covers one behaviour (no AND in the test name)
 - [ ] Bug fixes have a test that would have caught the original bug
 - [ ] The sceptic ran at every Red and Green checkpoint; every finding was fixed or rebutted in the report
+- [ ] The deletion question: if the code under test were deleted, would every new test fail?
 
 If you cannot honestly and thoroughly check all the boxes, then you did not TDD. Start over.
 
@@ -25,3 +26,4 @@ If you cannot honestly and thoroughly check all the boxes, then you did not TDD.
 | Must mock everything | Code is too coupled. Use dependency injection. |
 | Test setup is huge | Extract helpers. Still complex? Simplify the design. |
 | Bug found in existing code | Write a failing test reproducing it first, then fix. Never fix bugs without a test. |
+| A test fails and you don't know why | Classify it: TEST wrong vs CODE wrong. Prove the classification with two independent pieces of evidence before changing either. Undetermined? Stop and ask. |

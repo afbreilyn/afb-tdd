@@ -122,6 +122,16 @@ const mockUser = createMockUser({ id: "2" });
 
 ---
 
+## Test Isolation
+
+A test must produce the same result run once, run 1000 times, run alone, or run alongside the whole suite — including under parallel execution (`go test ./...` default parallelism, concurrent Vitest workers). In-memory fakes give you this for free; these rules bite when tests share real state — a database (contract tests above), Redis, the filesystem.
+
+- **Unique test data.** Every identifier a test creates in shared state must be high-entropy unique: `uuid.New().String()` / `crypto.randomUUID()`, emails like `user-<uuid>@test.example`. Never hardcode small sequential IDs — they collide across tests, runs, and parallel workers.
+- **No blanket deletes.** Never `TRUNCATE` or delete-all in setup/teardown; that couples the test to everything else touching the store. Track what you created and clean up only that.
+- **Self-contained.** Each test constructs everything it needs. No test may depend on another test having run (or not run), and a dirty state left by a crashed test must not break the next run.
+
+---
+
 ## When to Use Each Type of Double
 
 | Situation | Use |

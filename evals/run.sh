@@ -35,7 +35,7 @@ while [ $# -gt 0 ]; do
 done
 
 for tool in jq claude git; do
-  have "$tool" || { echo "missing required tool: $tool" >&2; exit 1; }
+  have "$tool" || { echo "missing required tool: $tool — run evals/setup.sh" >&2; exit 1; }
 done
 CAND_DIR="$EVALS_DIR/candidates/$CANDIDATE"
 [ -f "$CAND_DIR/preamble.md" ] || { echo "unknown candidate '$CANDIDATE' (no $CAND_DIR/preamble.md)" >&2; exit 1; }

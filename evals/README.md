@@ -22,7 +22,14 @@ evals/compare.sh results/runs/<run-id>/summary.json  # candidate vs baseline.jso
 evals/report.sh                                      # trend table over all recorded runs
 ```
 
-Prerequisites: `jq`, `git`, `claude`, coreutils `timeout` (`brew install coreutils`). `--with-mutation` also needs Stryker (in the TS fixture's devDeps) and [`go-mutesting`](https://github.com/avito-tech/go-mutesting) (`go install github.com/avito-tech/go-mutesting/cmd/go-mutesting@latest`).
+## setup: 
+
+```bash
+evals/setup.sh            # installs jq/coreutils/go-mutesting, verifies node/go/claude, warms fixture deps
+evals/setup.sh --check    # verify only, install nothing
+```
+
+It won't touch your node/go installs (those stay with nvm/asdf/brew — it just tells you if they're missing).
 
 ## What a run does
 

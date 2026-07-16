@@ -11,6 +11,7 @@ we can't tell if the robit chose the *right* behaviours to test — that's the h
 | "test-first actually happened" | `grade-process.sh` | jq the transcript into event order: test edit → *failing* run → only then the first prod edit; count red→green cycles | deterministic **gate** |
 | "resisted the task's temptation, in the house style" | `grade-static.sh` + the task's `extra_checks` | greps over added diff lines — e.g. ≥2 map entries in the new test, zero `ByTestId` in the parent, zero `time.Now()` in prod | deterministic **gate** |
 | "the tests catch small bugs, not just deletion" | `grade-mutation.sh` (`--with-mutation`) | inject hundreds of one-token mutants into changed prod files; score = killed ÷ (killed + survived) | deterministic **metric** (score, not pass/fail) |
+| "the called shots were correct — the robit understands the code it hasn't written yet" | `grade-shots.sh` | pair each `Expected failure:` declaration with the next test run (deterministic); with `--with-judge`, an LLM classifies each pair match/mismatch/hedge; accuracy = match ÷ (match + mismatch) | pairing is deterministic; the verdict is **model opinion** — metric, never a gate |
 | "the tests are well-written — assertions, naming, minimality" | `judge.sh` (`--with-judge`) | LLM scores the diff 1–5 per rubric dimension (sceptic rubric, Part B); median of 3 calls | **model opinion** — relative comparison only, never a gate |
 
 ## tldr
@@ -105,4 +106,5 @@ evals/report.sh                                      # trend table over all reco
 ## caveats
 - n=3 is a coarse instrument. trust deltas > 0.5 on judge scores and gate-rate drops; ignore the rest.
 - judge scores are relative (skill version A vs B) since the judge shares the generator's biases.
+- shot "hedges" ("expected failure: passes immediately") are excluded from accuracy but reported — a rising hedge count means the shot-calling discipline is eroding even if accuracy looks fine. drill into `runs/<run-id>/*/artifacts/shot-pairs.json`.
 - fixtures exemplify the convention docs listed in their `eval-fixture.json`; re-review fixtures when those docs change.

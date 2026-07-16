@@ -163,9 +163,9 @@ run_one() { # run_one <task> <rep>
 
   # --- grade ---
   local merged='{}' grader out
-  for grader in grade-suite grade-revert grade-process grade-static; do
+  for grader in grade-suite grade-revert grade-process grade-static grade-shots; do
     [ -x "$GRADERS/$grader.sh" ] || continue
-    if out="$("$GRADERS/$grader.sh" "$work" "$fixture_json" "$task_dir/task.json" "$art/transcript.jsonl" 2>"$art/$grader-stderr.txt")"; then
+    if out="$(AFB_SHOT_JUDGE="$WITH_JUDGE" "$GRADERS/$grader.sh" "$work" "$fixture_json" "$task_dir/task.json" "$art/transcript.jsonl" 2>"$art/$grader-stderr.txt")"; then
       merged="$(jq -n --argjson a "$merged" --argjson b "$out" '$a * $b')"
     else
       merged="$(jq -n --argjson a "$merged" --arg g "$grader" '$a * {errors: (($a.errors // []) + [$g])}')"
@@ -225,7 +225,8 @@ done | jq -s \
       rollup: {
         gate_pass_rate: ([.[] | .grades | gates(.) | to_entries[] | .value] | (map(if . then 1 else 0 end) | add) / length),
         judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value] | if length > 0 then (add / length) else null end),
-        mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end)
+        mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end),
+        shot_accuracy_mean: ([.[] | .grades.shots.accuracy // empty] | if length > 0 then (add / length) else null end)
       }
     }
   }) | from_entries |
@@ -236,6 +237,7 @@ done | jq -s \
       gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),
       mutation_mean: ([.[] | .rollup.mutation_mean | select(. != null)] | if length > 0 then add / length else null end),
+      shot_accuracy_mean: ([.[] | .rollup.shot_accuracy_mean | select(. != null)] | if length > 0 then add / length else null end),
       cost_usd: ([.[] | .reps[] | .cost_usd // 0] | add)
     }
   }' > "$SUMMARY"
@@ -243,6 +245,7 @@ done | jq -s \
 jq -c '{run_id, date, label, skill_sha, model, candidate, reps: ([.tasks[].reps | length] | add),
         gate_pass_rate: .totals.gate_pass_rate,
         judge_mean: .totals.judge_mean, mutation_mean: .totals.mutation_mean,
+        shot_accuracy: .totals.shot_accuracy_mean,
         per_task: (.tasks | with_entries(.value = .value.rollup.gate_pass_rate)),
         cost_usd: .totals.cost_usd}' "$SUMMARY" >> "$EVALS_DIR/results/history.jsonl"
 

@@ -68,7 +68,7 @@ Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude
 ```
 </details>
 
-## The Sceptic
+## The Sceptic (the gremlins!)
 
 Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [references/sceptic.md](references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
 

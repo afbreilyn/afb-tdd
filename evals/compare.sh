@@ -26,7 +26,7 @@ echo
 printf '%-28s %8s %10s %3s\n' "metric" "ref" "candidate" ""
 printf '%-28s %8s %10s %3s\n' "----------------------------" "--------" "----------" "---"
 
-for metric in gate_pass_rate judge_mean mutation_mean; do
+for metric in gate_pass_rate judge_mean mutation_mean shot_accuracy_mean; do
   r=$(jq -r ".totals.$metric" "$REF"); c=$(jq -r ".totals.$metric" "$CAND")
   printf '%-28s %8s %10s  %s\n' "$metric" "$(fmt "$r")" "$(fmt "$c")" "$(arrow "$r" "$c")"
 done

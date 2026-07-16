@@ -1,0 +1,13 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 2700,
+  "max_turns": 200,
+  "extra_checks": [
+    {
+      "name": "no_noop_fake_hash",
+      "glob": "**/fakes/**",
+      "forbid_regex": "return \"hashed\"$",
+      "why": "fake output must be a deterministic function of its input, not a constant"
+    }
+  ]
+}

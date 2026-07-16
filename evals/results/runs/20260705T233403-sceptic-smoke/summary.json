@@ -1,0 +1,79 @@
+{
+  "run_id": "20260705T233403-sceptic-smoke",
+  "label": "sceptic-smoke",
+  "date": "2026-07-06",
+  "skill_sha": "d6cc642",
+  "skill_dirty": true,
+  "claude_code_version": "2.1.201 (Claude Code)",
+  "model": "claude-sonnet-4-6",
+  "tasks": {
+    "go-transparent-fake": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "4be5c64b-050a-4631-9f3e-6b37f4f3609d",
+          "cost_usd": 4.190510150000001,
+          "num_turns": 92,
+          "duration_s": 1597,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 8
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 4
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 6,
+            "cycle_commits": 6,
+            "prod_edits_without_red": 3,
+            "test_runs": 18
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 1
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 1,
+    "judge_mean": null,
+    "mutation_mean": null,
+    "cost_usd": 4.190510150000001
+  },
+  "candidate": "afb-tdd"
+}

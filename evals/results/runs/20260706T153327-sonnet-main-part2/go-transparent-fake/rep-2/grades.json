@@ -1,0 +1,46 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "e78abca9-c36d-4c94-b032-32868926fa9c",
+  "cost_usd": 6.44060805,
+  "num_turns": 128,
+  "duration_s": 1842,
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 8
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 4
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 10,
+    "cycle_commits": 11,
+    "prod_edits_without_red": 1,
+    "test_runs": 29
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  }
+}

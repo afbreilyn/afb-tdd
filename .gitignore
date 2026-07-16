@@ -1,1 +1,4 @@
 .idea/
+evals/fixtures/ts-vitest/node_modules/
+evals/results/runs/**/artifacts/
+

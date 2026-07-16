@@ -1,0 +1,1023 @@
+{
+  "run_id": "20260705T214015-pre-sceptic-baseline",
+  "label": "pre-sceptic-baseline",
+  "date": "2026-07-05",
+  "skill_sha": "d6cc642",
+  "skill_dirty": true,
+  "claude_code_version": "2.1.201 (Claude Code)",
+  "model": "claude-sonnet-4-6",
+  "tasks": {
+    "go-bugfix-expiry": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "a6b5090b-4be6-40a5-9779-69a4b80b5da9",
+          "cost_usd": 0.5022457,
+          "num_turns": 24,
+          "duration_s": 156,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "frozen_clock_used_in_tests",
+                "pass": true,
+                "count": 2
+              },
+              {
+                "name": "no_wall_clock_in_service",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "646da638-c56a-4c78-b871-59dc605c7d32",
+          "cost_usd": 0.5319220000000001,
+          "num_turns": 24,
+          "duration_s": 191,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 1
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 0,
+            "test_runs": 3
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "frozen_clock_used_in_tests",
+                "pass": true,
+                "count": 2
+              },
+              {
+                "name": "no_wall_clock_in_service",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "a50d72dd-eb2a-4f5f-b121-1dac37f780d5",
+          "cost_usd": 0.6180781000000001,
+          "num_turns": 26,
+          "duration_s": 203,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 7
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "frozen_clock_used_in_tests",
+                "pass": true,
+                "count": 2
+              },
+              {
+                "name": "no_wall_clock_in_service",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    },
+    "go-feature-map-summary": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "84681fe3-d70c-41df-8a49-95c5cfbc83d1",
+          "cost_usd": 0.361076,
+          "num_turns": 22,
+          "duration_s": 75,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "multi_entry_map_test",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "6d92d3b0-6653-42bb-b46c-87b317b36fda",
+          "cost_usd": 0.2916308,
+          "num_turns": 17,
+          "duration_s": 61,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 0,
+            "test_runs": 4
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "multi_entry_map_test",
+                "pass": true,
+                "count": 2
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "9f3a075d-b67a-4011-8baf-713ff5893ded",
+          "cost_usd": 0.3708858499999999,
+          "num_turns": 22,
+          "duration_s": 96,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 3
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "multi_entry_map_test",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    },
+    "go-transparent-fake": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "ed8abbbe-da2f-4342-82d7-892bdcfadfda",
+          "cost_usd": 1.5532918999999994,
+          "num_turns": 56,
+          "duration_s": 496,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 7
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 5
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": false,
+            "cycles": 3,
+            "cycle_commits": 3,
+            "prod_edits_without_red": 2,
+            "test_runs": 11
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 1
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": false,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "52067a11-f831-4ad5-b266-471e48b5c5fc",
+          "cost_usd": 1.5944505499999995,
+          "num_turns": 57,
+          "duration_s": 525,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 6
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 4
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": false,
+            "cycles": 5,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 4,
+            "test_runs": 13
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 1
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": false,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "d5fe59c3-60e2-4681-bacb-bf4aeb2cd819",
+          "cost_usd": 1.5324577999999998,
+          "num_turns": 56,
+          "duration_s": 528,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 6
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 4
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": false,
+            "cycles": 4,
+            "cycle_commits": 4,
+            "prod_edits_without_red": 5,
+            "test_runs": 11
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 1
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": false,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 0.75,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    },
+    "ts-bugfix-validation": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "eb2bd64b-e54a-4581-9c92-d5631f5f2f44",
+          "cost_usd": 0.4601829500000001,
+          "num_turns": 24,
+          "duration_s": 152,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 4
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "tld_bug_repro_test_exists",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "a4d7db48-2dfd-49b7-8187-cb0edba0ebe2",
+          "cost_usd": 0.3816386,
+          "num_turns": 21,
+          "duration_s": 120,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 1,
+            "test_runs": 5
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "tld_bug_repro_test_exists",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "b4fff51e-806c-4003-99be-afeebcba83d7",
+          "cost_usd": 0.36032435000000007,
+          "num_turns": 20,
+          "duration_s": 125,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 4
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "tld_bug_repro_test_exists",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    },
+    "ts-extract-component": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "68185af2-e31f-4232-9d3c-f35376626de1",
+          "cost_usd": 0.5578493499999998,
+          "num_turns": 32,
+          "duration_s": 170,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 4,
+            "prod_edits_without_red": 1,
+            "test_runs": 9
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "66414539-479d-406d-ae88-98418253d876",
+          "cost_usd": 0.4649743,
+          "num_turns": 28,
+          "duration_s": 162,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 3
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 3,
+            "cycle_commits": 4,
+            "prod_edits_without_red": 1,
+            "test_runs": 8
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "a1f06614-87e4-41fb-97e6-faf04a0ec5cf",
+          "cost_usd": 0.5562392499999999,
+          "num_turns": 33,
+          "duration_s": 170,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 2,
+            "test_runs": 9
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    },
+    "ts-feature-errors": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "5350f828-1fbd-4dbf-84ca-4b088c013351",
+          "cost_usd": 0.8258973,
+          "num_turns": 38,
+          "duration_s": 304,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 5
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 3,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 2,
+            "test_runs": 10
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "unsubscribe_error_variants_enumerated",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "3c33e06c-a0af-4d7b-b762-44cededc1e6e",
+          "cost_usd": 0.9028144500000002,
+          "num_turns": 45,
+          "duration_s": 348,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 5
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 1,
+            "test_runs": 11
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "unsubscribe_error_variants_enumerated",
+                "pass": true,
+                "count": 4
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "7005efcf-8f69-46be-a726-d9464a5d8f5c",
+          "cost_usd": 0.7301176500000001,
+          "num_turns": 34,
+          "duration_s": 270,
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 5
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 3,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 0,
+            "test_runs": 10
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0
+            },
+            "extra_checks": [
+              {
+                "name": "unsubscribe_error_variants_enumerated",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": null
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 0.9583333333333334,
+    "judge_mean": null,
+    "mutation_mean": null,
+    "cost_usd": 12.5960769
+  },
+  "candidate": "afb-tdd"
+}

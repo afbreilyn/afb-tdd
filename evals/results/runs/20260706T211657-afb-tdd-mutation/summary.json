@@ -1,0 +1,154 @@
+{
+  "run_id": "20260706T211657-afb-tdd-mutation",
+  "label": "afb-tdd-mutation",
+  "date": "2026-07-06",
+  "skill_sha": "8eef4fa",
+  "skill_dirty": true,
+  "claude_code_version": "2.1.202 (Claude Code)",
+  "candidate": "afb-tdd",
+  "model": "claude-sonnet-4-6",
+  "tasks": {
+    "go-transparent-fake": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "84f1178e-884c-4967-bf72-616eb39c4275",
+          "cost_usd": 2.9153294499999998,
+          "num_turns": 78,
+          "duration_s": 1385,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 7
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 5
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": false,
+            "cycles": 6,
+            "cycle_commits": 6,
+            "prod_edits_without_red": 2,
+            "test_runs": 18
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 1,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 4
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "mutation": {
+            "score": 0.538462,
+            "tool": "go-mutesting"
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": false,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 0.75,
+        "judge_mean": null,
+        "mutation_mean": 0.538462
+      }
+    },
+    "ts-feature-errors": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "b0a4c3aa-65a1-40f7-8ded-535c07dd19c9",
+          "cost_usd": 1.8210057,
+          "num_turns": 45,
+          "duration_s": 838,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 6
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 11
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "unsubscribe_error_variants_enumerated",
+                "pass": true,
+                "count": 3
+              }
+            ]
+          },
+          "mutation": {
+            "score": 0.7553191489361702,
+            "tool": "stryker"
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "mutation_mean": 0.7553191489361702
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 0.875,
+    "judge_mean": null,
+    "mutation_mean": 0.6468905744680851,
+    "cost_usd": 4.7363351499999995
+  }
+}

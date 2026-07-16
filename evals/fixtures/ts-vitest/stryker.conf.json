@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-js/master/packages/api/schema/stryker-core.json",
+  "testRunner": "vitest",
+  "coverageAnalysis": "perTest",
+  "vitest": {
+    "configFile": "vitest.config.ts"
+  },
+  "tempDirName": ".stryker-tmp"
+}

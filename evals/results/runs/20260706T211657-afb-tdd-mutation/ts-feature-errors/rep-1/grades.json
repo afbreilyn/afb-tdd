@@ -1,0 +1,53 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "b0a4c3aa-65a1-40f7-8ded-535c07dd19c9",
+  "cost_usd": 1.8210057,
+  "num_turns": 45,
+  "duration_s": 838,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 6
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 1,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 11
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "mutation": {
+    "score": 0.7553191489361702,
+    "tool": "stryker"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 1200,
+  "max_turns": 120,
+  "extra_checks": [
+    {
+      "name": "multi_entry_map_test",
+      "glob": "**/*_test.go",
+      "require_regex": "\"[a-z]+\":\\s*\"[^\"]+\"",
+      "min_count": 2,
+      "why": "a single-entry map test masks non-deterministic iteration order"
+    }
+  ]
+}

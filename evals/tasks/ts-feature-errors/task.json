@@ -1,0 +1,14 @@
+{
+  "fixture": "ts-vitest",
+  "timeout_s": 1500,
+  "max_turns": 150,
+  "extra_checks": [
+    {
+      "name": "unsubscribe_error_variants_enumerated",
+      "glob": "src/**/*.test.ts",
+      "require_regex": "not_subscribed",
+      "min_count": 1,
+      "why": "each failure mode must be a named, tested variant"
+    }
+  ]
+}

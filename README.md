@@ -11,14 +11,10 @@ The `SKILL.md` itself does a pretty good job of explaining the logic.
 The loop and the scaffolder are two skills in two repos. This repo is the loop.
 
 ```bash
-git clone git@github.com:afbreilyn/afb-tdd.git ~/.claude/skills/afb-tdd-core
-ln -s ~/.claude/skills/afb-tdd-core/alias ~/.claude/skills/afb-tdd
+git clone git@github.com:afbreilyn/afb-tdd.git ~/.claude/skills/afb-tdd
 ```
 
-The clone provides `/afb-tdd-core` (the loop). The symlink provides `/afb-tdd`, a
-five-line alias that invokes it — that's the one you type. Two names exist because a
-project-local skill named `afb-tdd` shadows the personal skill of the same name, so the
-loop needs a name of its own for generated skills to reference.
+Invoke it with `/afb-tdd` from any project.
 
 ### Project-local — inherit and extend with your own conventions and domain logic
 
@@ -38,8 +34,9 @@ test suite, and writes a `.claude/skills/afb-tdd/SKILL.md` pre-filled from your 
 including polyrepos, where every member repo gets its own skill plus a cross-repo index.
 See that repo's README for the detail.
 
-`/afb-tdd` in that project then runs the local version, which invokes `afb-tdd-core` for
-the loop and adds the project specifics on top.
+`/afb-tdd` in that project then runs the local version, which inherits this workflow and
+adds the project specifics on top. The local skill shadows this one, so `/afb-tdd` is
+still the only command you type.
 
 <details>
 <summary>The manual fallback</summary>
@@ -55,8 +52,7 @@ user-invocable: true
 allowed-tools: Bash
 ---
 
-Invoke the `afb-tdd-core` skill for the red-green-refactor loop, then apply the project
-specifics below.
+Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude/skills/afb-tdd/SKILL.md).
 
 ## Project-specific
 
@@ -64,8 +60,8 @@ specifics below.
 - Full suite: `make test`   # or whatever you use
 
 ### Conventions
-- Name ONLY the conventions for your stack, e.g. `go.md` — `afb-tdd-core` links its own
-  `references/conventions/` relatively, so don't record a path here.
+- Link ONLY the conventions for your stack, e.g.
+  [go.md](~/.claude/skills/afb-tdd/references/conventions/go.md)
 
 ### Test infrastructure to reuse
 - Builders / fakes / fixtures and where they live
@@ -74,8 +70,8 @@ specifics below.
 - DB setup/teardown, auth/tenancy, time control, external stubs, isolation
 ```
 
-Reference the loop by **skill name**, never by filesystem path — that's what makes the file
-mean the same thing on a teammate's machine.
+The local skill is named `afb-tdd` too, so it shadows this one — which is why it links the
+workflow by path rather than invoking it by name. A name reference would resolve to itself.
 </details>
 
 ## The Sceptic (the gremlins!)

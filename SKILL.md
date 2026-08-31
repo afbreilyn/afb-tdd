@@ -1,6 +1,6 @@
 ---
-name: afb-tdd-core
-description: The red-green-refactor TDD loop. Invoked by the afb-tdd alias and by project-local skills; also usable directly.
+name: afb-tdd
+description: Interactive red-green-refactor TDD workflow. Invoke when writing new features or fixing bugs test-first.
 user-invocable: true
 allowed-tools: Bash
 ---
@@ -15,7 +15,7 @@ Determine which layer to begin at (see [test-patterns.md](references/test-patter
 
 Then follow this strict red-green-refactor loop. Do not skip or combine steps.
 
-**Autonomous mode:** when invoked as `/afb-tdd --auto` or `/afb-tdd-core --auto`, or when running non-interactively (headless `-p`), do not pause for user confirmation at the end of Red/Green/Refactor. Still produce the same report at each pause point (called shot, failure output, results), then continue. At the end of each Refactor step, make a git commit with message `tdd(cycle N): <behaviour>`. Every other rule is unchanged.
+**Autonomous mode:** when invoked as `/afb-tdd --auto`, or when running non-interactively (headless `-p`), do not pause for user confirmation at the end of Red/Green/Refactor. Still produce the same report at each pause point (called shot, failure output, results), then continue. At the end of each Refactor step, make a git commit with message `tdd(cycle N): <behaviour>`. Every other rule is unchanged.
 
 ## Test Sequencing
 

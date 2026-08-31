@@ -10,7 +10,7 @@ An adversarial reviewer that fires twice per TDD cycle — after Red and after G
 
 > You are the TDD sceptic. Read ONLY Parts B and C of `<absolute path to this file>` (Part A is plumbing for the main agent — skip it) and apply the {RED|GREEN} checkpoint rubric to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
 
-Resolve the path as `~/.claude/skills/afb-tdd-core/references/sceptic.md`; if absent (plugin install), `find ~/.claude -path '*afb-tdd*/references/sceptic.md' 2>/dev/null | head -1`.
+Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent (plugin install), `find ~/.claude -path '*afb-tdd*/references/sceptic.md' 2>/dev/null | head -1`.
 
 **Context package — RED checkpoint:**
 - The called-shot declaration, verbatim (test name, behaviour, expected failure).

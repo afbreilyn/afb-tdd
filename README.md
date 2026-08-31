@@ -6,40 +6,46 @@ The `SKILL.md` itself does a pretty good job of explaining the logic.
 
 ## How to do the thing:
 
-### Global — use as-is
+### Install
 
-This skill lives in `~/.claude/skills/afb-tdd/` and is available in every Claude Code session. Invoke it with `/afb-tdd` from any project.
+The loop and the scaffolder are two skills in two repos. This repo is the loop.
 
-### Local — inherit and extend with your own testing conventions and domain logic
-
-For a project with its own test conventions, create a local skill that delegates to this one and adds project-specific overrides. The fastest way is to let the setup script do it for you:
-
-```
-/afb-tdd setup
+```bash
+git clone git@github.com:afbreilyn/afb-tdd.git ~/.claude/skills/afb-tdd-core
+ln -s ~/.claude/skills/afb-tdd-core/alias ~/.claude/skills/afb-tdd
 ```
 
-This runs a detector that inspects your repo — languages, test runner, the full command set (per-module test targets, gates, codegen, DB setup), E2E framework, service prerequisites (Postgres/Redis from your compose file), module layout, your docs, and your **own** rule files (`.claude/rules/*.md`, `CLAUDE.md`, …). It then reads the small set of project files it found to fill in the architecture and slice order, asks you a few things it can't detect (domain gotchas, which test helpers are canonical, whether (and how) to start at the E2E layer, commit conventions....), and writes a (local) `.claude/skills/afb-tdd/SKILL.md` pre-filled from your codebase.
+The clone provides `/afb-tdd-core` (the loop). The symlink provides `/afb-tdd`, a
+five-line alias that invokes it — that's the one you type. Two names exist because a
+project-local skill named `afb-tdd` shadows the personal skill of the same name, so the
+loop needs a name of its own for generated skills to reference.
 
-If your repo has its own rule files, the generated skill links **those** as the source of truth (and drops the global conventions). Otherwise it links **only the conventions matching your stack** (a Go repo links `go.md` and nothing else). Either way it links rather than inlines, so every `/afb-tdd` cycle afterwards only loads a small, relevant context instead of re-discovering your repo.
+### Project-local — inherit and extend with your own conventions and domain logic
 
-The setup fans out a robit audit of your existing test suite and adds gold-standard exemplar files (with `file:line`), a "known deviations" list, and a "don't imitate this file" callout. It costs more up front tokens, but it's the default cause it's worth it to not propogate anti-patterns. In a hurry? `/afb-tdd setup --simple` skips the audit and just scaffolds. 
+Scaffolding a project skill lives in the separate
+[afb-tdd-setup](https://github.com/afbreilyn/afb-tdd-setup) skill:
 
-`/afb-tdd` in that project then runs the local version, which inherits the core workflow. Re-run with `--force` to regenerate (just like any claude skill). 
+```bash
+git clone git@github.com:afbreilyn/afb-tdd-setup.git ~/.claude/skills/afb-tdd-setup
+```
 
-### Polyrepo — a container of repos
+```
+/afb-tdd-setup
+```
 
-Run `/afb-tdd setup` at the root of a **polyrepo** (a directory holding two or more independent git repos as children) and it notices the child repos, proposes a **top-level cross-repo skill**, and — once you confirm scope — sets up each member repo too. You end up with one local skill per member plus a top-level index that a single-repo skill can't capture:
+It detects your stack, commands, conventions, architecture and docs, audits your existing
+test suite, and writes a `.claude/skills/afb-tdd/SKILL.md` pre-filled from your codebase —
+including polyrepos, where every member repo gets its own skill plus a cross-repo index.
+See that repo's README for the detail.
 
-- the **domain** in the language of the business,
-- the **cross-repo dependency graph** — who calls whom, over what transport, what shares a database, what must change in lockstep,
-- **contract-testing guidance** for the seams between repos (where a consumer's fake of a provider silently drifts), including a proposal for where to add contracts when none exist yet.
-
-The detector surfaces the cheap signals for you — shared compose services, sibling host/port env vars, orchestrator scripts, existing OpenAPI/Pact/schema artifacts — as *candidates*; you confirm the graph and the contract strategy. Each member is then set up with the ordinary single-repo flow (its own commands, conventions, and optional test audit), and the questions are batched so you aren't prompted once per repo. If a folder-of-repos should be treated as a single repo instead, pass `--no-polyrepo`.
+`/afb-tdd` in that project then runs the local version, which invokes `afb-tdd-core` for
+the loop and adds the project specifics on top.
 
 <details>
-<summary>What it generates (and the manual fallback)</summary>
+<summary>The manual fallback</summary>
 
-If you'd rather write it by hand, create `.claude/skills/afb-tdd/SKILL.md` with this shape and add only what differs:
+If you'd rather write it by hand, create `.claude/skills/afb-tdd/SKILL.md` with this shape
+and add only what differs:
 
 ```markdown
 ---
@@ -49,7 +55,8 @@ user-invocable: true
 allowed-tools: Bash
 ---
 
-Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude/skills/afb-tdd/SKILL.md).
+Invoke the `afb-tdd-core` skill for the red-green-refactor loop, then apply the project
+specifics below.
 
 ## Project-specific
 
@@ -57,8 +64,8 @@ Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude
 - Full suite: `make test`   # or whatever you use
 
 ### Conventions
-- Link ONLY the conventions for your stack, e.g.
-  [go.md](~/.claude/skills/afb-tdd/references/conventions/go.md)
+- Name ONLY the conventions for your stack, e.g. `go.md` — `afb-tdd-core` links its own
+  `references/conventions/` relatively, so don't record a path here.
 
 ### Test infrastructure to reuse
 - Builders / fakes / fixtures and where they live
@@ -66,6 +73,9 @@ Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude
 ### Domain gotchas
 - DB setup/teardown, auth/tenancy, time control, external stubs, isolation
 ```
+
+Reference the loop by **skill name**, never by filesystem path — that's what makes the file
+mean the same thing on a teammate's machine.
 </details>
 
 ## The Sceptic (the gremlins!)

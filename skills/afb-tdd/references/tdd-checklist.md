@@ -9,7 +9,7 @@ Before marking work complete:
 - [ ] All tests pass
 - [ ] Output is pristine — no errors or warnings
 - [ ] Tests use real code (mocks only where unavoidable)
-- [ ] Edge cases and error paths are covered
+- [ ] Edge cases and error paths are covered — enumerated out loud, including branches that already existed and that your change made reachable with new inputs, not only handlers you added
 - [ ] Each test covers one behaviour (no AND in the test name)
 - [ ] Bug fixes have a test that would have caught the original bug
 - [ ] The sceptic ran at every Red and Green checkpoint (or `--no-sceptic` was explicitly set); every finding was fixed or rebutted in the report

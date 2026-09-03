@@ -52,7 +52,8 @@ When starting a new behaviour, work in this order:
 2. Only refactor while green. Never refactor while red.
 3. Remove any tests that now provide redundant coverage or that didn't fail for the right reason.
 4. Run the full test suite to verify no unintended side effects across the whole codebase.
-5. Ask the user if they want to commit the cycle, wait for their input, and once they give you the go-ahead, return to Red for the next slice.
+5. **Remaining exception cases** (Test Sequencing step 4). Before you can call the behaviour done, list every error and edge case now reachable in the code you touched — including branches that already existed and that your change made reachable with new inputs, not only handlers you added. For each: name it, and either write the cycle for it or say in one line why it doesn't need one. An empty list is a valid answer only when you have actually looked and there is nothing; "no error paths" without the enumeration is a skipped step, not a finding. This is the step that silently doesn't happen — do not fold it into the commit question.
+6. Ask the user if they want to commit the cycle, wait for their input, and once they give you the go-ahead, return to Red for the next slice.
 
 ## Component Extraction
 

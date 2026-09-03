@@ -9,6 +9,10 @@
 # deterministically by grade-process.sh.
 #
 # Three single-turn calls per rep; the median per dimension is recorded.
+# A dimension the change cannot exercise (e.g. error_path_coverage on a change
+# with no error paths) scores null, not a number: scoring vacuous cases mixed
+# "covered well" and "nothing to cover" into the same average and made the mean
+# untrustworthy. Nulls are dropped before the median and before the rollup.
 # Model: sonnet by default; override with AFB_JUDGE_MODEL.
 #
 # Emits: {"judge": {"scores": {...}, "calls": n}}
@@ -39,7 +43,14 @@ Here is the full diff of the change:
 
 $DIFF
 
-Score each dimension from 1 (bad) to 5 (excellent):
+Score each dimension from 1 (bad) to 5 (excellent), or null.
+
+Use null when the change genuinely cannot exercise that dimension: no error
+paths exist to test, no test doubles were needed, and so on. null means \"not
+applicable here\", and is not a criticism. Do NOT award a high score just
+because there was nothing to get wrong, and do NOT award a low score because a
+dimension went unexercised. If the dimension applies at all, score it.
+
 - assertion_strength: are assertions exact and meaningful (R1, R2)?
 - one_behaviour_per_test: does each test cover exactly one behaviour (R5, R8)?
 - fakes_vs_mocks: are doubles used correctly — fakes over mocks, no mock-testing (R3)?
@@ -47,13 +58,13 @@ Score each dimension from 1 (bad) to 5 (excellent):
 - naming: do test names state the behaviour precisely (R5)?
 - minimality: is the implementation the minimum the tests force (G1, G3)?
 
-Return ONLY this JSON, nothing else:
+Return ONLY this JSON, nothing else (any score may be null):
 {\"assertion_strength\": n, \"one_behaviour_per_test\": n, \"fakes_vs_mocks\": n, \"error_path_coverage\": n, \"naming\": n, \"minimality\": n, \"notes\": \"one sentence\"}"
 
 collect() { # one judge call; prints the scores JSON or nothing
   local out scores
   out=$(claude -p "$PROMPT" --output-format json --model "$MODEL" 2>/dev/null) || return 1
-  scores=$(jq -r '.result' <<<"$out" | sed -e 's/^```json//' -e 's/^```//' -e 's/```$//' | jq -c 'select(.assertion_strength != null)' 2>/dev/null) || return 1
+  scores=$(jq -r '.result' <<<"$out" | sed -e 's/^```json//' -e 's/^```//' -e 's/```$//' | jq -c 'select(has("assertion_strength"))' 2>/dev/null) || return 1
   [ -n "$scores" ] && printf '%s\n' "$scores"
 }
 
@@ -68,7 +79,8 @@ done
 
 MEDIANS='{}'
 for dim in "${DIMENSIONS[@]}"; do
-  m=$(printf '%s\n' "${CALLS[@]}" | jq -r ".$dim" | sort -n | awk '{a[NR]=$1} END {print a[int((NR+1)/2)]}')
+  m=$(printf '%s\n' "${CALLS[@]}" | jq -r ".$dim // empty" | grep -E '^[0-9]+$' | sort -n \
+      | awk '{a[NR]=$1} END {if (NR) print a[int((NR+1)/2)]; else print "null"}')
   MEDIANS=$(jq -c --arg d "$dim" --argjson v "$m" '. + {($d): $v}' <<<"$MEDIANS")
 done
 NOTES=$(jq -r '.notes // ""' <<<"${CALLS[0]}")

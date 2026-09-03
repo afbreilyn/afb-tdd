@@ -239,7 +239,7 @@ done | jq -s \
       reps: [.[] | .grades | . + {gates: gates(.)}],
       rollup: {
         gate_pass_rate: ([.[] | .grades | gates(.) | to_entries[] | .value] | (map(if . then 1 else 0 end) | add) / length),
-        judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value] | if length > 0 then (add / length) else null end),
+        judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value | select(. != null)] | if length > 0 then (add / length) else null end),
         mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end),
         shot_accuracy_mean: ([.[] | .grades.shots.accuracy // empty] | if length > 0 then (add / length) else null end)
       }

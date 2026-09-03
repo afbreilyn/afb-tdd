@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "c36b31b1-e8a9-459c-98cb-04cb16541f8b",
+  "cost_usd": 0.4018506,
+  "num_turns": 27,
+  "duration_s": 147,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 1,
+    "test_runs": 6
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 1
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`expected 'subscribed' to be 'email_error'`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expected { kind: 'response_error', … } to deeply equal { kind: 'already_subscribed', … }`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 2,
+      "naming": 5,
+      "minimality": 3,
+      "notes": "Tests are precise and behavior-scoped, but the new ApiError branch only tests status 409 — any other non-ok status (e.g. 500) silently falls through to the misleading 'connection_error' message, an untested error path (G5)."
+    },
+    "calls": 3
+  }
+}

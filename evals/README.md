@@ -15,7 +15,7 @@ we can't tell if the robit chose the *right* behaviours to test — that's the h
 | "the tests are well-written — assertions, naming, minimality" | `judge.sh` (`--with-judge`) | LLM scores the diff 1–5 per rubric dimension (sceptic rubric, Part B); median of 3 calls | **model opinion** — relative comparison only, never a gate |
 
 ## tldr
-- 6 tasks (3 golang, 3 typescript) in `evals/tasks/` — each one tries to suss out instances of one specific mistake (code-before-tests, single-entry map tests, testid selectors, etc, as captured in the `extra_checks`)
+- 7 tasks (4 golang, 3 typescript) in `evals/tasks/` — each one tries to suss out instances of one specific mistake (code-before-tests, single-entry map tests, testid selectors, etc, as captured in the `extra_checks`)
 - a headless robit does each task using the afb-tdd skill; the (deterministic) graders score the (nondeterministic) output
 - the outputs are stored in `results/`: `history.jsonl` (the trend, one line per run), `runs/<run-id>/summary.json` (the details), and `baseline.json` (what `compare.sh` measures against). scores are committed; raw diffs/transcripts stay in `runs/<run-id>/artifacts/`, gitignored
 
@@ -101,7 +101,7 @@ evals/report.sh                                      # trend table over all reco
 - `graders/*.sh` — each check, commented
 - `tasks/<name>/task.json` + `prompt.md` — what each task asks and its per-task rules
 - `candidates/` — who gets evaluated (`--candidate`, default afb-tdd: a preamble + optional agent files)
-- `../references/sceptic.md` Part B — the rubric the judge scores against
+- `../skills/afb-tdd/references/sceptic.md` Part B — the rubric the judge scores against
 
 ## caveats
 - n=3 is a coarse instrument. trust deltas > 0.5 on judge scores and gate-rate drops; ignore the rest.

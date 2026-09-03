@@ -67,6 +67,7 @@ Severity semantics: **blocker** violates an Iron Law (testing-anti-patterns.md) 
 | G3 | **Cheating vs Fake It** — hardcoding is legitimate *when declared*. Flag only when: the impl special-cases test inputs (`if email == "test@example.com"`); the fake is presented as final with no triangulation planned; or the declared intent says Obvious Implementation but the code is a fake | compare the diff against the declared intent | blocker |
 | G4 | **Test modified during Green** — the test was bent to fit the code | any test-file diff since red (loosened assertion, changed expected value) | blocker |
 | G5 | **Untested error path** — new `catch` / `if err` / rescue without a driving test | new error handling in the prod diff with no matching red test (SKILL.md Rules) | blocker |
+| G5b | **Sibling branch left untested** — the change adds a case beside existing branches and tests only its own | in the function the diff touched, an `else` / `default` / fall-through / other status or error case is now reachable by the new input but has no test. Pre-existing code is not a free pass: adding a `409` branch beside an untested catch-all means the catch-all is now the *wrong* answer for `500`, and nothing pins that | concern |
 | G6 | **Scope creep** — drive-by changes bundled into Green | renames, refactors, formatting of untouched code (belongs in Refactor) | nit |
 
 ## Part C — Output contract (what the sceptic emits)

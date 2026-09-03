@@ -1,0 +1,21 @@
+{
+  "name": "afbreilyn",
+  "owner": {
+    "name": "afb",
+    "url": "https://github.com/afbreilyn"
+  },
+  "description": "afb's TDD skills for Claude Code, as an installable plugin.",
+  "plugins": [
+    {
+      "name": "afb-tdd",
+      "source": "./",
+      "description": "Interactive red-green-refactor TDD with an adversarial sceptic, plus a scaffolder that tunes it to your repo.",
+      "category": "engineering",
+      "keywords": [
+        "tdd",
+        "testing",
+        "red-green-refactor"
+      ]
+    }
+  ]
+}

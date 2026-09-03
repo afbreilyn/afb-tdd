@@ -2,28 +2,41 @@
 
 An interactive Claude Code skill to do red-green-refactor style TDD. The robit writes one failing test at a time with explicit pauses for the human to review.
 
-The `SKILL.md` itself does a pretty good job of explaining the logic.
+Two skills:
+
+| Skill | What it does |
+|---|---|
+| [afb-tdd](skills/afb-tdd/SKILL.md) | The red-green-refactor loop, with an adversarial sceptic on every cycle. The one you use daily. |
+| [afb-tdd-setup](skills/afb-tdd-setup/SKILL.md) | Run once per repo. Detects your stack and commands, audits your test suite, and tunes the loop to the project. |
+
+The loop's `SKILL.md` does a pretty good job of explaining the logic.
 
 ## How to do the thing:
 
 ### Install
 
-The loop and the scaffolder are two skills in two repos. This repo is the loop.
+As a plugin:
 
 ```bash
-git clone git@github.com:afbreilyn/afb-tdd.git ~/.claude/skills/afb-tdd
+claude plugin marketplace add afbreilyn/afb-tdd
+claude plugin install afb-tdd@afbreilyn
 ```
 
-Invoke it with `/afb-tdd` from any project.
+Skills are then `/afb-tdd:afb-tdd` and `/afb-tdd:afb-tdd-setup` — plugin skills keep the
+plugin name as a prefix.
 
-### Project-local — inherit and extend with your own conventions and domain logic
-
-Scaffolding a project skill lives in the separate
-[afb-tdd-setup](https://github.com/afbreilyn/afb-tdd-setup) skill:
+For development, clone and symlink instead, which gives unprefixed `/afb-tdd` and
+`/afb-tdd-setup`:
 
 ```bash
-git clone git@github.com:afbreilyn/afb-tdd-setup.git ~/.claude/skills/afb-tdd-setup
+git clone git@github.com:afbreilyn/afb-tdd.git ~/workspace/afb-tdd
+~/workspace/afb-tdd/scripts/link-skills.sh
 ```
+
+The clone has to live outside `~/.claude/skills/`, or the symlink target and the clone
+collide on the same path.
+
+### Project-local — tune the loop to your conventions and domain logic
 
 ```
 /afb-tdd-setup
@@ -32,7 +45,10 @@ git clone git@github.com:afbreilyn/afb-tdd-setup.git ~/.claude/skills/afb-tdd-se
 It detects your stack, commands, conventions, architecture and docs, audits your existing
 test suite, and writes a `.claude/skills/afb-tdd/SKILL.md` pre-filled from your codebase —
 including polyrepos, where every member repo gets its own skill plus a cross-repo index.
-See that repo's README for the detail.
+
+> That output shape is changing: setup will write checked-in resources the loop reads,
+> rather than generating a project skill. See
+> [ADR 0001](.agents/adr/0001-checked-in-resources-instead-of-a-generated-skill.md).
 
 `/afb-tdd` in that project then runs the local version, which inherits this workflow and
 adds the project specifics on top. The local skill shadows this one, so `/afb-tdd` is

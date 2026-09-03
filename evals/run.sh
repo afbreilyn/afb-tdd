@@ -15,7 +15,7 @@
 set -euo pipefail
 
 EVALS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(dirname "$EVALS_DIR")"
+REPO_DIR="$(dirname "$EVALS_DIR")"   # evals/ sits at the repo root, not inside a skill
 GRADERS="$EVALS_DIR/graders"
 source "$GRADERS/lib.sh"
 
@@ -57,9 +57,9 @@ RUN_ID="$(date +%Y%m%dT%H%M%S)${LABEL:+-$LABEL}"
 RUN_DIR="$EVALS_DIR/results/runs/$RUN_ID"
 mkdir -p "$RUN_DIR"
 
-SKILL_SHA="$(git -C "$SKILL_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+SKILL_SHA="$(git -C "$REPO_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 SKILL_DIRTY=false
-[ -n "$(git -C "$SKILL_DIR" status --porcelain 2>/dev/null)" ] && SKILL_DIRTY=true
+[ -n "$(git -C "$REPO_DIR" status --porcelain 2>/dev/null)" ] && SKILL_DIRTY=true
 CLAUDE_VERSION="$(claude --version 2>/dev/null | head -1 || echo unknown)"
 
 # --- select tasks -----------------------------------------------------------

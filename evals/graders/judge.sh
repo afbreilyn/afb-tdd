@@ -18,8 +18,8 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
 
 WORKDIR="$1"; FIXTURE="$2"; TASK="$3"; TRANSCRIPT="$4"
 
-SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-RUBRIC="$SKILL_DIR/references/sceptic.md"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+RUBRIC="$REPO_DIR/skills/afb-tdd/references/sceptic.md"
 [ -f "$RUBRIC" ] || { echo "judge.sh: rubric not found at $RUBRIC — refusing to run with a divergent copy" >&2; exit 1; }
 
 MODEL="${AFB_JUDGE_MODEL:-sonnet}"

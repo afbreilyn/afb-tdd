@@ -1,7 +1,17 @@
-# Sketch: one repo, two sibling skills
+# One repo, two sibling skills
 
-Proposal, not yet executed. Folds `afb-tdd` and `afb-tdd-setup` back into a single
-repo laid out as a Claude Code plugin, following `mattpocock/skills`.
+**Executed 2026-09-02.** Folds `afb-tdd` and `afb-tdd-setup` into a single repo laid
+out as a Claude Code plugin, following `mattpocock/skills`.
+
+Two things differed from the sketch:
+
+- The break was `evals/graders/judge.sh:22` (the sceptic rubric path), not
+  `evals/run.sh:18`. `run.sh`'s `SKILL_DIR` was always the repo root and stayed
+  correct; it is now named `REPO_DIR`. `judge.sh` fails loudly when the rubric is
+  missing, so this would not have shipped silently.
+- The clone had to leave `~/.claude/skills/`, since that path cannot be both the
+  clone and the symlink target. It now lives at `~/workspace/afb-tdd` alongside the
+  other repos, and `scripts/link-skills.sh` does the linking.
 
 ## Target tree
 

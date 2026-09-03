@@ -101,6 +101,21 @@ run_one() { # run_one <task> <rep>
   work="$(mktemp -d "${TMPDIR:-/tmp}/afb-eval.XXXXXX")"
   tar -C "$fixture_dir" --exclude node_modules -cf - . | tar -C "$work" -xf -
   [ -d "$fixture_dir/node_modules" ] && ln -s "$fixture_dir/node_modules" "$work/node_modules"
+
+  # A task may overlay files onto its fixture via a "seed" dir (task.json's
+  # `seed` key, relative to the task dir). Used to pre-seed .claude/afb-tdd/
+  # so a task can assert the loop actually reads the repo's resources.
+  local seed_rel seed_dir
+  seed_rel="$(jq -r '.seed // empty' "$task_dir/task.json" 2>/dev/null)"
+  if [ -n "$seed_rel" ]; then
+    seed_dir="$task_dir/$seed_rel"
+    if [ -d "$seed_dir" ]; then
+      tar -C "$seed_dir" -cf - . | tar -C "$work" -xf -
+    else
+      echo "task $task declares seed '$seed_rel' but $seed_dir does not exist" >&2
+      return 1
+    fi
+  fi
   if [ -d "$CAND_DIR/agents" ]; then
     mkdir -p "$work/.claude/agents"
     cp "$CAND_DIR/agents/"*.md "$work/.claude/agents/"

@@ -5,6 +5,8 @@ user-invocable: true
 allowed-tools: Bash
 ---
 
+**This repo's resources:** if `.claude/afb-tdd/` exists here, read `project.md` (commands, layout, slice order) and `practices.md` (how this team tests) before the first cycle, and prefer them over the built-in conventions below wherever they disagree. They are the team's own, written by `/afb-tdd-setup` and committed. If the directory is absent that is normal, not a problem: fall back to the conventions below and don't raise it again. If you are about to cite an exemplar from `practices.md` and the file it names no longer exists, say so once — the practices were audited at `manifest.json`'s `auditedCommit` and the repo has moved since.
+
 ## Before You Start
 
 Determine which layer to begin at (see [test-patterns.md](references/test-patterns.md)):

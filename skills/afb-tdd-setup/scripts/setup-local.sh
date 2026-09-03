@@ -3,45 +3,44 @@
 # setup-local.sh — scaffold a project-local afb-tdd skill, pre-filled with sane
 # defaults inferred from the current repository.
 #
-# Ships with the afb-tdd-setup skill. The red-green-refactor loop lives in the
-# separate afb-tdd skill, which the generated project skill links BY PATH (see
-# CORE_PATH below). It cannot reference the loop by skill name: the generated
-# skill is itself named afb-tdd and shadows the personal skill of that name, so
-# a name reference would resolve to itself.
+# Ships with the afb-tdd-setup skill. It writes RESOURCES, never a skill: the
+# afb-tdd loop reads them as a soft dependency and falls back to its own
+# references when they are absent. Nothing written here points at another skill's
+# install location, so the output is machine-independent and safe to commit.
 #
-# All detection here is deterministic shell (zero LLM tokens). It writes two files
-# into <repo>/.claude/skills/afb-tdd/:
-#   - DIGEST.txt     a compact summary of what was detected, the project files worth
-#                    reading in Setup Mode, and the human-only questions
-#   - SKILL.md.draft a pre-filled local skill; Setup Mode reads the located project
-#                    files, fills the prose, confirms the questions, and promotes it
+# All detection here is deterministic shell (zero LLM tokens). It writes into
+# <repo>/.claude/afb-tdd/:
+#   - project.md     THIS script's durable output: detected facts about the repo
+#                    (stack, commands, layout, slice order). the setup skill fills the
+#                    prose markers; the human owns it afterwards.
+#   - manifest.json  what was generated, when, and against which commit
+#   - DIGEST.txt     transient: what was detected, which project files the setup skill
+#                    may read, and the human-only questions. Deleted on promotion.
 #
-# The generated skill links the project's OWN rules/docs (or the stack-relevant
-# global conventions if it has none) rather than inlining them — rich but link-based,
-# so each TDD cycle loads a small, relevant context.
+# practices.md is NOT written here. It is the model's output from the test-suite
+# audit (adapted conventions, gold-standard exemplars, known deviations), written
+# by the setup skill, step 4.
 #
 # Usage: setup-local.sh [--force] [--simple] [--polyrepo|--no-polyrepo]
 #   --force        regenerate even if a local SKILL.md already exists
 #   --simple       skip the test-suite audit inventory (by DEFAULT it's included, so
-#                  Setup Mode runs the gold-standard / known-deviations audit). Aliases:
+#                  the setup skill runs the gold-standard / known-deviations audit). Aliases:
 #                  --shallow
 #   --polyrepo     force polyrepo mode (delegate to setup-polyrepo.sh)
 #   --no-polyrepo  force single-repo mode even if child git repos are present
-#   --core-skill-path=PATH
-#                  install location of the afb-tdd loop skill, written into the
-#                  generated skill (default: ~/.claude/skills/afb-tdd)
+#   --refresh      regenerate beside the existing files as project.md.new for a
+#                  human to diff and merge. Never overwrites: these files belong
+#                  to the team once written
+#   --self-test    run the fixture tests and exit; no repo needed
 
 set -euo pipefail
 
-# Install path of the loop skill, as written into the generated project skill.
-# `~` is left unexpanded on purpose so the generated file stays readable and
-# resolves per-user rather than hardcoding one machine's home directory.
-CORE_PATH="~/.claude/skills/afb-tdd"
-R="../../.."   # path from .claude/skills/afb-tdd/SKILL.md back to the repo root
+R="../.."   # path from .claude/afb-tdd/project.md back to the repo root
 
 FORCE=0
-DEEP=1   # the deep audit is the default; --simple opts out
+DEEP=1      # the deep audit is the default; --simple opts out
 POLY=auto   # auto | force | off
+REFRESH=0
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=1 ;;
@@ -49,10 +48,16 @@ for arg in "$@"; do
     --simple|--shallow) DEEP=0 ;;  # opt out of the test audit
     --polyrepo) POLY=force ;;
     --no-polyrepo) POLY=off ;;
-    --core-skill-path=*) CORE_PATH="${arg#*=}" ;;
+    --refresh) REFRESH=1 ;;
+    --self-test) SELF_TEST=1 ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
+
+if [ "${SELF_TEST:-0}" = 1 ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  exec bash "$SCRIPT_DIR/tests/run-tests.sh"
+fi
 
 # --- polyrepo detection (first, off CWD; ignores this dir's own git state) --
 # A polyrepo is a container holding >=2 independent git repos as immediate
@@ -81,15 +86,24 @@ if ! REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null); then
 fi
 cd "$REPO_ROOT"
 
-TARGET_DIR="$REPO_ROOT/.claude/skills/afb-tdd"
-SKILL_FILE="$TARGET_DIR/SKILL.md"
+TARGET_DIR="$REPO_ROOT/.claude/afb-tdd"
+PROJECT_FILE="$TARGET_DIR/project.md"
+MANIFEST_FILE="$TARGET_DIR/manifest.json"
 DIGEST_FILE="$TARGET_DIR/DIGEST.txt"
-DRAFT_FILE="$TARGET_DIR/SKILL.md.draft"
+
+# --refresh writes beside the originals so a human can diff; the default path
+# writes in place only when nothing is there yet.
+if [ "$REFRESH" = 1 ]; then
+  PROJECT_FILE="$TARGET_DIR/project.md.new"
+  MANIFEST_FILE="$TARGET_DIR/manifest.json.new"
+fi
 
 # --- idempotency guard -----------------------------------------------------
-if [ -f "$SKILL_FILE" ] && [ "$FORCE" -ne 1 ]; then
-  echo "A local skill already exists at $SKILL_FILE"
-  echo "Nothing to do. Re-run with --force to regenerate from scratch."
+if [ -f "$TARGET_DIR/project.md" ] && [ "$FORCE" -ne 1 ] && [ "$REFRESH" -ne 1 ]; then
+  echo "Resources already exist at $TARGET_DIR/project.md"
+  echo "These belong to you once written, so nothing was changed."
+  echo "  --refresh   regenerate as project.md.new for you to diff and merge"
+  echo "  --force     overwrite in place (discards your edits)"
   exit 0
 fi
 
@@ -214,8 +228,11 @@ fi
 # Curate to umbrella targets so the skill isn't a wall of per-module variants.
 pick_preferred() { # pick_preferred "<preferred space list>" "<all values...>"
   local pref="$1"; shift; local out="" p
+  # An empty array expands to one empty string; treat that as no values at all,
+  # or callers print an empty "Gate:" line for a repo with no Makefile.
+  if [ "$#" -eq 0 ] || { [ "$#" -eq 1 ] && [ -z "$1" ]; }; then return 0; fi
   for p in $pref; do printf '%s\n' "$@" | grep -qx "$p" && out="$out $p"; done
-  [ -n "$out" ] && echo "${out# }" || printf '%s ' "$@"
+  if [ -n "$out" ]; then echo "${out# }"; else printf '%s ' "$@"; fi
 }
 GATE_SHOW=$(pick_preferred "check check-all" "${MK_GATE[@]:-}")
 FIX_SHOW=$(pick_preferred "lint-fix format" "${MK_FIX[@]:-}")
@@ -331,14 +348,14 @@ emit_list() { # prefix, space-separated items
   if [ "$HAS_RULESET" -eq 1 ]; then
     echo "  Conventions       : project ruleset found — global conventions dropped"
   else
-    echo "  Conventions to link (global fallback):"
+    echo "  Built-in conventions to ADAPT into practices.md (not copy):"
     if [ -n "$CONV_UNIQUE" ]; then while IFS= read -r c; do echo "      - $c"; done <<< "$CONV_UNIQUE"
     else echo "      (none — stack unrecognized)"; fi
   fi
   if [ ${#NOTES[@]} -gt 0 ]; then echo; echo "NOTES:"; for n in "${NOTES[@]}"; do echo "  - $n"; done; fi
 
   echo
-  echo "PROJECT KNOWLEDGE FOUND (Setup Mode: read ONLY these — do not explore further):"
+  echo "PROJECT KNOWLEDGE FOUND (read ONLY these — do not explore further):"
   if [ ${#RULESET[@]} -gt 0 ]; then echo "  Style rules    : ${RULESET[*]}"; else echo "  Style rules    : (none)"; fi
   if [ ${#INSTRUCTIONS[@]} -gt 0 ]; then echo "  Instructions   : ${INSTRUCTIONS[*]}"; else echo "  Instructions   : (none)"; fi
   emit_list "  Modules        : " "$MODULES"
@@ -372,33 +389,28 @@ emit_list() { # prefix, space-separated items
 } > "$DIGEST_FILE"
 
 # ===========================================================================
-#  emit SKILL.md.draft
+#  emit project.md
 # ===========================================================================
 {
   cat <<'EOF'
----
-name: afb-tdd
-description: Interactive red-green-refactor TDD workflow.
-user-invocable: true
-allowed-tools: Bash
----
-EOF
-  echo
-  echo "Follow the TDD workflow defined in [$CORE_PATH/SKILL.md]($CORE_PATH/SKILL.md)."
-  cat <<'EOF'
+# afb-tdd: project profile
 
-## Project-specific
+Facts about this repo, detected by `/afb-tdd-setup`. The afb-tdd loop reads this
+alongside `practices.md`. Edit it freely: it is yours once written, and `--refresh`
+diffs rather than overwrites.
 
-<!-- STACK: Setup Mode fills this one-liner from README / CLAUDE.md -->
+## Stack
+
+<!-- STACK: step 3 fills this one-liner from README / CLAUDE.md -->
 # TODO(stack): one-line summary — languages, frameworks, datastores, transport
 EOF
 
-  # ---- Path-scoped rules (project's own) OR global-conventions fallback ----
+  # ---- Path-scoped rules (project's own) OR conventions fallback ----------
   if [ "$HAS_RULESET" -eq 1 ]; then
     echo
-    echo "### Path-scoped rules"
+    echo "## Path-scoped rules"
     echo
-    echo "The project's own conventions — the source of truth for style. They supersede the global afb-tdd references. Skim the relevant one before writing; don't restate it here."
+    echo "The project's own conventions, and the source of truth for style. They supersede the afb-tdd built-in references. Skim the relevant one before writing; don't restate it here."
     for f in "${RULESET[@]}"; do
       echo "- [$(basename "$f")]($R/$f) — <!-- TODO(rule): one-line summary from doc-read -->"
     done
@@ -407,9 +419,11 @@ EOF
     done
   else
     echo
-    echo "### Conventions"
+    echo "## Conventions"
+    echo
     if [ -n "$CONV_UNIQUE" ]; then
-      while IFS= read -r c; do echo "- See [$c]($CORE_PATH/references/conventions/$c)"; done <<< "$CONV_UNIQUE"
+      echo "This repo has no rule files of its own. The loop should use these of its built-in conventions, and whatever \`practices.md\` says where the two disagree:"
+      while IFS= read -r c; do echo "- \`$c\`"; done <<< "$CONV_UNIQUE"
     else
       echo "- # TODO: no stack-specific conventions detected"
     fi
@@ -418,9 +432,9 @@ EOF
     done
   fi
 
-  # ---- Architecture skeleton ----
+  # ---- Architecture skeleton ---------------------------------------------
   echo
-  echo "### Architecture — where a feature lives"
+  echo "## Architecture: where a feature lives"
   echo
   if [ -f README.md ]; then
     echo "Background in [README.md]($R/README.md)${README_SECTIONS:+ (sections: $README_SECTIONS)}."
@@ -443,12 +457,12 @@ EOF
   echo
   echo "External / linked docs: <!-- NEEDS CONFIRMATION (Q9): Notion / Google Docs / ADRs / decision records — paste links; may need an MCP connector or pasted content to read -->"
 
-  # ---- Outside-in slice order scaffold ----
+  # ---- Outside-in slice order --------------------------------------------
   echo
-  echo "### Outside-in slice order for a user-facing feature"
+  echo "## Outside-in slice order for a user-facing feature"
   echo
   echo "Each step is its own red-green-refactor cycle:"
-  echo "<!-- TODO(slice): Setup Mode refines these to name real dirs/files per the architecture above -->"
+  echo "<!-- TODO(slice): step 3 refines these to name real dirs/files per the architecture above -->"
   n=1
   [ -n "$E2E_FW" ] && { echo "$n. $E2E_FW e2e spec (the user story)."; n=$((n+1)); }
   if printf '%s\n' "${CONV[@]:-}" | grep -q frontend.md; then echo "$n. Frontend component/page test."; n=$((n+1)); fi
@@ -457,9 +471,9 @@ EOF
   echo "$n. Repository/persistence test; keep its in-memory fake in sync."; n=$((n+1))
   echo "$n. SQL/migration, then run codegen."
 
-  # ---- Commands ----
+  # ---- Commands -----------------------------------------------------------
   echo
-  echo "### Commands"
+  echo "## Commands"
   echo
   echo "Use the narrowest target for the layer under test; run the full gate before calling a cycle done."
   echo
@@ -479,45 +493,53 @@ EOF
     echo "- DB setup: $(for g in $DB_SHOW; do printf '`make %s` ' "$g"; done)"
   fi
 
-  # ---- Test infrastructure ----
-  cat <<'EOF'
-
-### Test infrastructure to reuse
-EOF
+  # ---- Test infrastructure + gotchas + commits ----------------------------
+  echo
+  echo "## Test infrastructure to reuse"
   echo "<!-- NEEDS CONFIRMATION (Q6): keep only the canonical ones -->"
   echo "- Candidates detected: $HELPERS"
-
-  # ---- Domain gotchas + Commits ----
   cat <<'EOF'
 
-### Domain gotchas
+## Domain gotchas
 <!-- NEEDS CONFIRMATION (Q7): DB setup/teardown, auth/tenancy, time control, external stubs, isolation -->
 - # TODO
 
-### Commits
+## Commits
 - Do not attribute commits to Claude or list it as a co-author.
 <!-- NEEDS CONFIRMATION (Q8): project-specific message format / hooks -->
 EOF
+} > "$PROJECT_FILE"
 
-  if [ "$DEEP" -eq 1 ]; then
-    cat <<'EOF'
-
-<!-- DEEP AUDIT: Setup Mode appends these from the per-module test audit -->
-### Test helpers & gold-standard files
-<!-- TODO(deep): canonical helper APIs + exemplar test files with file:line -->
-
-### Known deviations
-<!-- TODO(deep): shipped violations, grouped by area; not precedent -->
-
-### Don't imitate this file
-<!-- TODO(deep): the single worst reference, with the model to copy instead -->
-EOF
-  fi
-} > "$DRAFT_FILE"
+# ===========================================================================
+#  emit manifest.json
+# ===========================================================================
+# auditedCommit is what makes practices.md's file:line exemplars checkable: the
+# loop can tell whether an anchor predates a lot of movement.
+AUDITED_COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
+CONVENTIONS_VERSION="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+STACK_JSON="$(printf '%s\n' "${LANGS[@]:-}" | grep -v '^$' | sed 's/.*/"&"/' | paste -sd',' - || true)"
+{
+  echo "{"
+  echo "  \"generatedAt\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
+  echo "  \"auditedCommit\": \"$AUDITED_COMMIT\","
+  echo "  \"stack\": [${STACK_JSON}],"
+  echo "  \"deepAudit\": $([ "$DEEP" -eq 1 ] && echo true || echo false),"
+  echo "  \"conventionsVersion\": \"$CONVENTIONS_VERSION\","
+  echo "  \"files\": [\"project.md\"$([ "$DEEP" -eq 1 ] && echo ', "practices.md"')]"
+  echo "}"
+} > "$MANIFEST_FILE"
 
 echo "Wrote:"
 echo "  $DIGEST_FILE"
-echo "  $DRAFT_FILE"
-[ "$DEEP" -eq 1 ] && echo "  (deep audit requested — Setup Mode will fan out per-module test audits)"
+echo "  $PROJECT_FILE"
+echo "  $MANIFEST_FILE"
+if [ "$DEEP" -eq 1 ]; then
+  echo "  (deep audit requested — step 4 fans out per-module test audits and writes practices.md)"
+fi
 echo
-echo "Next: Setup Mode reads the located project files, fills the prose, confirms Q5–Q8, and promotes the draft to SKILL.md."
+if [ "$REFRESH" = 1 ]; then
+  echo "Next: diff the .new files against the originals and merge by hand. Nothing was overwritten."
+else
+  echo "Next: the setup skill reads the located project files, fills the prose in project.md,"
+  echo "confirms Q5-Q9, writes practices.md from the audit, and deletes DIGEST.txt."
+fi

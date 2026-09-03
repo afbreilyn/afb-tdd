@@ -9,28 +9,28 @@
 # artifacts and a member list. Polyrepo Setup Mode confirms scope with the human
 # and fans the existing per-repo setup into each member.
 #
-# Writes two files into <container>/.claude/skills/afb-tdd/:
+# Writes ONE file into <container>/.claude/skills/afb-tdd/:
 #   - DIGEST.txt     starts with the POLYREPO=true marker; lists members + a
 #                    shallow stack sniff, cross-repo CANDIDATES, the project
 #                    knowledge worth reading, the fan-out list, and the
-#                    polyrepo-level human questions (P1-P6)
-#   - SKILL.md.draft a pre-filled cross-repo index (domain, member table,
-#                    dependency graph, contract-testing guidance) for Setup Mode
-#                    to fill and promote
+#                    polyrepo-level human questions (P1-P5)
 #
-# Usage: setup-polyrepo.sh [--force] [--simple] [--polyrepo] [--core-skill-path=PATH]
+# There is NO top-level cross-repo index any more. The container usually is not
+# a git repo, so an index there has nowhere to be committed, which defeats the
+# point of checked-in resources. Each member gets its own .claude/afb-tdd/
+# instead, and the cross-repo edges land in each member's project.md under a
+# Cross-repo heading: only that member's own edges, not the whole graph.
+#
+# Usage: setup-polyrepo.sh [--force] [--simple] [--polyrepo]
 #   --force        regenerate even if a top-level SKILL.md already exists
 #   --simple       per-member deep audits are skipped downstream (passed through
 #                  to each setup-local.sh run by Setup Mode). Aliases: --shallow
 #   --polyrepo     accepted as a no-op (setup-local.sh passes it through)
-#   --core-skill-path=PATH
-#                  install location of the afb-tdd loop skill, written into the
-#                  generated skills (default: ~/.claude/skills/afb-tdd)
 
 set -euo pipefail
 
-RM="../../.."   # path from .claude/skills/afb-tdd/SKILL.md back to the container root
-CORE_PATH="~/.claude/skills/afb-tdd"   # install path of the loop skill — see setup-local.sh
+# No paths back to the container root are emitted any more: this script writes
+# only a digest, and each member's resources are written inside that member.
 
 FORCE=0
 DEEP=1
@@ -40,16 +40,13 @@ for arg in "$@"; do
     --deep)  DEEP=1 ;;
     --simple|--shallow) DEEP=0 ;;
     --polyrepo) : ;;                # no-op; setup-local.sh forwards it
-    --core-skill-path=*) CORE_PATH="${arg#*=}" ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
 
 CONTAINER="$(pwd)"
-TARGET_DIR="$CONTAINER/.claude/skills/afb-tdd"
-SKILL_FILE="$TARGET_DIR/SKILL.md"
+TARGET_DIR="$CONTAINER/.claude/afb-tdd"
 DIGEST_FILE="$TARGET_DIR/DIGEST.txt"
-DRAFT_FILE="$TARGET_DIR/SKILL.md.draft"
 
 # --- helpers ---------------------------------------------------------------
 have() { command -v "$1" >/dev/null 2>&1; }
@@ -78,8 +75,8 @@ if [ "${#MEMBERS[@]}" -lt 2 ]; then
 fi
 
 # --- idempotency guard -----------------------------------------------------
-if [ -f "$SKILL_FILE" ] && [ "$FORCE" -ne 1 ]; then
-  echo "A top-level skill already exists at $SKILL_FILE"
+if [ -f "$DIGEST_FILE" ] && [ "$FORCE" -ne 1 ]; then
+  echo "A polyrepo digest already exists at $DIGEST_FILE"
   echo "Nothing to do. Re-run with --force to regenerate from scratch."
   exit 0
 fi
@@ -269,8 +266,9 @@ MEMBER_READMES=$(echo "$MEMBER_READMES" | sed 's/^ //')
 
   echo
   echo "ASK THE HUMAN (polyrepo-level — cannot be auto-detected reliably):"
-  echo "  P1 Domain       : 2-3 sentences of domain truth for the whole system,"
-  echo "                    or a link to the authoritative domain doc."
+  echo "  P1 Domain doc   : Link to the authoritative domain doc for the whole"
+  echo "                    system, if one exists. It gets LINKED from each"
+  echo "                    member's project.md, never copied into them."
   echo "  P2 Dependencies : Confirm the cross-repo graph above — who calls whom,"
   echo "                    over what transport (HTTP/queue/shared DB)?"
   echo "  P3 Contracts    : Where are the seams, and how should they be tested"
@@ -278,104 +276,14 @@ MEMBER_READMES=$(echo "$MEMBER_READMES" | sed 's/^ //')
   echo "                    client / schema snapshot)? Which repo OWNS each contract?"
   echo "  P4 Lockstep     : Which changes must move across repos together (e.g. an"
   echo "                    API response-shape change + its web/mobile consumers)?"
-  echo "  P5 External docs: Domain docs outside these repos — Notion, ADRs, design"
+  echo "  P4b External docs: Domain docs outside these repos — Notion, ADRs, design"
   echo "                    docs, runbooks? Paste links; note which are authoritative."
-  echo "  P6 Scope        : Set up all members now? (default: yes — all listed above)"
+  echo "  P5 Scope        : Set up all members now? (default: yes — all listed above)"
 } > "$DIGEST_FILE"
-
-# ===========================================================================
-#  emit SKILL.md.draft  (polyrepo cross-repo index)
-# ===========================================================================
-{
-  cat <<'EOF'
----
-name: afb-tdd
-description: Interactive red-green-refactor TDD workflow (polyrepo cross-repo index).
-user-invocable: true
-allowed-tools: Bash
----
-EOF
-  echo
-  echo "Follow the TDD workflow defined in [$CORE_PATH/SKILL.md]($CORE_PATH/SKILL.md)."
-  cat <<'EOF'
-
-## Polyrepo
-
-This is a **polyrepo** — a container of independent git repositories. Each member repo has its own
-afb-tdd skill with that repo's stack, commands, and conventions; **when you are working inside a
-member, its local skill governs.** This top-level skill is the cross-repo index: the shared domain,
-how the repos depend on each other, and how to test the seams between them.
-
-## Domain
-<!-- NEEDS CONFIRMATION (P1): 2-3 sentences of domain truth, or link the authoritative domain doc -->
-# TODO(domain): what the whole system does, in the language of the business
-
-## Member repos
-EOF
-
-  echo
-  echo "| Repo | Stack | Role | Local skill |"
-  echo "|------|-------|------|-------------|"
-  for m in "${MEMBERS[@]}"; do
-    echo "| \`$m/\` | $(sniff_stack "$m") | <!-- TODO(role): one line --> | [skill]($RM/$m/.claude/skills/afb-tdd/SKILL.md) |"
-  done
-
-  cat <<'EOF'
-
-## Cross-repo dependencies (what's linked)
-<!-- NEEDS CONFIRMATION (P2/P4): confirm the graph from the digest's CROSS-REPO CANDIDATES -->
-EOF
-  echo "<!-- TODO(deps): list each edge, e.g. \`web\` -> \`api\` over HTTP (API_HOST) -->"
-  if [ -n "$SHARED_INFRA" ]; then
-    echo "- Shared infra (confirm ownership):"
-    echo "$SHARED_INFRA"
-  fi
-  if [ -n "$ORCH" ]; then echo "- Orchestrator repo(s): $ORCH"; fi
-  echo "- Changes that must move in lockstep: <!-- TODO(P4): e.g. an \`api\` response-shape change requires updating its consumers in the same change set -->"
-
-  cat <<'EOF'
-
-## Contract testing between repos
-<!-- NEEDS CONFIRMATION (P3): the seams, the chosen strategy, and the source of truth -->
-
-The seams between these repos are where a single-repo suite is blind: a consumer's fake/MSW handler
-of a provider can pass every local test while the provider's real shape has drifted. The
-EOF
-  echo "[Fake + Contract Testing]($CORE_PATH/references/test-patterns.md) rule applies across"
-  cat <<'EOF'
-repo boundaries, not just within one:
-
-- **Source of truth** for each contract: <!-- TODO(P3): OpenAPI spec / shared types package / Pact / .proto -->
-- **Strategy** at each seam: <!-- TODO(P3): consumer-driven contract, shared schema, generated client, or schema snapshot -->
-- A cross-repo feature **starts with the contract**: the provider side proves it serves the shape and
-  the consumer side proves it consumes that shape, before the per-repo red-green cycles begin.
-EOF
-  if [ -n "$CONTRACTS" ]; then
-    echo "- Existing contract artifacts detected:"
-    echo "$CONTRACTS" | sed 's/^  /  - /'
-  else
-    echo "- **No contract artifacts detected.** Propose where to add them at the seams above and which"
-    echo "  repo owns each — today the consumers' expectations are unverified against the providers."
-  fi
-
-  cat <<'EOF'
-
-## Cross-repo outside-in order
-
-A user-facing feature that spans repos runs outside-in across repo boundaries — each layer is its
-own red-green-refactor cycle, in its own repo, using that repo's local skill:
-<!-- TODO(slice): name the real repos, e.g. 1) E2E in `web`  2) `web` component/page  3) contract at the `web`<->`api` seam  4) `api` handler -> service -> repository -->
-
-## Commits
-- Do not attribute commits to Claude or list it as a co-author.
-- Each member is its own git repo with its own remote — commit per repo. A cross-repo feature is
-  several commits, one per affected repo.
-EOF
-} > "$DRAFT_FILE"
 
 echo "Wrote (polyrepo):"
 echo "  $DIGEST_FILE"
-echo "  $DRAFT_FILE"
 echo
 echo "Members detected: ${MEMBERS[*]}"
-echo "Next: Polyrepo Setup Mode fills the cross-repo index, fans setup into each member, batches the questions, and promotes the drafts."
+echo "Next: fan the single-repo detector into each member, batch the questions, and"
+echo "write each member's own .claude/afb-tdd/. There is no top-level index."

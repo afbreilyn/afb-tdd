@@ -3,7 +3,7 @@
 `afb-tdd-setup` stops generating a project-local skill. It writes plain resources
 into the repo, committed, and the single global `afb-tdd` loop reads them.
 
-Settled by grilling, 2026-09-01. Not yet implemented.
+Settled by grilling 2026-09-01, implemented 2026-09-02.
 
 ## Why
 

@@ -43,56 +43,58 @@ collide on the same path.
 ```
 
 It detects your stack, commands, conventions, architecture and docs, audits your existing
-test suite, and writes a `.claude/skills/afb-tdd/SKILL.md` pre-filled from your codebase —
-including polyrepos, where every member repo gets its own skill plus a cross-repo index.
+test suite, and writes `.claude/afb-tdd/` — committed resources the loop reads:
 
-> That output shape is changing: setup will write checked-in resources the loop reads,
-> rather than generating a project skill. See
-> [ADR 0001](.agents/adr/0001-checked-in-resources-instead-of-a-generated-skill.md).
+```
+.claude/afb-tdd/
+├── manifest.json   what was generated, when, against which commit
+├── project.md      facts: stack, commands, layout, slice order
+└── practices.md    taste: how this team tests, with gold-standard exemplars
+```
 
-`/afb-tdd` in that project then runs the local version, which inherits this workflow and
-adds the project specifics on top. The local skill shadows this one, so `/afb-tdd` is
-still the only command you type.
+Commit them. They mean the same thing on every teammate's machine, and `/afb-tdd` prefers
+them over its built-in conventions. It is a **soft** dependency: the loop works fine in a
+repo that never ran setup.
+
+These files are yours once written. A second run refuses to clobber them; `--refresh`
+regenerates alongside for you to diff and merge.
+
+In a polyrepo, every member repo gets its own `.claude/afb-tdd/`; there is no top-level
+index, since a container usually isn't a git repo and nothing there could be committed.
+See [ADR 0001](.agents/adr/0001-checked-in-resources-instead-of-a-generated-skill.md).
+
+`/afb-tdd` in that project then reads those files before its first cycle and prefers them
+over its built-ins. Same command, same skill, tuned to the repo.
 
 <details>
-<summary>The manual fallback</summary>
+<summary>Writing them by hand</summary>
 
-If you'd rather write it by hand, create `.claude/skills/afb-tdd/SKILL.md` with this shape
-and add only what differs:
+The files are plain markdown with no required schema; setup just saves you the detection
+and the audit. A minimal `.claude/afb-tdd/project.md`:
 
 ```markdown
----
-name: afb-tdd
-description: Interactive red-green-refactor TDD workflow.
-user-invocable: true
-allowed-tools: Bash
----
+# afb-tdd: project profile
 
-Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude/skills/afb-tdd/SKILL.md).
-
-## Project-specific
-
-### Commands
+## Commands
 - Full suite: `make test`   # or whatever you use
 
-### Conventions
-- Link ONLY the conventions for your stack, e.g.
-  [go.md](~/.claude/skills/afb-tdd/references/conventions/go.md)
+## Architecture: where a feature lives
+- `svc/` — what lives here, and its entry points
 
-### Test infrastructure to reuse
-- Builders / fakes / fixtures and where they live
-
-### Domain gotchas
+## Domain gotchas
 - DB setup/teardown, auth/tenancy, time control, external stubs, isolation
 ```
 
-The local skill is named `afb-tdd` too, so it shadows this one — which is why it links the
-workflow by path rather than invoking it by name. A name reference would resolve to itself.
+And `practices.md` for house style: how this team writes tests, gold-standard files to
+copy with `file:line`, known deviations that are not precedent.
+
+Keep every path repo-relative. These files are committed and read on other people's
+machines, so a `~/.claude/...` path in one is a bug.
 </details>
 
 ## The Sceptic (the gremlins!)
 
-Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [references/sceptic.md](references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
+Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [sceptic.md](skills/afb-tdd/references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
 
 ## Evals
 

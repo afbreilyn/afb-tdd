@@ -17,7 +17,7 @@ Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent 
 - The path of the test file (the sceptic reads it — don't paste it).
 - The diff for this cycle (or the new test snippet if the file is untracked).
 - The actual failure output from the test run.
-- The path to the project-local `.claude/skills/afb-tdd/SKILL.md`, if one exists.
+- The path to `.claude/afb-tdd/practices.md`, if it exists. That file is this team's own testing conventions and known deviations, and it outranks the built-in references wherever they disagree. Its absence is normal and is never itself a finding.
 - The path to `references/testing-anti-patterns.md`.
 - One line from you on existing coverage near this behaviour (feeds R7 — you know the suite; the sceptic does not explore it).
 

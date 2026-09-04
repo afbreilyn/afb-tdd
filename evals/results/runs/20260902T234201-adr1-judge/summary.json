@@ -1,0 +1,767 @@
+{
+  "run_id": "20260902T234201-adr1-judge",
+  "label": "adr1-judge",
+  "date": "2026-09-03",
+  "skill_sha": "2a3ccad",
+  "skill_dirty": false,
+  "claude_code_version": "2.1.259 (Claude Code)",
+  "candidate": "afb-tdd",
+  "model": "claude-sonnet-4-6",
+  "tasks": {
+    "go-bugfix-expiry": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "54ca0975-b40f-4542-bbe6-4730e9098d9f",
+          "cost_usd": 0.6349720000000002,
+          "num_turns": 18,
+          "duration_s": 315,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 1
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 0,
+            "test_runs": 3
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "frozen_clock_used_in_tests",
+                "pass": true,
+                "count": 2
+              },
+              {
+                "name": "no_wall_clock_in_service",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 1,
+            "paired": 1,
+            "matches": 1,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "compilation error — `NewAccessService` called with 3 args but signature only takes 2",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 3,
+              "naming": 5,
+              "minimality": 4,
+              "notes": "Solid clock-injection refactor with exact boundary assertion (AtExactExpiryIsInvalid) using a real FrozenClock fake, but no test drives an error path for the new clock dependency and the boundary flip (>= to >) isn't independently pinned from the past-expiry case."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.5,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 1
+      }
+    },
+    "go-feature-map-summary": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "3a995616-1062-4726-a2da-aae96fe69a8f",
+          "cost_usd": 0.6694053500000001,
+          "num_turns": 28,
+          "duration_s": 358,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 3,
+            "prod_edits_without_red": 1,
+            "test_runs": 8
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "multi_entry_map_test",
+                "pass": true,
+                "count": 6
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 5,
+            "paired": 4,
+            "matches": 2,
+            "mismatches": 1,
+            "hedges": 1,
+            "accuracy": 0.6666666666666666,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "`expected: \"Q1 Report\"`, `actual: \"\"` (method doesn't exist yet — compilation error)",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`expected: \"Q1 Report [env=prod, team=payments]\"`, `actual: \"Q1 Report\"`",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": ". Running sceptic:",
+                "outcome": "pass",
+                "verdict": "hedge"
+              },
+              {
+                "prediction": "`expected: \"R [x=y]\"`, `actual: \"R\"`",
+                "outcome": "pass",
+                "verdict": "mismatch"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 4,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 5,
+              "naming": 5,
+              "minimality": 5,
+              "notes": "Assertions are exact and tests are well-named, but no test drives the no-error-handling/escaping caveat and the single-tag test is somewhat redundant with the with-tags test."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.833333333333333,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 0.6666666666666666
+      }
+    },
+    "go-honours-practices": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "3f255d2a-fff0-4273-a021-954e63ec86f3",
+          "cost_usd": 0.6474664499999999,
+          "num_turns": 27,
+          "duration_s": 266,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 1,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "honours_practices_parallel",
+                "pass": true,
+                "count": 2
+              },
+              {
+                "name": "honours_practices_loop_var",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 2,
+            "paired": 2,
+            "matches": 2,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "compilation error — `r.Summary undefined (type *domain.Report has no field or method Summary)`",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`expected \"Q1 Report [env=prod, team=payments]\" but got \"Q1 Report\"`",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 4,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 5,
+              "naming": 5,
+              "minimality": 5,
+              "notes": "Two well-named, exact-assertion tests each drive one behaviour via a builder (no mocks), with no untested error paths since Summary has none to cover."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.833333333333333,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 1
+      }
+    },
+    "go-transparent-fake": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "78dc773e-2db8-4803-81e0-8fd428492216",
+          "cost_usd": 2.5425699500000003,
+          "num_turns": 71,
+          "duration_s": 1049,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 6
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 5
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 5,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 3,
+            "test_runs": 15
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 5
+            },
+            "extra_checks": [
+              {
+                "name": "no_noop_fake_hash",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 5,
+            "paired": 5,
+            "matches": 3,
+            "mismatches": 2,
+            "hedges": 0,
+            "accuracy": 0.6,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "compile error — `Register` undefined on `*AccessService`, `NewAccessService` arg mismatch",
+                "outcome": "fail",
+                "verdict": "mismatch"
+              },
+              {
+                "prediction": "compile error — `Login` undefined on `*AccessService`",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "assertion error — the current placeholder returns `(Session{}, nil)` for a found user, not `ErrInvalidCredentials`",
+                "outcome": "pass",
+                "verdict": "mismatch"
+              },
+              {
+                "prediction": "assertion error — current implementation returns `Session{}` (zero-value, zero `ExpiresAt`)",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "compile error — `hasher/sha256` package doesn't exist",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 4,
+              "one_behaviour_per_test": 4,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 3,
+              "naming": 5,
+              "minimality": 4,
+              "notes": "Solid TDD with real fakes and contract tests, but Register's hashing-error branch and Login's non-NotFound repo error are untested (G5)."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.166666666666667,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 0.6
+      }
+    },
+    "ts-bugfix-validation": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "c36b31b1-e8a9-459c-98cb-04cb16541f8b",
+          "cost_usd": 0.4018506,
+          "num_turns": 27,
+          "duration_s": 147,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 1,
+            "test_runs": 6
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "tld_bug_repro_test_exists",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 2,
+            "paired": 2,
+            "matches": 2,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "`expected 'subscribed' to be 'email_error'`",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`expected { kind: 'response_error', … } to deeply equal { kind: 'already_subscribed', … }`",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 4,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 2,
+              "naming": 5,
+              "minimality": 3,
+              "notes": "Tests are precise and behavior-scoped, but the new ApiError branch only tests status 409 — any other non-ok status (e.g. 500) silently falls through to the misleading 'connection_error' message, an untested error path (G5)."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 1
+      }
+    },
+    "ts-extract-component": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "2b2f939e-c6be-4d0e-bb5f-d301caf2bc1b",
+          "cost_usd": 1.25493235,
+          "num_turns": 52,
+          "duration_s": 627,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 4,
+            "prod_edits_without_red": 1,
+            "test_runs": 16
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 5,
+            "paired": 5,
+            "matches": 3,
+            "mismatches": 1,
+            "hedges": 1,
+            "accuracy": 0.75,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "Module not found — `./SubscriberList` doesn't exist yet",
+                "outcome": "fail",
+                "verdict": "mismatch"
+              },
+              {
+                "prediction": "`Unable to find an accessible element with the role \"listitem\"` / `getByText(\"Ada Lovelace\")` throws — the `ul` renders with no children",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"` — no `<a>` is rendered yet",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`Unable to find an element with the text: \"tech, design\"` — no topics span rendered yet",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "The test will tell us whether `join(\"\")` on an empty array causes a crash or renders nothing — we need to see it fail first to know the actual state",
+                "outcome": "pass",
+                "verdict": "hedge"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 3,
+              "naming": 5,
+              "minimality": 5,
+              "notes": "Clean extraction with precise, exact assertions and no doubles; no error paths exist to test, so that dimension is vacuously fine but not exercised."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.666666666666667,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 0.75
+      }
+    },
+    "ts-feature-errors": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "565f2332-c55f-4aa8-baed-a8cf099b4766",
+          "cost_usd": 0.8036632999999999,
+          "num_turns": 45,
+          "duration_s": 334,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 5
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 5,
+            "prod_edits_without_red": 0,
+            "test_runs": 12
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "unsubscribe_error_variants_enumerated",
+                "pass": true,
+                "count": 4
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 5,
+            "paired": 4,
+            "matches": 4,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "`TypeError` / import error — `unsubscribe` is not exported yet",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'topic_error', ... }`",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'connection_error' }` — because the stub never calls the network",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'not_subscribed' }` — current code ignores the body",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": 5,
+              "error_path_coverage": 5,
+              "naming": 5,
+              "minimality": 3,
+              "notes": "Tests are precise and well-isolated, but the email regex validates format generally while only an empty-string case is tested, which is more than the tests force (G1)."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.666666666666667,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 1
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 1,
+    "judge_mean": 4.523809523809524,
+    "mutation_mean": null,
+    "shot_accuracy_mean": 0.8595238095238095,
+    "cost_usd": 6.954860000000001
+  }
+}

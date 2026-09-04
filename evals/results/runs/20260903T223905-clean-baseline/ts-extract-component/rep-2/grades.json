@@ -1,0 +1,88 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "01abea13-0bfb-4825-a30c-d30cb314d919",
+  "cost_usd": 1.0332538999999994,
+  "num_turns": 45,
+  "duration_s": 487,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 3
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 3,
+    "prod_edits_without_red": 5,
+    "test_runs": 11
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": 3,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "cannot find text \"Ada Lovelace\" (component doesn't exist yet → import will throw, test will error/fail)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an accessible element with the role \"link\"` — the component exists but the test is new; this will fail because no such assertion exists yet (the",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: \"design, product\"` — topics span doesn't exist in the component yet",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "SubscriberList tests are precise and single-purpose with exact assertions (mailto href, joined topics text), and the extracted implementation matches exactly what the tests force; Dashboard's own test was intentionally weakened to a text check since link behavior now belongs to SubscriberList, which is correct but slightly less exact than before."
+    },
+    "calls": 3
+  }
+}

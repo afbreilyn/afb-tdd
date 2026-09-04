@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "f3eb2331-cd09-435a-87ef-62a7da341a08",
+  "cost_usd": 0.7232905500000001,
+  "num_turns": 30,
+  "duration_s": 318,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 3
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 1,
+    "test_runs": 7
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 5
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "received `{ kind: 'subscribed', subscriberId: 'sub-a@b' }` ≠ expected `{ kind: 'email_error', ... }` — the current regex `\\\\S+@\\\\S+` doesn't require a dot in th",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "received `{ kind: 'response_error', message: 'unexpected response from the newsletter service' }` ≠ expected `{ kind: 'already_subscribed', ... }` — because `po",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "The 'accepts a minimal address' test only checks .kind when the exact subscriberId is knowable (R2), and the new already_subscribed branch sits beside the pre-existing response_error catch-all with no test pinning that catch-all still behaves correctly for other non-2xx bodies (G5b)."
+    },
+    "calls": 3
+  }
+}

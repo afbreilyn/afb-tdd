@@ -1,0 +1,93 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "565f2332-c55f-4aa8-baed-a8cf099b4766",
+  "cost_usd": 0.8036632999999999,
+  "num_turns": 45,
+  "duration_s": 334,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 0,
+    "test_runs": 12
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 4
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 4,
+    "matches": 4,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`TypeError` / import error — `unsubscribe` is not exported yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'topic_error', ... }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'connection_error' }` — because the stub never calls the network",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'unsubscribed' } to equal { kind: 'not_subscribed' }` — current code ignores the body",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 5,
+      "naming": 5,
+      "minimality": 3,
+      "notes": "Tests are precise and well-isolated, but the email regex validates format generally while only an empty-string case is tested, which is more than the tests force (G1)."
+    },
+    "calls": 3
+  }
+}

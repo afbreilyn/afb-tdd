@@ -1,0 +1,78 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "081987b2-9282-4c06-ada8-99613ac898ec",
+  "cost_usd": 0.33620350000000004,
+  "num_turns": 15,
+  "duration_s": 1061,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 1
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 1,
+    "cycle_commits": 1,
+    "prod_edits_without_red": 0,
+    "test_runs": 3
+  },
+  "static": {
+    "pass": false,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "pins_the_catch_all",
+        "pass": false,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 1,
+    "paired": 1,
+    "matches": 1,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `undefined: ErrPayloadTooLarge`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": 5,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "Clean, minimal TDD addition: one exact assertion, one new branch fully driven by its own test, no doubles involved, no over-implementation."
+    },
+    "calls": 3
+  }
+}

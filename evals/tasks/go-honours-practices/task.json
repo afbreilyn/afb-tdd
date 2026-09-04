@@ -1,0 +1,21 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 1200,
+  "max_turns": 120,
+  "seed": "seed",
+  "extra_checks": [
+    {
+      "name": "honours_practices_parallel",
+      "glob": "**/*_test.go",
+      "require_regex": "t\\.Parallel\\(\\)",
+      "min_count": 1,
+      "why": "seeded .claude/afb-tdd/practices.md mandates t.Parallel(); absence means the resources were never read"
+    },
+    {
+      "name": "honours_practices_loop_var",
+      "glob": "**/*_test.go",
+      "forbid_regex": "for _, (tt|test|x) := range",
+      "why": "seeded practices.md mandates `tc` as the subtest loop variable"
+    }
+  ]
+}

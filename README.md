@@ -2,75 +2,99 @@
 
 An interactive Claude Code skill to do red-green-refactor style TDD. The robit writes one failing test at a time with explicit pauses for the human to review.
 
-The `SKILL.md` itself does a pretty good job of explaining the logic.
+Two skills:
+
+| Skill | What it does |
+|---|---|
+| [afb-tdd](skills/afb-tdd/SKILL.md) | The red-green-refactor loop, with an adversarial sceptic on every cycle. The one you use daily. |
+| [afb-tdd-setup](skills/afb-tdd-setup/SKILL.md) | Run once per repo. Detects your stack and commands, audits your test suite, and tunes the loop to the project. |
+
+The loop's `SKILL.md` does a pretty good job of explaining the logic.
 
 ## How to do the thing:
 
-### Global — use as-is
+### Install
 
-This skill lives in `~/.claude/skills/afb-tdd/` and is available in every Claude Code session. Invoke it with `/afb-tdd` from any project.
+As a plugin:
 
-### Local — inherit and extend with your own testing conventions and domain logic
-
-For a project with its own test conventions, create a local skill that delegates to this one and adds project-specific overrides. The fastest way is to let the setup script do it for you:
-
-```
-/afb-tdd setup
+```bash
+claude plugin marketplace add afbreilyn/afb-tdd
+claude plugin install afb-tdd@afbreilyn
 ```
 
-This runs a detector that inspects your repo — languages, test runner, the full command set (per-module test targets, gates, codegen, DB setup), E2E framework, service prerequisites (Postgres/Redis from your compose file), module layout, your docs, and your **own** rule files (`.claude/rules/*.md`, `CLAUDE.md`, …). It then reads the small set of project files it found to fill in the architecture and slice order, asks you a few things it can't detect (domain gotchas, which test helpers are canonical, whether (and how) to start at the E2E layer, commit conventions....), and writes a (local) `.claude/skills/afb-tdd/SKILL.md` pre-filled from your codebase.
+Skills are then `/afb-tdd:afb-tdd` and `/afb-tdd:afb-tdd-setup` — plugin skills keep the
+plugin name as a prefix.
 
-If your repo has its own rule files, the generated skill links **those** as the source of truth (and drops the global conventions). Otherwise it links **only the conventions matching your stack** (a Go repo links `go.md` and nothing else). Either way it links rather than inlines, so every `/afb-tdd` cycle afterwards only loads a small, relevant context instead of re-discovering your repo.
+For development, clone and symlink instead, which gives unprefixed `/afb-tdd` and
+`/afb-tdd-setup`:
 
-The setup fans out a robit audit of your existing test suite and adds gold-standard exemplar files (with `file:line`), a "known deviations" list, and a "don't imitate this file" callout. It costs more up front tokens, but it's the default cause it's worth it to not propogate anti-patterns. In a hurry? `/afb-tdd setup --simple` skips the audit and just scaffolds. 
+```bash
+git clone git@github.com:afbreilyn/afb-tdd.git ~/workspace/afb-tdd
+~/workspace/afb-tdd/scripts/link-skills.sh
+```
 
-`/afb-tdd` in that project then runs the local version, which inherits the core workflow. Re-run with `--force` to regenerate (just like any claude skill). 
+The clone has to live outside `~/.claude/skills/`, or the symlink target and the clone
+collide on the same path.
 
-### Polyrepo — a container of repos
+### Project-local — tune the loop to your conventions and domain logic
 
-Run `/afb-tdd setup` at the root of a **polyrepo** (a directory holding two or more independent git repos as children) and it notices the child repos, proposes a **top-level cross-repo skill**, and — once you confirm scope — sets up each member repo too. You end up with one local skill per member plus a top-level index that a single-repo skill can't capture:
+```
+/afb-tdd-setup
+```
 
-- the **domain** in the language of the business,
-- the **cross-repo dependency graph** — who calls whom, over what transport, what shares a database, what must change in lockstep,
-- **contract-testing guidance** for the seams between repos (where a consumer's fake of a provider silently drifts), including a proposal for where to add contracts when none exist yet.
+It detects your stack, commands, conventions, architecture and docs, audits your existing
+test suite, and writes `.claude/afb-tdd/` — committed resources the loop reads:
 
-The detector surfaces the cheap signals for you — shared compose services, sibling host/port env vars, orchestrator scripts, existing OpenAPI/Pact/schema artifacts — as *candidates*; you confirm the graph and the contract strategy. Each member is then set up with the ordinary single-repo flow (its own commands, conventions, and optional test audit), and the questions are batched so you aren't prompted once per repo. If a folder-of-repos should be treated as a single repo instead, pass `--no-polyrepo`.
+```
+.claude/afb-tdd/
+├── manifest.json   what was generated, when, against which commit
+├── project.md      facts: stack, commands, layout, slice order
+└── practices.md    taste: how this team tests, with gold-standard exemplars
+```
+
+Commit them. They mean the same thing on every teammate's machine, and `/afb-tdd` prefers
+them over its built-in conventions. It is a **soft** dependency: the loop works fine in a
+repo that never ran setup.
+
+These files are yours once written. A second run refuses to clobber them; `--refresh`
+regenerates alongside for you to diff and merge.
+
+In a polyrepo, every member repo gets its own `.claude/afb-tdd/`; there is no top-level
+index, since a container usually isn't a git repo and nothing there could be committed.
+See [ADR 0001](.agents/adr/0001-checked-in-resources-instead-of-a-generated-skill.md).
+
+`/afb-tdd` in that project then reads those files before its first cycle and prefers them
+over its built-ins. Same command, same skill, tuned to the repo.
 
 <details>
-<summary>What it generates (and the manual fallback)</summary>
+<summary>Writing them by hand</summary>
 
-If you'd rather write it by hand, create `.claude/skills/afb-tdd/SKILL.md` with this shape and add only what differs:
+The files are plain markdown with no required schema; setup just saves you the detection
+and the audit. A minimal `.claude/afb-tdd/project.md`:
 
 ```markdown
----
-name: afb-tdd
-description: Interactive red-green-refactor TDD workflow.
-user-invocable: true
-allowed-tools: Bash
----
+# afb-tdd: project profile
 
-Follow the TDD workflow defined in [~/.claude/skills/afb-tdd/SKILL.md](~/.claude/skills/afb-tdd/SKILL.md).
-
-## Project-specific
-
-### Commands
+## Commands
 - Full suite: `make test`   # or whatever you use
 
-### Conventions
-- Link ONLY the conventions for your stack, e.g.
-  [go.md](~/.claude/skills/afb-tdd/references/conventions/go.md)
+## Architecture: where a feature lives
+- `svc/` — what lives here, and its entry points
 
-### Test infrastructure to reuse
-- Builders / fakes / fixtures and where they live
-
-### Domain gotchas
+## Domain gotchas
 - DB setup/teardown, auth/tenancy, time control, external stubs, isolation
 ```
+
+And `practices.md` for house style: how this team writes tests, gold-standard files to
+copy with `file:line`, known deviations that are not precedent.
+
+Keep every path repo-relative. These files are committed and read on other people's
+machines, so a `~/.claude/...` path in one is a bug.
 </details>
 
 ## The Sceptic (the gremlins!)
 
-Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [references/sceptic.md](references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
+Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [sceptic.md](skills/afb-tdd/references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
 
 ## Evals
 

@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "c2752ea1-2684-40fe-bfaa-4efe48dc7bc1",
+  "cost_usd": 0.72446685,
+  "num_turns": 29,
+  "duration_s": 368,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 7
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 2
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "received `{ kind: 'subscribed', subscriberId: 'sub-a@b' }` instead of `{ kind: 'email_error', … }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "received `{ kind: 'response_error', message: 'unexpected response from the newsletter service' }` instead of `{ kind: 'already_subscribed', … }`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "Both new tests pin exact outputs via toEqual through the existing MSW fake and the impl changes (dot-in-domain regex, already_subscribed body check) are minimal and test-driven, but the new 409 branch doesn't gate on status so a same-shaped body at another status would be misclassified and nothing pins that."
+    },
+    "calls": 3
+  }
+}

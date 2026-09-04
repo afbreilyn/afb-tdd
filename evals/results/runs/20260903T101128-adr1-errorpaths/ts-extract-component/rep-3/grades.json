@@ -1,0 +1,84 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "501c6f03-181a-4909-b5c6-3d421b97ebbc",
+  "cost_usd": 0.6536466999999999,
+  "num_turns": 42,
+  "duration_s": 258,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 5,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 2,
+    "test_runs": 13
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 4,
+    "paired": 4,
+    "matches": 3,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.75,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`Unable to find an accessible element with the role \"list\" and name \"Subscribers\"` — the file doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: Ada Lovelace`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: design, engineering`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "errors": [
+    "judge"
+  ]
+}

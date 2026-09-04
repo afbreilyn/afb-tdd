@@ -7,7 +7,8 @@
 # captures the diff + transcript, and grades the result. Scores land in
 # results/runs/<run-id>/ and one line is appended to results/history.jsonl.
 #
-# Usage: run.sh [--task <name>] [-n <reps>] [--with-mutation] [--with-judge]
+# Usage: run.sh [--task <name>] [--probe <name>] [-n <reps>] [--with-mutation]
+#               [--with-judge]
 #               [--label <name>] [--model <model>] [--keep-workdirs]
 #
 # See README.md (this directory) for the full workflow.
@@ -15,14 +16,15 @@
 set -euo pipefail
 
 EVALS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(dirname "$EVALS_DIR")"
+REPO_DIR="$(dirname "$EVALS_DIR")"   # evals/ sits at the repo root, not inside a skill
 GRADERS="$EVALS_DIR/graders"
 source "$GRADERS/lib.sh"
 
-TASK_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
+TASK_FILTER=""; PROBE_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
 while [ $# -gt 0 ]; do
   case "$1" in
     --task) TASK_FILTER="$2"; shift 2 ;;
+    --probe) PROBE_FILTER="$2"; shift 2 ;;
     --candidate) CANDIDATE="$2"; shift 2 ;;
     -n) REPS="$2"; shift 2 ;;
     --with-mutation) WITH_MUTATION=1; shift ;;
@@ -42,13 +44,19 @@ CAND_DIR="$EVALS_DIR/candidates/$CANDIDATE"
 TIMEOUT_BIN=timeout; have timeout || TIMEOUT_BIN=gtimeout
 have "$TIMEOUT_BIN" || { echo "missing timeout (brew install coreutils)" >&2; exit 1; }
 
-# A project-local skill anywhere above the workdirs would shadow the global one.
+# Two ways the environment can contaminate a run, both silent:
+#   .claude/skills/afb-tdd  a legacy project skill, which SHADOWS the global one
+#   .claude/afb-tdd         resources, which the loop READS and prefers
+# The second arrived with ADR 0001 and is the one a task seeds deliberately
+# inside its own workdir; anywhere ABOVE the workdir it is contamination.
 PROBE="$(mktemp -d)"; DIR="$PROBE"
 while [ "$DIR" != "/" ]; do
-  if [ -e "$DIR/.claude/skills/afb-tdd" ]; then
-    echo "refusing to run: $DIR/.claude/skills/afb-tdd would shadow the global skill" >&2
-    exit 1
-  fi
+  for contaminant in .claude/skills/afb-tdd .claude/afb-tdd; do
+    if [ -e "$DIR/$contaminant" ]; then
+      echo "refusing to run: $DIR/$contaminant would change what the skill sees" >&2
+      exit 1
+    fi
+  done
   DIR="$(dirname "$DIR")"
 done
 rmdir "$PROBE"
@@ -57,15 +65,22 @@ RUN_ID="$(date +%Y%m%dT%H%M%S)${LABEL:+-$LABEL}"
 RUN_DIR="$EVALS_DIR/results/runs/$RUN_ID"
 mkdir -p "$RUN_DIR"
 
-SKILL_SHA="$(git -C "$SKILL_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+SKILL_SHA="$(git -C "$REPO_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 SKILL_DIRTY=false
-[ -n "$(git -C "$SKILL_DIR" status --porcelain 2>/dev/null)" ] && SKILL_DIRTY=true
+[ -n "$(git -C "$REPO_DIR" status --porcelain 2>/dev/null)" ] && SKILL_DIRTY=true
 CLAUDE_VERSION="$(claude --version 2>/dev/null | head -1 || echo unknown)"
 
 # --- select tasks -----------------------------------------------------------
+# A probe measures the rubric or the harness, not the skill, so it lives in
+# probes/ and is never part of a scored sweep. See probes/README.md.
+SUITE_DIR="$EVALS_DIR/tasks"
+if [ -n "$PROBE_FILTER" ]; then
+  SUITE_DIR="$EVALS_DIR/probes"; TASK_FILTER="$PROBE_FILTER"
+fi
 TASKS=()
-for dir in "$EVALS_DIR"/tasks/*/; do
+for dir in "$SUITE_DIR"/*/; do
   name="$(basename "$dir")"
+  [ -f "$dir/task.json" ] || continue
   if [ -n "$TASK_FILTER" ] && ! printf ',%s,' "$TASK_FILTER" | grep -qF ",$name,"; then continue; fi
   TASKS+=("$name")
 done
@@ -85,7 +100,7 @@ TOTAL_COST=0
 
 run_one() { # run_one <task> <rep>
   local task="$1" rep="$2"
-  local task_dir="$EVALS_DIR/tasks/$task"
+  local task_dir="$SUITE_DIR/$task"
   local fixture_name fixture_dir fixture_json timeout_s max_turns
   fixture_name="$(jq -r .fixture "$task_dir/task.json")"
   fixture_dir="$EVALS_DIR/fixtures/$fixture_name"
@@ -101,6 +116,21 @@ run_one() { # run_one <task> <rep>
   work="$(mktemp -d "${TMPDIR:-/tmp}/afb-eval.XXXXXX")"
   tar -C "$fixture_dir" --exclude node_modules -cf - . | tar -C "$work" -xf -
   [ -d "$fixture_dir/node_modules" ] && ln -s "$fixture_dir/node_modules" "$work/node_modules"
+
+  # A task may overlay files onto its fixture via a "seed" dir (task.json's
+  # `seed` key, relative to the task dir). Used to pre-seed .claude/afb-tdd/
+  # so a task can assert the loop actually reads the repo's resources.
+  local seed_rel seed_dir
+  seed_rel="$(jq -r '.seed // empty' "$task_dir/task.json" 2>/dev/null)"
+  if [ -n "$seed_rel" ]; then
+    seed_dir="$task_dir/$seed_rel"
+    if [ -d "$seed_dir" ]; then
+      tar -C "$seed_dir" -cf - . | tar -C "$work" -xf -
+    else
+      echo "task $task declares seed '$seed_rel' but $seed_dir does not exist" >&2
+      return 1
+    fi
+  fi
   if [ -d "$CAND_DIR/agents" ]; then
     mkdir -p "$work/.claude/agents"
     cp "$CAND_DIR/agents/"*.md "$work/.claude/agents/"
@@ -193,7 +223,16 @@ run_one() { # run_one <task> <rep>
       model_used: (if $model_used == "" then null else $model_used end)} + $grades' \
     > "$rep_dir/grades.json"
 
+  local grader_errs
+  grader_errs="$(jq -r '(.errors // []) | join(", ")' <<<"$merged")"
   echo "    done in ${duration}s, \$$cost, $turns turns (running total \$$TOTAL_COST)"
+  # A crashed grader leaves its gate key absent, which the rollup reads as a
+  # FAILED gate. Never let that pass silently as if the model had failed.
+  # `if`, not `[ ... ] && echo`: under `set -e` a false test in a standalone
+  # && list exits the script.
+  if [ -n "$grader_errs" ]; then
+    echo "    !! GRADER CRASHED: $grader_errs — its gate scores as failed, but the model may be fine" >&2
+  fi
   if [ "$KEEP" = 1 ]; then echo "    workdir kept: $work"; else rm -rf "$work"; fi
 }
 
@@ -212,19 +251,26 @@ done | jq -s \
   --arg run_id "$RUN_ID" --arg label "$LABEL" --arg sha "$SKILL_SHA" \
   --argjson dirty "$SKILL_DIRTY" --arg cc "$CLAUDE_VERSION" --arg model "${MODEL:-default}" \
   --arg candidate "$CANDIDATE" --arg date "$(date +%Y-%m-%d)" '
-  def gates(g): {
-    suite_green: (g.suite.green // false),
-    revert_check: (g.revert.pass // false),
-    process_red_first: (g.process.red_before_first_prod_edit // false),
-    static_checks: (g.static.pass // false)
+  # A gate is pass | fail | "errored". A grader that crashed left its key
+  # absent; scoring that as a failure blames the model for our bug, so it is
+  # reported as "errored" and excluded from gate_pass_rate entirely.
+  def gate(v; crashed): if crashed then "errored" else (v // false) end;
+  def gates(g): (g.errors // []) as $e | {
+    suite_green:       gate(g.suite.green;                          $e | index("grade-suite")),
+    revert_check:      gate(g.revert.pass;                          $e | index("grade-revert")),
+    process_red_first: gate(g.process.red_before_first_prod_edit;   $e | index("grade-process")),
+    static_checks:     gate(g.static.pass;                          $e | index("grade-static"))
   };
+  def scored(gs): [gs | to_entries[] | .value | select(. != "errored")];
   group_by(.task) | map({
     key: .[0].task,
     value: {
       reps: [.[] | .grades | . + {gates: gates(.)}],
       rollup: {
-        gate_pass_rate: ([.[] | .grades | gates(.) | to_entries[] | .value] | (map(if . then 1 else 0 end) | add) / length),
-        judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value] | if length > 0 then (add / length) else null end),
+        gate_pass_rate: ([.[] | .grades | gates(.) | scored(.)] | flatten
+                         | if length > 0 then (map(if . then 1 else 0 end) | add) / length else null end),
+        judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value | select(. != null)] | if length > 0 then (add / length) else null end),
+        grader_errors: ([.[] | .grades.errors // [] | length] | add),
         mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end),
         shot_accuracy_mean: ([.[] | .grades.shots.accuracy // empty] | if length > 0 then (add / length) else null end)
       }
@@ -234,8 +280,9 @@ done | jq -s \
     claude_code_version: $cc, candidate: $candidate,
     model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model), tasks: .,
     totals: {
-      gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
+      gate_pass_rate: ([.[] | .rollup.gate_pass_rate | select(. != null)] | if length > 0 then add / length else null end),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),
+      grader_errors: ([.[] | .rollup.grader_errors] | add),
       mutation_mean: ([.[] | .rollup.mutation_mean | select(. != null)] | if length > 0 then add / length else null end),
       shot_accuracy_mean: ([.[] | .rollup.shot_accuracy_mean | select(. != null)] | if length > 0 then add / length else null end),
       cost_usd: ([.[] | .reps[] | .cost_usd // 0] | add)

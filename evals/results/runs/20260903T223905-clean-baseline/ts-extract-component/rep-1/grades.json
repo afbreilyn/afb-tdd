@@ -1,0 +1,93 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "4a06135e-b516-44b0-b179-95393c22017f",
+  "cost_usd": 1.2454679000000002,
+  "num_turns": 49,
+  "duration_s": 624,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 3
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 4,
+    "test_runs": 13
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 4,
+    "paired": 4,
+    "matches": 3,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.75,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`Cannot find module './SubscriberList'` (or equivalent TS/import error)",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: Ada Lovelace`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: TypeScript, testing`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 4,
+      "notes": "Assertions are exact (role+name, exact href, exact text) and tests use a real factory instead of mocks, but the Subscriber-type relocation to types.ts is a drive-by refactor bundled into green rather than something the SubscriberList tests themselves force."
+    },
+    "calls": 3
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "671ccc10-dde5-4dc8-a414-6e33f49a4d69",
+  "cost_usd": 1.3579147999999996,
+  "num_turns": 57,
+  "duration_s": 600,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 7
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 5,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 1,
+    "test_runs": 14
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 4
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 7,
+    "paired": 7,
+    "matches": 4,
+    "mismatches": 1,
+    "hedges": 2,
+    "accuracy": 0.8,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `s.service.Register` undefined",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "exactly.",
+        "outcome": "pass",
+        "verdict": "hedge"
+      },
+      {
+        "prediction": "compile error — `user.PasswordHash undefined`",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "compile error — `sha256hasher` package doesn't exist",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Login` method and `ErrInvalidCredentials` don't exist",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "this test passes immediately under the current stub — which means the stub is still masking behaviour. I'll verify this, then confirm the test isn't self-invali",
+        "outcome": "pass",
+        "verdict": "hedge"
+      },
+      {
+        "prediction": "`s.ErrorIs(err, service.ErrInvalidCredentials)` is expected to NOT trigger, but `session.Email` assertion fails — or the error assertion shows ErrInvalidCredent",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Solid TDD with a real fake-hasher contract and clean fake-vs-real separation, but Login's error path collapses two distinct failure causes (unknown email vs wrong password) into one untested-as-separate branch and G5b-style ambiguity around ErrInvalidCredentials wrapping."
+    },
+    "calls": 3
+  }
+}

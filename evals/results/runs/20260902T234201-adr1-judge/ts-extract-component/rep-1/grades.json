@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "2b2f939e-c6be-4d0e-bb5f-d301caf2bc1b",
+  "cost_usd": 1.25493235,
+  "num_turns": 52,
+  "duration_s": 627,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 1,
+    "test_runs": 16
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 3,
+    "mismatches": 1,
+    "hedges": 1,
+    "accuracy": 0.75,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "Module not found — `./SubscriberList` doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`Unable to find an accessible element with the role \"listitem\"` / `getByText(\"Ada Lovelace\")` throws — the `ul` renders with no children",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"` — no `<a>` is rendered yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Unable to find an element with the text: \"tech, design\"` — no topics span rendered yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "The test will tell us whether `join(\"\")` on an empty array causes a crash or renders nothing — we need to see it fail first to know the actual state",
+        "outcome": "pass",
+        "verdict": "hedge"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "Clean extraction with precise, exact assertions and no doubles; no error paths exist to test, so that dimension is vacuously fine but not exercised."
+    },
+    "calls": 3
+  }
+}

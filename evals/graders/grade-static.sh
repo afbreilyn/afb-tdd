@@ -79,7 +79,13 @@ while IFS= read -r check; do
     while IFS= read -r f; do
       [ -n "$f" ] || continue
       if matches_globs "$f" "$(jq -nc --arg g "$glob" '[$g]')"; then
-        n=$(git -C "$WORKDIR" diff baseline final -- "$f" | grep -E '^\+[^+]' | grep -oE "$require" | wc -l | tr -d ' ')
+        # Both greps need a guard: under `set -o pipefail` either one matching
+        # nothing exits 1 and kills the grader, which then scores as a FAILED
+        # gate rather than a crash. Happens whenever the glob matches more than
+        # one file and any of them lacks the pattern. The forbid branch above
+        # already guards its grep; this one did not.
+        n=$(git -C "$WORKDIR" diff baseline final -- "$f" \
+            | { grep -E '^\+[^+]' || true; } | { grep -oE "$require" || true; } | wc -l | tr -d ' ')
         matched=$((matched + n))
       fi
     done < <(git -C "$WORKDIR" diff --name-only baseline final)

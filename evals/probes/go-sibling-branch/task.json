@@ -1,0 +1,15 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 1200,
+  "max_turns": 120,
+  "seed": "seed",
+  "extra_checks": [
+    {
+      "name": "pins_the_catch_all",
+      "glob": "**/delivery/*_test.go",
+      "require_regex": "errors\\.New\\(",
+      "min_count": 1,
+      "why": "adding a third permanent error beside an untested `return true` fall-through makes that fall-through load-bearing; pinning it needs an ad-hoc unclassified error"
+    }
+  ]
+}

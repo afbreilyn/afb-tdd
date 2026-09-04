@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "761146fd-55ca-4b19-b46a-7177065f4d19",
+  "cost_usd": 0.37474635,
+  "num_turns": 23,
+  "duration_s": 155,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 2,
+    "test_runs": 5
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`expected { kind: 'subscribed', subscriberId: 'sub-a@b' } to deeply equal { kind: 'email_error', message: '\"a@b\" is not a valid email address' }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expected { kind: 'response_error', message: 'unexpected response from the newsletter service' } to deeply equal { kind: 'already_subscribed', message: 'you are",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "Both new tests use exact toEqual assertions, target one behaviour each, exercise the already_subscribed path through msw (a fake HTTP layer, not a mock), and the implementation changes are the minimal forced additions (dot-in-domain regex fix, already_subscribed branch) with no untested branches introduced."
+    },
+    "calls": 3
+  }
+}

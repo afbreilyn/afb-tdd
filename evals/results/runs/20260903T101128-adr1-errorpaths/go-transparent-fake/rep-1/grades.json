@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "9fc1a5be-b5d0-463d-91c1-f1312c3fe734",
+  "cost_usd": 2.45156015,
+  "num_turns": 80,
+  "duration_s": 1073,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 6
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 4
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 2,
+    "test_runs": 17
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 5
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 2,
+    "mismatches": 3,
+    "hedges": 0,
+    "accuracy": 0.4,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compilation error — `s.service.Register undefined`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compilation error — `domain.User` has no `PasswordHash()` method (drives the whole Hasher + domain change)",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`s.service.Login undefined`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "test fails because the Fake It `Login` currently accepts any password and returns a session",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "test passes immediately (the `ErrNotFound` → `ErrInvalidCredentials` mapping already exists) — if so, delete and reconsider",
+        "outcome": "pass",
+        "verdict": "mismatch"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 2,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Login's ErrNotFound→ErrInvalidCredentials branch (the enumeration-prevention behavior the code explicitly claims) and the Save/GetByEmail generic-error wraps are new error handling with no driving test."
+    },
+    "calls": 3
+  }
+}

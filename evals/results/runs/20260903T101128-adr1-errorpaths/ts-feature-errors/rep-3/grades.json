@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "9d3676ce-f37c-4d2d-9305-cc169c341ef5",
+  "cost_usd": 0.5782360000000001,
+  "num_turns": 35,
+  "duration_s": 289,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 0,
+    "test_runs": 9
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 3,
+    "mismatches": 0,
+    "hedges": 2,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`AssertionError: expected undefined to deeply equal { kind: 'email_error', message: '\"\" is not a valid email address' }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'success' } to deeply equal { kind: 'topic_error', message: '\"gossip\" is not a known topic' }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'success' } to deeply equal { kind: 'not_subscribed', ... }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "this might pass immediately since the stub already returns `success` for any non-error response — I'll verify first",
+        "outcome": "pass",
+        "verdict": "hedge"
+      },
+      {
+        "prediction": "`AssertionError: expected { kind: 'connection_error' } ... wait, the catch IS already there`. Let me check — the catch block was written in cycle 3 but never ha",
+        "outcome": "pass",
+        "verdict": "hedge"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Solid exact assertions and one-behaviour tests via msw fakes, but the connection_error test only checks kind (weak) and the impl's blanket 'anything but not_subscribed is success' branch leaves a generic/unexpected-error response path untested (G5b)."
+    },
+    "calls": 3
+  }
+}

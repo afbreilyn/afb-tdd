@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "64218cea-918a-4dd0-917e-764df0890991",
+  "cost_usd": 0.9083968499999999,
+  "num_turns": 30,
+  "duration_s": 511,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 1,
+    "test_runs": 7
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 1
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 1,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.5,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`expect(result.kind).toBe(\"email_error\")` receives `\"subscribed\"` instead",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expect(result.kind).toBe(\"already_subscribed\")` receives `\"response_error\"` instead",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Solid, focused tests (msw fake server, precise names, exact toEqual for the 409 case) but the dot-in-domain test only checks result.kind, not the message, leaving a weaker assertion than its sibling test."
+    },
+    "calls": 3
+  }
+}

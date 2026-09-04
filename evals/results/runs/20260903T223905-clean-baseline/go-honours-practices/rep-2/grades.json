@@ -1,0 +1,88 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "93c3989f-0152-4362-8ddd-a2e5bc658cdc",
+  "cost_usd": 0.31163074999999996,
+  "num_turns": 22,
+  "duration_s": 131,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 4
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "honours_practices_parallel",
+        "pass": true,
+        "count": 2
+      },
+      {
+        "name": "honours_practices_loop_var",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compilation error — `r.Summary undefined (type Report has no field or method Summary)`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`assert.Equal` — expected `\"Q1 Report [env=prod, team=payments]\"` but got `\"Q1 Report\"`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Both tests use exact-value assertions on distinct behaviours (no-tags vs sorted-tags formatting), names precisely state behaviour, and the implementation (including necessary key sorting for deterministic map output) is the minimum the two tests force with no untested branches."
+    },
+    "calls": 3
+  }
+}

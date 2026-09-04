@@ -7,7 +7,8 @@
 # captures the diff + transcript, and grades the result. Scores land in
 # results/runs/<run-id>/ and one line is appended to results/history.jsonl.
 #
-# Usage: run.sh [--task <name>] [-n <reps>] [--with-mutation] [--with-judge]
+# Usage: run.sh [--task <name>] [--probe <name>] [-n <reps>] [--with-mutation]
+#               [--with-judge]
 #               [--label <name>] [--model <model>] [--keep-workdirs]
 #
 # See README.md (this directory) for the full workflow.
@@ -19,10 +20,11 @@ REPO_DIR="$(dirname "$EVALS_DIR")"   # evals/ sits at the repo root, not inside 
 GRADERS="$EVALS_DIR/graders"
 source "$GRADERS/lib.sh"
 
-TASK_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
+TASK_FILTER=""; PROBE_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
 while [ $# -gt 0 ]; do
   case "$1" in
     --task) TASK_FILTER="$2"; shift 2 ;;
+    --probe) PROBE_FILTER="$2"; shift 2 ;;
     --candidate) CANDIDATE="$2"; shift 2 ;;
     -n) REPS="$2"; shift 2 ;;
     --with-mutation) WITH_MUTATION=1; shift ;;
@@ -63,9 +65,16 @@ SKILL_DIRTY=false
 CLAUDE_VERSION="$(claude --version 2>/dev/null | head -1 || echo unknown)"
 
 # --- select tasks -----------------------------------------------------------
+# A probe measures the rubric or the harness, not the skill, so it lives in
+# probes/ and is never part of a scored sweep. See probes/README.md.
+SUITE_DIR="$EVALS_DIR/tasks"
+if [ -n "$PROBE_FILTER" ]; then
+  SUITE_DIR="$EVALS_DIR/probes"; TASK_FILTER="$PROBE_FILTER"
+fi
 TASKS=()
-for dir in "$EVALS_DIR"/tasks/*/; do
+for dir in "$SUITE_DIR"/*/; do
   name="$(basename "$dir")"
+  [ -f "$dir/task.json" ] || continue
   if [ -n "$TASK_FILTER" ] && ! printf ',%s,' "$TASK_FILTER" | grep -qF ",$name,"; then continue; fi
   TASKS+=("$name")
 done
@@ -85,7 +94,7 @@ TOTAL_COST=0
 
 run_one() { # run_one <task> <rep>
   local task="$1" rep="$2"
-  local task_dir="$EVALS_DIR/tasks/$task"
+  local task_dir="$SUITE_DIR/$task"
   local fixture_name fixture_dir fixture_json timeout_s max_turns
   fixture_name="$(jq -r .fixture "$task_dir/task.json")"
   fixture_dir="$EVALS_DIR/fixtures/$fixture_name"
@@ -236,18 +245,24 @@ done | jq -s \
   --arg run_id "$RUN_ID" --arg label "$LABEL" --arg sha "$SKILL_SHA" \
   --argjson dirty "$SKILL_DIRTY" --arg cc "$CLAUDE_VERSION" --arg model "${MODEL:-default}" \
   --arg candidate "$CANDIDATE" --arg date "$(date +%Y-%m-%d)" '
-  def gates(g): {
-    suite_green: (g.suite.green // false),
-    revert_check: (g.revert.pass // false),
-    process_red_first: (g.process.red_before_first_prod_edit // false),
-    static_checks: (g.static.pass // false)
+  # A gate is pass | fail | "errored". A grader that crashed left its key
+  # absent; scoring that as a failure blames the model for our bug, so it is
+  # reported as "errored" and excluded from gate_pass_rate entirely.
+  def gate(v; crashed): if crashed then "errored" else (v // false) end;
+  def gates(g): (g.errors // []) as $e | {
+    suite_green:       gate(g.suite.green;                          $e | index("grade-suite")),
+    revert_check:      gate(g.revert.pass;                          $e | index("grade-revert")),
+    process_red_first: gate(g.process.red_before_first_prod_edit;   $e | index("grade-process")),
+    static_checks:     gate(g.static.pass;                          $e | index("grade-static"))
   };
+  def scored(gs): [gs | to_entries[] | .value | select(. != "errored")];
   group_by(.task) | map({
     key: .[0].task,
     value: {
       reps: [.[] | .grades | . + {gates: gates(.)}],
       rollup: {
-        gate_pass_rate: ([.[] | .grades | gates(.) | to_entries[] | .value] | (map(if . then 1 else 0 end) | add) / length),
+        gate_pass_rate: ([.[] | .grades | gates(.) | scored(.)] | flatten
+                         | if length > 0 then (map(if . then 1 else 0 end) | add) / length else null end),
         judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value | select(. != null)] | if length > 0 then (add / length) else null end),
         grader_errors: ([.[] | .grades.errors // [] | length] | add),
         mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end),
@@ -259,7 +274,7 @@ done | jq -s \
     claude_code_version: $cc, candidate: $candidate,
     model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model), tasks: .,
     totals: {
-      gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
+      gate_pass_rate: ([.[] | .rollup.gate_pass_rate | select(. != null)] | if length > 0 then add / length else null end),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),
       grader_errors: ([.[] | .rollup.grader_errors] | add),
       mutation_mean: ([.[] | .rollup.mutation_mean | select(. != null)] | if length > 0 then add / length else null end),

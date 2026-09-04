@@ -872,6 +872,269 @@
         "shot_accuracy_mean": 0.9166666666666666
       }
     },
+    "go-sibling-branch": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "4eb94629-0f09-40d5-a000-4819971d4bbe",
+          "cost_usd": 0.1818013,
+          "num_turns": 14,
+          "duration_s": 93,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 1
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 0,
+            "test_runs": 3
+          },
+          "static": {
+            "pass": false,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "pins_the_catch_all",
+                "pass": false,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 1,
+            "paired": 1,
+            "matches": 1,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "compilation error — `ErrPayloadTooLarge` undefined",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": 4,
+              "naming": 5,
+              "minimality": 5,
+              "notes": "Single new sentinel error, precise boolean assertion, minimal branch added to match; G5b concern since other unhandled error types still fall through to true untested but that's pre-existing behaviour, not new."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": false
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "c8656fee-18c0-4111-9e31-d28e1f3489e6",
+          "cost_usd": 0.19971265,
+          "num_turns": 13,
+          "duration_s": 84,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 1
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 0,
+            "test_runs": 3
+          },
+          "static": {
+            "pass": false,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "pins_the_catch_all",
+                "pass": false,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 1,
+            "paired": 1,
+            "matches": 0,
+            "mismatches": 1,
+            "hedges": 0,
+            "accuracy": 0,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "`assert.False` fires — `Retryable` falls through to `return true` for any error it hasn't classified yet",
+                "outcome": "fail",
+                "verdict": "mismatch"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": 4,
+              "naming": 5,
+              "minimality": 5,
+              "notes": "Clean triangulated addition: exact assertion, single new branch, no unrelated changes, matches SKILL Fake-It/triangulate pattern with no test doubles involved."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": false
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "21656ed7-879a-4608-8b22-eaa6118d6ad4",
+          "cost_usd": 0.41728705,
+          "num_turns": 22,
+          "duration_s": 177,
+          "model_used": "claude-sonnet-4-6",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 1,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 2,
+            "test_runs": 5
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "pins_the_catch_all",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 1,
+            "paired": 1,
+            "matches": 1,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "compile error — `ErrPayloadTooLarge` undefined",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 5,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": 5,
+              "naming": 5,
+              "minimality": 4,
+              "notes": "Two precisely named tests pin exact boolean outcomes for the new permanent-failure case and the unclassified-error case, and the slice-based refactor is a minimal, fully-tested generalization driven by triangulation rather than speculative handling."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 0.8333333333333334,
+        "judge_mean": 4.8,
+        "grader_errors": 0,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 0.6666666666666666
+      }
+    },
     "go-transparent-fake": {
       "reps": [
         {
@@ -2136,12 +2399,11 @@
     }
   },
   "totals": {
-    "gate_pass_rate": 1,
-    "judge_mean": 4.642987964416536,
+    "gate_pass_rate": 0.9791666666666667,
+    "judge_mean": 4.662614468864469,
     "grader_errors": 0,
     "mutation_mean": null,
-    "shot_accuracy_mean": 0.8019274376417231,
+    "shot_accuracy_mean": 0.7850198412698413,
     "cost_usd": 21.2043803
-  },
-  "note": "go-sibling-branch excluded: it is a probe (measures the rubric), not a task (measures the skill). See probes/README.md."
+  }
 }

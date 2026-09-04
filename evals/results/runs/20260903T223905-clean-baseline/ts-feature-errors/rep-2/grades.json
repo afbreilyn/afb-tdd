@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "3e869a85-e185-464a-9d79-a552b9c4487e",
+  "cost_usd": 0.8674847000000003,
+  "num_turns": 44,
+  "duration_s": 380,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 3,
+    "test_runs": 10
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 3,
+    "mismatches": 2,
+    "hedges": 0,
+    "accuracy": 0.6,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "TypeScript import/compilation error — `unsubscribe` is not exported yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expected { kind: 'success' } to equal { kind: 'topic_error', ... }` — the stub currently returns `success` for any valid email",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "The API call will throw (MSW \"unhandled request\" error) because the server doesn't yet handle `newsletter.unsubscribe`",
+        "outcome": "pass",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`expected { kind: 'success' } to equal { kind: 'not_subscribed', ... }` — stub returns `success` for all valid inputs",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "The `connection_error` branch IS in the code but this specific test doesn't exist yet — it will fail because the test doesn't exist (red by absence). Once I add",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Solid, precise tests but the connection_error case only checks `kind` and the impl silently treats any error body other than exactly \"not_subscribed\" as success, an untested sibling branch; extracting validateEmail/validateTopic also refactors subscribe's existing code mid-Green rather than in Refactor."
+    },
+    "calls": 3
+  }
+}

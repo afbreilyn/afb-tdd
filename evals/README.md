@@ -15,7 +15,7 @@ we can't tell if the robit chose the *right* behaviours to test — that's the h
 | "the tests are well-written — assertions, naming, minimality" | `judge.sh` (`--with-judge`) | LLM scores the diff 1–5 per rubric dimension (sceptic rubric, Part B); median of 3 calls | **model opinion** — relative comparison only, never a gate |
 
 ## tldr
-- 7 tasks (4 golang, 3 typescript) in `evals/tasks/` — each one tries to suss out instances of one specific mistake (code-before-tests, single-entry map tests, testid selectors, etc, as captured in the `extra_checks`)
+- 7 tasks (4 golang, 3 typescript) in `tasks/`, plus `probes/` — a probe measures the rubric or the harness, not the skill, so it never scores and never enters `baseline.json` in `evals/tasks/` — each one tries to suss out instances of one specific mistake (code-before-tests, single-entry map tests, testid selectors, etc, as captured in the `extra_checks`)
 - a headless robit does each task using the afb-tdd skill; the (deterministic) graders score the (nondeterministic) output
 - the outputs are stored in `results/`: `history.jsonl` (the trend, one line per run), `runs/<run-id>/summary.json` (the details), and `baseline.json` (what `compare.sh` measures against). scores are committed; raw diffs/transcripts stay in `runs/<run-id>/artifacts/`, gitignored
 
@@ -87,6 +87,7 @@ evals/run.sh --task ts-extract-component -n 1        # one cheap run of one task
 evals/run.sh -n 3 --label my-change                  # full run: 6 tasks × 3 reps (~$30, hours)
 evals/run.sh -n 3 --with-judge --with-mutation ...   # add the optional graders
 evals/run.sh --candidate <name> ...                  # evaluate something other than afb-tdd (see candidates/)
+evals/run.sh --probe go-sibling-branch ...           # run a probe (see probes/README.md); never part of a scored sweep
 evals/compare.sh results/runs/<run-id>/summary.json  # this run vs baseline.json
 evals/report.sh                                      # trend table over all recorded runs
 ```

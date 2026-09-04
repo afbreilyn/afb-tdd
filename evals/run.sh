@@ -208,7 +208,16 @@ run_one() { # run_one <task> <rep>
       model_used: (if $model_used == "" then null else $model_used end)} + $grades' \
     > "$rep_dir/grades.json"
 
+  local grader_errs
+  grader_errs="$(jq -r '(.errors // []) | join(", ")' <<<"$merged")"
   echo "    done in ${duration}s, \$$cost, $turns turns (running total \$$TOTAL_COST)"
+  # A crashed grader leaves its gate key absent, which the rollup reads as a
+  # FAILED gate. Never let that pass silently as if the model had failed.
+  # `if`, not `[ ... ] && echo`: under `set -e` a false test in a standalone
+  # && list exits the script.
+  if [ -n "$grader_errs" ]; then
+    echo "    !! GRADER CRASHED: $grader_errs — its gate scores as failed, but the model may be fine" >&2
+  fi
   if [ "$KEEP" = 1 ]; then echo "    workdir kept: $work"; else rm -rf "$work"; fi
 }
 
@@ -240,6 +249,7 @@ done | jq -s \
       rollup: {
         gate_pass_rate: ([.[] | .grades | gates(.) | to_entries[] | .value] | (map(if . then 1 else 0 end) | add) / length),
         judge_mean: ([.[] | .grades.judge.scores // empty | to_entries[] | select(.key != "notes") | .value | select(. != null)] | if length > 0 then (add / length) else null end),
+        grader_errors: ([.[] | .grades.errors // [] | length] | add),
         mutation_mean: ([.[] | .grades.mutation.score // empty] | if length > 0 then (add / length) else null end),
         shot_accuracy_mean: ([.[] | .grades.shots.accuracy // empty] | if length > 0 then (add / length) else null end)
       }
@@ -251,6 +261,7 @@ done | jq -s \
     totals: {
       gate_pass_rate: ([.[] | .rollup.gate_pass_rate] | add / length),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),
+      grader_errors: ([.[] | .rollup.grader_errors] | add),
       mutation_mean: ([.[] | .rollup.mutation_mean | select(. != null)] | if length > 0 then add / length else null end),
       shot_accuracy_mean: ([.[] | .rollup.shot_accuracy_mean | select(. != null)] | if length > 0 then add / length else null end),
       cost_usd: ([.[] | .reps[] | .cost_usd // 0] | add)

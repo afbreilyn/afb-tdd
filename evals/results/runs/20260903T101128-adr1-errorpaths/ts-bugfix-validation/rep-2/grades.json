@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "5636f356-cf26-44cc-ad4c-71dca7a0a8a9",
+  "cost_usd": 0.33617579999999997,
+  "num_turns": 22,
+  "duration_s": 138,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 5
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "tld_bug_repro_test_exists",
+        "pass": true,
+        "count": 2
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`AssertionError: expected \"subscribed\" to be \"email_error\"` — the current regex `^\\\\S+@\\\\S+$` passes `a@b` straight through to the network call",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`AssertionError: expected \"response_error\" to be \"already_subscribed\"` — today `postApi` doesn't check the status code, so the error body is parsed as unknown J",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 3,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Solid, minimal, well-named tests, but the already_subscribed test's `toBeTruthy()` on a fully-known message is weak (R2), and the new 409 branch leaves the pre-existing response_error catch-all sibling untested for other error shapes/statuses (G5b)."
+    },
+    "calls": 3
+  }
+}

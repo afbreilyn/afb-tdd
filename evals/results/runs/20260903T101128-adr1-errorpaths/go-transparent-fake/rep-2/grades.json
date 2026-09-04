@@ -1,0 +1,103 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "ba4d9591-a05e-4641-8a21-8633e82e0a84",
+  "cost_usd": 1.6870636999999995,
+  "num_turns": 67,
+  "duration_s": 661,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 7
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 0,
+    "test_runs": 12
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 4
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 6,
+    "paired": 6,
+    "matches": 3,
+    "mismatches": 1,
+    "hedges": 2,
+    "accuracy": 0.75,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `s.service.Register undefined`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": ".",
+        "outcome": "pass",
+        "verdict": "hedge"
+      },
+      {
+        "prediction": "compile error — `domain.User` has no method `PasswordHash()`; `NewAccessService` signature mismatch once I thread in Hasher",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "compile error — `Login` and `service.ErrInvalidCredentials` are undefined",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expected error \"invalid credentials\" but got nil` — because the current fake returns a session regardless of password",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "this test may start green because cycle 4's Obvious Implementation already handles the happy path. I'll verify — if it starts green, I'll document it and keep i",
+        "outcome": "pass",
+        "verdict": "hedge"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 5,
+      "minimality": 5,
+      "notes": "Well-separated, precisely named tests with real fakes throughout; only weakness is the generic hasher contract's necessarily loose assertions (NotEmpty/NotEqual) and an untested Register-save-failure passthrough."
+    },
+    "calls": 3
+  }
+}

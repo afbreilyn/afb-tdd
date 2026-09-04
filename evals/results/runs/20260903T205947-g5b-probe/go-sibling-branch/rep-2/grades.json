@@ -1,0 +1,49 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "d7a759c3-afc9-4579-bdcd-449a01540cce",
+  "cost_usd": 0.32753895,
+  "num_turns": 17,
+  "duration_s": 142,
+  "model_used": "claude-sonnet-4-6",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 1
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 1,
+    "cycle_commits": 1,
+    "prod_edits_without_red": 0,
+    "test_runs": 3
+  },
+  "errors": [
+    "grade-static",
+    "judge"
+  ],
+  "shots": {
+    "transcript_found": true,
+    "called": 1,
+    "paired": 1,
+    "matches": 1,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compilation error — `ErrPayloadTooLarge` undefined",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  }
+}

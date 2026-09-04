@@ -79,7 +79,11 @@ done
 
 MEDIANS='{}'
 for dim in "${DIMENSIONS[@]}"; do
-  m=$(printf '%s\n' "${CALLS[@]}" | jq -r ".$dim // empty" | grep -E '^[0-9]+$' | sort -n \
+  # `|| true` is load-bearing: under `set -o pipefail` a grep that matches
+  # nothing exits 1 and kills the script, which is exactly what happens when a
+  # dimension is null in every call — the case this null handling exists for.
+  m=$(printf '%s\n' "${CALLS[@]}" | jq -r ".$dim // empty" \
+      | { grep -E '^[0-9]+$' || true; } | sort -n \
       | awk '{a[NR]=$1} END {if (NR) print a[int((NR+1)/2)]; else print "null"}')
   MEDIANS=$(jq -c --arg d "$dim" --argjson v "$m" '. + {($d): $v}' <<<"$MEDIANS")
 done

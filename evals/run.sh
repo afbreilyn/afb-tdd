@@ -44,13 +44,19 @@ CAND_DIR="$EVALS_DIR/candidates/$CANDIDATE"
 TIMEOUT_BIN=timeout; have timeout || TIMEOUT_BIN=gtimeout
 have "$TIMEOUT_BIN" || { echo "missing timeout (brew install coreutils)" >&2; exit 1; }
 
-# A project-local skill anywhere above the workdirs would shadow the global one.
+# Two ways the environment can contaminate a run, both silent:
+#   .claude/skills/afb-tdd  a legacy project skill, which SHADOWS the global one
+#   .claude/afb-tdd         resources, which the loop READS and prefers
+# The second arrived with ADR 0001 and is the one a task seeds deliberately
+# inside its own workdir; anywhere ABOVE the workdir it is contamination.
 PROBE="$(mktemp -d)"; DIR="$PROBE"
 while [ "$DIR" != "/" ]; do
-  if [ -e "$DIR/.claude/skills/afb-tdd" ]; then
-    echo "refusing to run: $DIR/.claude/skills/afb-tdd would shadow the global skill" >&2
-    exit 1
-  fi
+  for contaminant in .claude/skills/afb-tdd .claude/afb-tdd; do
+    if [ -e "$DIR/$contaminant" ]; then
+      echo "refusing to run: $DIR/$contaminant would change what the skill sees" >&2
+      exit 1
+    fi
+  done
   DIR="$(dirname "$DIR")"
 done
 rmdir "$PROBE"

@@ -9,7 +9,7 @@
 # artifacts and a member list. Polyrepo Setup Mode confirms scope with the human
 # and fans the existing per-repo setup into each member.
 #
-# Writes ONE file into <container>/.claude/skills/afb-tdd/:
+# Writes ONE file into <container>/.claude/afb-tdd/:
 #   - DIGEST.txt     starts with the POLYREPO=true marker; lists members + a
 #                    shallow stack sniff, cross-repo CANDIDATES, the project
 #                    knowledge worth reading, the fan-out list, and the

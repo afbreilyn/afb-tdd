@@ -1,6 +1,6 @@
 ---
 name: afb-tdd-setup
-description: Tune the afb-tdd loop to this repo — detects stack, commands, architecture and conventions, audits the existing test suite, and writes committed resources the loop reads. Invoke when asked to set up, bootstrap, or initialize TDD for a project or polyrepo.
+description: Tune the afb-tdd loop to this repo — detects stack, commands, architecture and conventions, audits the existing test suite, and writes committed resources the loop reads. Use when asked to set up, bootstrap, initialise or refresh afb-tdd (or TDD generally) for a project or polyrepo. Not for running the TDD loop itself; that is the afb-tdd skill.
 allowed-tools: Bash(bash ${CLAUDE_SKILL_DIR}/scripts/setup-local.sh*), Bash(bash ${CLAUDE_SKILL_DIR}/scripts/setup-polyrepo.sh*)
 ---
 

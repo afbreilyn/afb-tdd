@@ -1,6 +1,6 @@
 ---
 name: afb-tdd
-description: Interactive red-green-refactor TDD workflow. Invoke when writing new features or fixing bugs test-first.
+description: Strict red-green-refactor TDD loop with a called shot before every test and an adversarial sceptic review after Red and Green; reads the repo's committed .claude/afb-tdd/ practices when present. Use when the user wants a feature built or a bug fixed test-first, says TDD or red-green-refactor, asks for a failing regression test before the fix, or names the afb-tdd skill. Not for adding tests after the fact to code that already exists, or for general test cleanup.
 allowed-tools: Bash
 ---
 
@@ -40,14 +40,14 @@ When starting a new behaviour, work in this order:
 5. Report the failure output and confirm it's failing correctly, then wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, or `SKIPPED (--no-sceptic)`.
 
 ## Green
-1. Write the minimum implementation to make the test pass. Nothing more. Hardcode if possible, don't make it handle future scenarios. State which you're doing: **Fake It** (will triangulate next cycle) or **Obvious Implementation**.
+1. Write the minimum implementation to make the test pass. Hardcode if possible and don't handle future scenarios: anything the test doesn't force is untested code, and the next cycle's test is what earns the generalisation. State which you're doing: **Fake It** (will triangulate next cycle) or **Obvious Implementation**.
 2. Run the tests yourself. Check whether the new test passes and all other tests remain green.
    - If something unexpected is failing, fix it before reporting to the user.
 3. **Sceptic**: same as Red step 4, but the GREEN checkpoint in [sceptic.md](references/sceptic.md).
 4. Report the results and wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, or `SKIPPED (--no-sceptic)`.
 
 ## Refactor
-1. Now that tests are green, clean up thoroughly — names, duplication, extraction of well-named helpers. Do not defer this to a later cycle.
+1. Now that tests are green, clean up thoroughly — names, duplication, extraction of well-named helpers. Do it now rather than in a later cycle: the next Red builds on whatever is left here, and deferred refactors rarely happen.
 2. Only refactor while green. Never refactor while red.
 3. Remove any tests that now provide redundant coverage or that didn't fail for the right reason.
 4. Run the full test suite to verify no unintended side effects across the whole codebase.
@@ -79,13 +79,10 @@ it('renders all main navigation links', () => {
 **Fallback — `data-testid`:** only when there is no user-visible data to key on (a purely presentational extraction like an icon or divider, or localized / non-accessible text). Then add `data-testid="<component-name>"` to the extracted component's root and assert `getByTestId('<component-name>')` is in the document — presence only, never internal content.
 
 ## Rules
-- NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.
-- If you wrote code before a test existed, delete it entirely. Do not adapt it — unverified code is technical debt.
-- Never write a `catch` or error case without a failing test for it first.
-- Each cycle should cover zero, one, or many — prefer the smallest slice.
-- Tests written first answer "what *should* this do?". Tests written after only answer "what *does* this do?" — they prove nothing.
-- If you find yourself thinking "just this once" about skipping a step, that is a red flag. Stop and restart the cycle properly.
-- Each cycle is deliberately small. This is especially important when working with an AI assistant: small context = higher accuracy. Don't batch cycles together.
+- **No production code without a failing test first.** A test written first answers "what *should* this do?", and watching it fail proves it can catch the bug. A test written after only records "what *does* this do?", so it proves nothing. If code got written before its test, delete it entirely rather than adapting it: adapting smuggles the unverified version back in.
+- **No `catch` or error case without a failing test that drives it.** Error handling is the code most often written speculatively and least often exercised, which is why the sceptic treats it as a blocker (G5).
+- **Each cycle covers zero, one, or many: the smallest slice.** Don't batch cycles together. Small cycles keep the working context small, and a small context is where you are most accurate.
+- **"Just this once" is the signal to stop.** The urge to skip a step shows up exactly when the step matters. Restart the cycle properly instead.
 
 See [sceptic.md](references/sceptic.md) for the adversarial review rubric (shared with the eval judge).
 See [test-patterns.md](references/test-patterns.md) for outside-in layer ordering, contract testing fakes, and when to use each type of test double.

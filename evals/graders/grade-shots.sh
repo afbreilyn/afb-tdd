@@ -95,7 +95,7 @@ done < "$EVENTS"
 VERDICTS=null
 JUDGE_CALLS=0
 if [ "${AFB_SHOT_JUDGE:-0}" = 1 ] && [ "$PAIRED" -gt 0 ]; then
-  MODEL="${AFB_JUDGE_MODEL:-sonnet}"
+  MODEL="$JUDGE_MODEL"
   PAIRS_TEXT=$(jq -s -r 'to_entries[] |
     "PAIR \(.key + 1)\npredicted failure: \(.value.prediction)\nrun outcome: \(.value.outcome)\nrun output (tail): \(.value.excerpt)\n"' "$PAIRS")
 
@@ -144,7 +144,7 @@ jq -s --argjson v "$VERDICTS" \
 
 jq -s \
   --argjson called "$CALLED" --argjson paired "$PAIRED" \
-  --argjson v "$VERDICTS" --argjson calls "$JUDGE_CALLS" '
+  --argjson v "$VERDICTS" --argjson calls "$JUDGE_CALLS" --arg jm "${MODEL:-}" '
   ($v // []) as $verdicts |
   ([$verdicts[] | select(. == "match")] | length) as $m |
   ([$verdicts[] | select(. == "mismatch")] | length) as $mm |
@@ -155,7 +155,7 @@ jq -s \
     mismatches: (if $v == null then null else $mm end),
     hedges:     (if $v == null then null else $h end),
     accuracy:   (if $v == null or ($m + $mm) == 0 then null else ($m / ($m + $mm)) end),
-    judge_calls: $calls,
+    judge_calls: $calls, judge_model: (if $jm == "" then null else $jm end),
     pairs: (to_entries | map({prediction: (.value.prediction | .[0:160]),
                               outcome: .value.outcome,
                               verdict: (if $v == null then null else $verdicts[.key] end)}))

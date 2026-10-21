@@ -8,7 +8,10 @@
 #
 # Emits: {"process": {"transcript_found": bool, "red_before_first_prod_edit": bool,
 #                     "cycles": n, "cycle_commits": n, "prod_edits_without_red": n,
-#                     "test_runs": n}}
+#                     "test_runs": n, "first_prod_edit_file": path|null,
+#                     "prod_edits_without_red_files": [path, ...]}}
+# The file fields say WHICH edits the counts are about, so a failed gate can be
+# read off the grades instead of reconstructed from the transcript.
 
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
@@ -20,7 +23,8 @@ CYCLE_COMMITS=$(git -C "$WORKDIR" log --oneline baseline..final 2>/dev/null | gr
 if [ ! -s "${TRANSCRIPT:-}" ]; then
   jq -n --argjson commits "$CYCLE_COMMITS" \
     '{process: {transcript_found: false, red_before_first_prod_edit: false,
-                cycles: 0, cycle_commits: $commits, prod_edits_without_red: 0, test_runs: 0}}'
+                cycles: 0, cycle_commits: $commits, prod_edits_without_red: 0, test_runs: 0,
+                first_prod_edit_file: null, prod_edits_without_red_files: []}}'
   exit 0
 fi
 
@@ -52,6 +56,8 @@ PENDING_RED=false    # inside a red->green arc
 HAD_PROD_EDIT=false
 CYCLES=0
 PROD_NO_RED=0
+FIRST_PROD_FILE=""
+NO_RED_FILES=""      # newline-separated, in edit order
 TEST_RUNS=0
 PENDING_TEST_RUN_ID=""
 
@@ -73,9 +79,13 @@ while IFS=$'\t' read -r id kind name detail; do
           prod)
             if [ "$FIRST_PROD_SEEN" = false ]; then
               FIRST_PROD_SEEN=true
+              FIRST_PROD_FILE="$rel"
               [ "$FAILING_RUN_AFTER_TEST_EDIT" = true ] && RED_BEFORE_FIRST_PROD=true
             fi
-            [ "$LAST_RUN" != fail ] && PROD_NO_RED=$((PROD_NO_RED + 1))
+            if [ "$LAST_RUN" != fail ]; then
+              PROD_NO_RED=$((PROD_NO_RED + 1))
+              NO_RED_FILES="${NO_RED_FILES}${rel}"$'\n'
+            fi
             [ "$PENDING_RED" = true ] && HAD_PROD_EDIT=true
             ;;
         esac
@@ -100,6 +110,9 @@ done < "$EVENTS"
 
 jq -n --argjson red_first "$RED_BEFORE_FIRST_PROD" --argjson cycles "$CYCLES" \
   --argjson commits "$CYCLE_COMMITS" --argjson no_red "$PROD_NO_RED" --argjson runs "$TEST_RUNS" \
+  --arg first "$FIRST_PROD_FILE" --arg no_red_files "$NO_RED_FILES" \
   '{process: {transcript_found: true, red_before_first_prod_edit: $red_first,
               cycles: $cycles, cycle_commits: $commits,
-              prod_edits_without_red: $no_red, test_runs: $runs}}'
+              prod_edits_without_red: $no_red, test_runs: $runs,
+              first_prod_edit_file: (if $first == "" then null else $first end),
+              prod_edits_without_red_files: ($no_red_files | split("\n") | map(select(. != "")) | unique)}}'

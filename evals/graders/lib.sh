@@ -12,6 +12,12 @@
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# The model-opinion graders (judge, shot verdicts) are pinned to an exact id.
+# An alias like `sonnet` moves when a model ships, which silently re-scores
+# everything and makes judge_mean incomparable with the baseline. Change this
+# only together with a re-baseline. AFB_JUDGE_MODEL still overrides it.
+JUDGE_MODEL="${AFB_JUDGE_MODEL:-claude-sonnet-5-5}"
+
 fixture_val() { # fixture_val <fixture.json> <key>
   jq -r ".$2" "$1"
 }

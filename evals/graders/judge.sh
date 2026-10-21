@@ -13,7 +13,7 @@
 # with no error paths) scores null, not a number: scoring vacuous cases mixed
 # "covered well" and "nothing to cover" into the same average and made the mean
 # untrustworthy. Nulls are dropped before the median and before the rollup.
-# Model: sonnet by default; override with AFB_JUDGE_MODEL.
+# Model: JUDGE_MODEL from lib.sh (pinned); override with AFB_JUDGE_MODEL.
 #
 # Emits: {"judge": {"scores": {...}, "calls": n}}
 
@@ -26,7 +26,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 RUBRIC="$REPO_DIR/skills/afb-tdd/references/sceptic.md"
 [ -f "$RUBRIC" ] || { echo "judge.sh: rubric not found at $RUBRIC — refusing to run with a divergent copy" >&2; exit 1; }
 
-MODEL="${AFB_JUDGE_MODEL:-sonnet}"
+MODEL="$JUDGE_MODEL"
 DIMENSIONS=(assertion_strength one_behaviour_per_test fakes_vs_mocks error_path_coverage naming minimality)
 
 DIFF=$(git -C "$WORKDIR" diff baseline final)
@@ -90,4 +90,4 @@ done
 NOTES=$(jq -r '.notes // ""' <<<"${CALLS[0]}")
 
 jq -n --argjson scores "$MEDIANS" --arg notes "$NOTES" --argjson calls ${#CALLS[@]} \
-  '{judge: {scores: ($scores + {notes: $notes}), calls: $calls}}'
+  --arg model "$MODEL" '{judge: {scores: ($scores + {notes: $notes}), calls: $calls, model: $model}}'

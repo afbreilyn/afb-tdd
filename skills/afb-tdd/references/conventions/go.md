@@ -34,6 +34,10 @@ user := domaintest.NewUnpersistedUser(
 )
 ```
 
+## New Types and Interfaces
+
+When a test needs a type, interface or function that doesn't exist yet, write the test first and let `undefined: Hasher` be the red. That compile error is a failure for the right reason: the test is asking for something the code doesn't have. Declare the type only after you've seen it, and declare just what the test references. Don't pre-declare an interface "because the tests won't compile without it". Even a behaviour-free declaration is production code written before a failing test, and it tends to grow methods no test asked for. (A typo'd name or a syntax error in the test is still the wrong reason; fix it and rerun.)
+
 ## Fakes and Contract Tests
 
 Write in-memory fakes that implement the same interface as the real implementation. Every fake must have a shared contract test suite that runs against both the fake and the real implementation.

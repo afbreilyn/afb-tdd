@@ -1,6 +1,6 @@
 {
   "name": "afb-tdd",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Interactive red-green-refactor TDD with an adversarial sceptic, plus a scaffolder that tunes it to your repo",
   "author": {
     "name": "afb",

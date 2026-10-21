@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "6703b2be-f027-4946-abb3-9dc2797a2970",
+  "cost_usd": 2.0620106,
+  "num_turns": 59,
+  "duration_s": 668,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 5,
+    "cycle_commits": 6,
+    "prod_edits_without_red": 1,
+    "test_runs": 18
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 5,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "module resolution error — `src/components/SubscriberList.tsx` doesn't exist yet.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`getByText(\"Ada Lovelace\")` / `getByText(\"Grace Hopper\")` not found — current implementation renders an empty `<ul>` regardless of input.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`getByRole(\"link\", { name: \"ada@example.com\" })` not found — current implementation only renders a name span.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`getByText(\"product, engineering\")` not found — current implementation doesn't render topics at all.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`getByText(\"product, engineering\")` not found — current implementation renders the raw array, which React concatenates with no separator (`\"productengineering\"`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 4,
+      "notes": "This is an extract-component refactor whose tests have precise assertions and no doubles, but it moves behaviour into a new component in one step (the empty-list and topics tests were not driven by any failing test), the 'topic' and 'topics joined' tests overlap, and the Dashboard test that was removed was moved rather than kept as integration coverage."
+    },
+    "calls": 3
+  }
+}

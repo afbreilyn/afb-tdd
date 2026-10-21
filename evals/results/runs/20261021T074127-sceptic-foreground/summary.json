@@ -1,0 +1,333 @@
+{
+  "run_id": "20261021T074127-sceptic-foreground",
+  "label": "sceptic-foreground",
+  "date": "2026-10-21",
+  "skill_sha": "03182f2",
+  "skill_dirty": false,
+  "claude_code_version": "2.1.306 (Claude Code)",
+  "candidate": "afb-tdd",
+  "model": "claude-sonnet-5",
+  "tasks": {
+    "ts-extract-component": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "6703b2be-f027-4946-abb3-9dc2797a2970",
+          "cost_usd": 2.0620106,
+          "num_turns": 59,
+          "duration_s": 668,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 5
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 5,
+            "cycle_commits": 6,
+            "prod_edits_without_red": 1,
+            "test_runs": 18
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 5,
+            "paired": 5,
+            "matches": 5,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 3,
+            "pairs": [
+              {
+                "prediction": "module resolution error — `src/components/SubscriberList.tsx` doesn't exist yet.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`getByText(\"Ada Lovelace\")` / `getByText(\"Grace Hopper\")` not found — current implementation renders an empty `<ul>` regardless of input.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`getByRole(\"link\", { name: \"ada@example.com\" })` not found — current implementation only renders a name span.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`getByText(\"product, engineering\")` not found — current implementation doesn't render topics at all.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`getByText(\"product, engineering\")` not found — current implementation renders the raw array, which React concatenates with no separator (`\"productengineering\"`",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 4,
+              "one_behaviour_per_test": 4,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": null,
+              "naming": 4,
+              "minimality": 4,
+              "notes": "This is an extract-component refactor whose tests have precise assertions and no doubles, but it moves behaviour into a new component in one step (the empty-list and topics tests were not driven by any failing test), the 'topic' and 'topics joined' tests overlap, and the Dashboard test that was removed was moved rather than kept as integration coverage."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "a6cd4ad5-1a83-46ed-af57-4f447b2af0f8",
+          "cost_usd": 0.9489166350000001,
+          "num_turns": 47,
+          "duration_s": 289,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 4,
+            "prod_edits_without_red": 1,
+            "test_runs": 10
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 4,
+            "paired": 4,
+            "matches": 3,
+            "mismatches": 1,
+            "hedges": 0,
+            "accuracy": 0.75,
+            "judge_calls": 2,
+            "pairs": [
+              {
+                "prediction": "import resolution error — `./SubscriberList` does not exist yet.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`TestingLibraryElementError: Unable to find an element with the text: Ada Lovelace` — current impl ignores `subscribers`.",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`TestingLibraryElementError: Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"` — no link is rendered yet.",
+                "outcome": "fail",
+                "verdict": "mismatch"
+              },
+              {
+                "prediction": "`TestingLibraryElementError: Unable to find an element with the text: product, design` — topics aren't rendered yet.",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 4,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": null,
+              "naming": 5,
+              "minimality": 4,
+              "notes": "This is an extract-component refactor with well-scoped, exact tests that moved with the code and no mocks or error paths; the minor concerns are that the empty-list test uses a weaker DOM-emptiness check, the 'shows a subscriber's name' test relies on getByText, and the Dashboard test lost its email-link coverage (which now lives in SubscriberList) without a Dashboard-level integration test of the composition."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "17157040-fd18-4ef9-a019-5ee156747528",
+          "cost_usd": 1.7823547000000002,
+          "num_turns": 9,
+          "duration_s": 630,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 4,
+            "cycle_commits": 1,
+            "prod_edits_without_red": 1,
+            "test_runs": 10
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "no_testid_in_parent",
+                "pass": true,
+                "count": 0
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 4,
+            "paired": 4,
+            "matches": 4,
+            "mismatches": 0,
+            "hedges": 0,
+            "accuracy": 1,
+            "judge_calls": 1,
+            "pairs": [
+              {
+                "prediction": "Vitest fails to resolve the import `./SubscriberList` (file doesn't exist yet)",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`toBeInTheDocument()`/`getByText` assertion fails — the Fake It stub renders an empty `<ul>`, so \"Ada Lovelace\" isn't found in the document",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`Unable to find an accessible element with the role \"link\" and name \"ada@example.com\"` — current implementation only renders the name span",
+                "outcome": "fail",
+                "verdict": "match"
+              },
+              {
+                "prediction": "`Unable to find an element with the text: product, engineering` — current implementation doesn't render topics at all",
+                "outcome": "fail",
+                "verdict": "match"
+              }
+            ]
+          },
+          "judge": {
+            "scores": {
+              "assertion_strength": 4,
+              "one_behaviour_per_test": 5,
+              "fakes_vs_mocks": null,
+              "error_path_coverage": null,
+              "naming": 5,
+              "minimality": 4,
+              "notes": "Tests are exact, single-behaviour, and use real rendering with no doubles, but this is an extract-component refactor with no declared called shot, and the empty-list test would pass against any empty ul, so the tests were written after the code existed and didn't drive it."
+            },
+            "calls": 3
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": 4.333333333333333,
+        "grader_errors": 0,
+        "mutation_mean": null,
+        "shot_accuracy_mean": 0.9166666666666666
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 1,
+    "judge_mean": 4.333333333333333,
+    "grader_errors": 0,
+    "mutation_mean": null,
+    "shot_accuracy_mean": 0.9166666666666666,
+    "cost_usd": 4.793281935
+  }
+}

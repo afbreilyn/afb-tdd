@@ -22,6 +22,14 @@ arrow() { # arrow <ref> <cand>
 fmt() { [ "$1" = null ] && echo "  -  " || printf '%.2f' "$1"; }
 
 echo "reference: $(jq -r .run_id "$REF") [$(jq -r '.candidate // "afb-tdd"' "$REF")]   candidate: $(jq -r .run_id "$CAND") [$(jq -r '.candidate // "afb-tdd"' "$CAND")]"
+
+# A model change moves every metric on its own, so say so before the numbers.
+for field in model judge_model; do
+  r=$(jq -r ".$field // \"unrecorded\"" "$REF"); c=$(jq -r ".$field // \"unrecorded\"" "$CAND")
+  if [ "$r" != "$c" ]; then
+    echo "!! $field differs: reference $r, candidate $c — deltas mix the model change with yours"
+  fi
+done
 echo
 printf '%-28s %8s %10s %3s\n' "metric" "ref" "candidate" ""
 printf '%-28s %8s %10s %3s\n' "----------------------------" "--------" "----------" "---"

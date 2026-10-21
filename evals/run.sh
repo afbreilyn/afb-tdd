@@ -9,7 +9,12 @@
 #
 # Usage: run.sh [--task <name>] [--probe <name>] [-n <reps>] [--with-mutation]
 #               [--with-judge]
-#               [--label <name>] [--model <model>] [--keep-workdirs]
+#               [--label <name>] [--model <model>|default] [--keep-workdirs]
+#
+# The model under test defaults to EVAL_MODEL and the judge to JUDGE_MODEL (both
+# pinned in graders/lib.sh to match the baseline). Both are checked with one
+# tiny call before any rep starts, so an unavailable id fails fast instead of
+# scoring every rep as a failed gate.
 #
 # See README.md (this directory) for the full workflow.
 
@@ -20,7 +25,7 @@ REPO_DIR="$(dirname "$EVALS_DIR")"   # evals/ sits at the repo root, not inside 
 GRADERS="$EVALS_DIR/graders"
 source "$GRADERS/lib.sh"
 
-TASK_FILTER=""; PROBE_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL=""; KEEP=0; CANDIDATE="afb-tdd"
+TASK_FILTER=""; PROBE_FILTER=""; REPS=1; WITH_MUTATION=0; WITH_JUDGE=0; LABEL=""; MODEL="$EVAL_MODEL"; KEEP=0; CANDIDATE="afb-tdd"
 while [ $# -gt 0 ]; do
   case "$1" in
     --task) TASK_FILTER="$2"; shift 2 ;;
@@ -35,6 +40,7 @@ while [ $# -gt 0 ]; do
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
 done
+[ "$MODEL" = default ] && MODEL=""   # no --model flag: the local default
 
 for tool in jq claude git; do
   have "$tool" || { echo "missing required tool: $tool — run evals/setup.sh" >&2; exit 1; }
@@ -60,6 +66,31 @@ while [ "$DIR" != "/" ]; do
   DIR="$(dirname "$DIR")"
 done
 rmdir "$PROBE"
+
+# check_model <id or empty> <role> — one tiny call; prints the resolved id.
+check_model() {
+  local m="$1" role="$2" dir out resolved
+  dir="$(mktemp -d)"
+  out="$(cd "$dir" && claude -p "Reply with OK." --output-format json --max-turns 1 \
+           ${m:+--model "$m"} 2>/dev/null || true)"
+  rmdir "$dir"
+  resolved="$(printf '%s' "$out" | jq -r '.modelUsage // {} | keys | first // empty' 2>/dev/null || true)"
+  if [ -z "$resolved" ]; then
+    echo "refusing to run: the $role model '${m:-default}' did not answer on this setup." >&2
+    echo "  Pass --model <id> or --model default for the model under test, or set" >&2
+    echo "  AFB_EVAL_MODEL / AFB_JUDGE_MODEL. Results on another model are not" >&2
+    echo "  comparable with results/baseline.json; compare.sh will say so." >&2
+    exit 1
+  fi
+  echo "$resolved"
+}
+echo "==> checking models"
+RESOLVED_MODEL="$(check_model "$MODEL" "under-test")"
+echo "    under test: $RESOLVED_MODEL"
+if [ "$WITH_JUDGE" = 1 ]; then
+  RESOLVED_JUDGE="$(check_model "$JUDGE_MODEL" "judge")"
+  echo "    judge:      $RESOLVED_JUDGE"
+fi
 
 RUN_ID="$(date +%Y%m%dT%H%M%S)${LABEL:+-$LABEL}"
 RUN_DIR="$EVALS_DIR/results/runs/$RUN_ID"
@@ -250,7 +281,8 @@ find "$RUN_DIR" -name grades.json | sort | while IFS= read -r f; do
 done | jq -s \
   --arg run_id "$RUN_ID" --arg label "$LABEL" --arg sha "$SKILL_SHA" \
   --argjson dirty "$SKILL_DIRTY" --arg cc "$CLAUDE_VERSION" --arg model "${MODEL:-default}" \
-  --arg candidate "$CANDIDATE" --arg date "$(date +%Y-%m-%d)" '
+  --arg candidate "$CANDIDATE" --arg date "$(date +%Y-%m-%d)" \
+  --arg judge_model "${RESOLVED_JUDGE:-}" '
   # A gate is pass | fail | "errored". A grader that crashed left its key
   # absent; scoring that as a failure blames the model for our bug, so it is
   # reported as "errored" and excluded from gate_pass_rate entirely.
@@ -278,7 +310,8 @@ done | jq -s \
   }) | from_entries |
   { run_id: $run_id, label: $label, date: $date, skill_sha: $sha, skill_dirty: $dirty,
     claude_code_version: $cc, candidate: $candidate,
-    model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model), tasks: .,
+    model: (([.[] | .reps[] | .model_used | select(. != null)] | first) // $model),
+    judge_model: (if $judge_model == "" then null else $judge_model end), tasks: .,
     totals: {
       gate_pass_rate: ([.[] | .rollup.gate_pass_rate | select(. != null)] | if length > 0 then add / length else null end),
       judge_mean: ([.[] | .rollup.judge_mean | select(. != null)] | if length > 0 then add / length else null end),

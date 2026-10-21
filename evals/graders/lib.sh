@@ -18,6 +18,12 @@ have() { command -v "$1" >/dev/null 2>&1; }
 # only together with a re-baseline. AFB_JUDGE_MODEL still overrides it.
 JUDGE_MODEL="${AFB_JUDGE_MODEL:-claude-sonnet-5-5}"
 
+# The model under test, pinned for the same reason: results/baseline.json was
+# generated on it. run.sh --model (or AFB_EVAL_MODEL) overrides it, and
+# `--model default` uses whatever the local Claude Code resolves to, for setups
+# where this id is unavailable (another provider, plan or region).
+EVAL_MODEL="${AFB_EVAL_MODEL:-claude-sonnet-5}"
+
 fixture_val() { # fixture_val <fixture.json> <key>
   jq -r ".$2" "$1"
 }

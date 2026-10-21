@@ -104,6 +104,12 @@ evals/report.sh                                      # trend table over all reco
 - `candidates/` — who gets evaluated (`--candidate`, default afb-tdd: a preamble + optional agent files)
 - `../skills/afb-tdd/references/sceptic.md` Part B — the rubric the judge scores against
 
+## models
+both models are pinned in `graders/lib.sh`, because the baseline was generated on them: the robit under test (`EVAL_MODEL`, `claude-sonnet-5`) and the judge (`JUDGE_MODEL`, `claude-sonnet-5-5`). an alias like `sonnet` moves when a model ships and silently re-scores everything.
+- different setup (another provider, plan or region)? `run.sh --model <your-id>` or `--model default` (whatever your claude code resolves to), and `AFB_JUDGE_MODEL=<id>` for the judge. `run.sh` checks both with one tiny call before any rep, so an unavailable id fails in seconds instead of scoring every rep as a failed gate.
+- results on other models are fine for your own A/B, but not comparable with `baseline.json`. `compare.sh` prints a `!! model differs` line when they don't match.
+- moving the pins is a re-baseline: change `lib.sh`, run the full `-n 3`, promote, commit together.
+
 ## caveats
 - n=3 is a coarse instrument. trust deltas > 0.5 on judge scores and gate-rate drops; ignore the rest.
 - judge scores are relative (skill version A vs B) since the judge shares the generator's biases.

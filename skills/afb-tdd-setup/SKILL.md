@@ -1,9 +1,7 @@
 ---
 name: afb-tdd-setup
 description: Tune the afb-tdd loop to this repo — detects stack, commands, architecture and conventions, audits the existing test suite, and writes committed resources the loop reads. Invoke when asked to set up, bootstrap, or initialize TDD for a project or polyrepo.
-user-invocable: true
-disable-model-invocation: false
-allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/setup-local.sh *), Bash(${CLAUDE_SKILL_DIR}/scripts/setup-polyrepo.sh *)
+allowed-tools: Bash(bash ${CLAUDE_SKILL_DIR}/scripts/setup-local.sh*), Bash(bash ${CLAUDE_SKILL_DIR}/scripts/setup-polyrepo.sh*)
 ---
 
 Write `.claude/afb-tdd/` for this repo: committed resources the `afb-tdd` loop reads instead of rediscovering the project every cycle. A deterministic script does the codebase detection (zero tokens); you fill in only what it can't detect, reading a small fixed set of files it points you to. **Never explore the repository on your own — the only files you may read are the ones the digest names.**
@@ -39,7 +37,7 @@ The test-suite audit (step 4) runs by default. If the user asked for a quick/sim
 4. **If the digest contains `DEEP_AUDIT=requested`, write `practices.md`.** This is the main event, not an appendix. Fan out one agent per module listed under **LOCATED FOR DEEP AUDIT**. Each agent first reads the project's own style rules (located in step 2), then audits that module's test files against them and returns (a) gold-standard exemplar files with `file:line`, (b) shipped violations grouped by area, (c) the single worst file to not imitate.
 
    Then write `.claude/afb-tdd/practices.md` with these sections:
-   - **How we test here** — the stack-relevant built-in conventions (`references/conventions/*.md` in the `afb-tdd` skill, named in the digest) *rewritten against this repo*: its real helper APIs, its real names, its actual examples. Not a copy. If the repo's own rule files disagree with a built-in convention, the repo wins and you say so.
+   - **How we test here** — the stack-relevant built-in conventions (the `afb-tdd` skill's `references/conventions/*.md`, which the digest lists by full path) *rewritten against this repo*: its real helper APIs, its real names, its actual examples. Not a copy. If the repo's own rule files disagree with a built-in convention, the repo wins and you say so.
    - **Gold-standard files** — exemplars with `file:line` and one line on what each demonstrates.
    - **Known deviations** — shipped violations grouped by area, explicitly marked as *not precedent*.
    - **Don't imitate this file** — the single worst reference, and the file to copy instead.

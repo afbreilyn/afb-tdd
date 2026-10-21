@@ -10,7 +10,7 @@ An adversarial reviewer that fires twice per TDD cycle — after Red and after G
 
 > You are the TDD sceptic. Read ONLY Parts B and C of `<absolute path to this file>` (Part A is plumbing for the main agent — skip it) and apply the {RED|GREEN} checkpoint rubric to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
 
-Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent (plugin install), `find ~/.claude -path '*afb-tdd*/references/sceptic.md' 2>/dev/null | head -1`.
+That is the path you just read this file from: the skill's base directory plus `references/sceptic.md`. It is the same rule under a symlinked or a plugin install, so never guess a fixed location or search for it.
 
 **Context package — RED checkpoint:**
 - The called-shot declaration, verbatim (test name, behaviour, expected failure).
@@ -18,7 +18,7 @@ Resolve the path as `~/.claude/skills/afb-tdd/references/sceptic.md`; if absent 
 - The diff for this cycle (or the new test snippet if the file is untracked).
 - The actual failure output from the test run.
 - The path to `.claude/afb-tdd/practices.md`, if it exists. That file is this team's own testing conventions and known deviations, and it outranks the built-in references wherever they disagree. Its absence is normal and is never itself a finding.
-- The path to `references/testing-anti-patterns.md`.
+- The absolute path to `references/testing-anti-patterns.md`, resolved the same way.
 - One line from you on existing coverage near this behaviour (feeds R7 — you know the suite; the sceptic does not explore it).
 
 The sceptic reads only the files named above — no exploration, no suite grepping.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# setup-local.sh — scaffold a project-local afb-tdd skill, pre-filled with sane
-# defaults inferred from the current repository.
+# setup-local.sh — write this repo's committed .claude/afb-tdd/ resources,
+# pre-filled with sane defaults inferred from the current repository.
 #
 # Ships with the afb-tdd-setup skill. It writes RESOURCES, never a skill: the
 # afb-tdd loop reads them as a soft dependency and falls back to its own
@@ -22,7 +22,7 @@
 # by the setup skill, step 4.
 #
 # Usage: setup-local.sh [--force] [--simple] [--polyrepo|--no-polyrepo]
-#   --force        regenerate even if a local SKILL.md already exists
+#   --force        overwrite existing .claude/afb-tdd/ files in place
 #   --simple       skip the test-suite audit inventory (by DEFAULT it's included, so
 #                  the setup skill runs the gold-standard / known-deviations audit). Aliases:
 #                  --shallow
@@ -34,6 +34,12 @@
 #   --self-test    run the fixture tests and exit; no repo needed
 
 set -euo pipefail
+
+# Resolved before any cd. The loop skill is this skill's sibling on disk under
+# both install routes (symlinked personal skills, plugin cache), so its
+# conventions are reachable without knowing where either was installed.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONV_DIR="$(cd "$SCRIPT_DIR/../../afb-tdd/references/conventions" 2>/dev/null && pwd || true)"
 
 R="../.."   # path from .claude/afb-tdd/project.md back to the repo root
 
@@ -55,7 +61,6 @@ for arg in "$@"; do
 done
 
 if [ "${SELF_TEST:-0}" = 1 ]; then
-  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   exec bash "$SCRIPT_DIR/tests/run-tests.sh"
 fi
 
@@ -74,7 +79,6 @@ if [ "$POLY" != off ]; then
     POLY_MEMBERS=$((POLY_MEMBERS + 1))
   done
   if [ "$POLY" = force ] || [ "$POLY_MEMBERS" -ge 2 ]; then
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     exec bash "$SCRIPT_DIR/setup-polyrepo.sh" "$@"
   fi
 fi
@@ -349,7 +353,7 @@ emit_list() { # prefix, space-separated items
     echo "  Conventions       : project ruleset found — global conventions dropped"
   else
     echo "  Built-in conventions to ADAPT into practices.md (not copy):"
-    if [ -n "$CONV_UNIQUE" ]; then while IFS= read -r c; do echo "      - $c"; done <<< "$CONV_UNIQUE"
+    if [ -n "$CONV_UNIQUE" ]; then while IFS= read -r c; do echo "      - ${CONV_DIR:+$CONV_DIR/}$c"; done <<< "$CONV_UNIQUE"
     else echo "      (none — stack unrecognized)"; fi
   fi
   if [ ${#NOTES[@]} -gt 0 ]; then echo; echo "NOTES:"; for n in "${NOTES[@]}"; do echo "  - $n"; done; fi
@@ -516,7 +520,11 @@ EOF
 # auditedCommit is what makes practices.md's file:line exemplars checkable: the
 # loop can tell whether an anchor predates a lot of movement.
 AUDITED_COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
-CONVENTIONS_VERSION="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+# A plugin install is a copy without .git, so fall back to the plugin's version.
+CONVENTIONS_VERSION="$(git -C "$SCRIPT_DIR" rev-parse --short HEAD 2>/dev/null \
+  || sed -nE 's/.*"version": *"([^"]+)".*/v\1/p' "$SCRIPT_DIR/../../../.claude-plugin/plugin.json" 2>/dev/null \
+  || true)"
+CONVENTIONS_VERSION="${CONVENTIONS_VERSION:-unknown}"
 STACK_JSON="$(printf '%s\n' "${LANGS[@]:-}" | grep -v '^$' | sed 's/.*/"&"/' | paste -sd',' - || true)"
 {
   echo "{"

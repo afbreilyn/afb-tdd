@@ -1,7 +1,6 @@
 ---
 name: afb-tdd
 description: Interactive red-green-refactor TDD workflow. Invoke when writing new features or fixing bugs test-first.
-user-invocable: true
 allowed-tools: Bash
 ---
 
@@ -92,8 +91,8 @@ See [sceptic.md](references/sceptic.md) for the adversarial review rubric (share
 See [test-patterns.md](references/test-patterns.md) for outside-in layer ordering, contract testing fakes, and when to use each type of test double.
 See [conventions/go.md](references/conventions/go.md) for Go-specific test conventions — testify, suites, fakes, transparent fakes, time control.
 See [conventions/frontend.md](references/conventions/frontend.md) for frontend test conventions — selectors, structure, factories, async patterns.
-See [conventions/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup. Reference this from your project skill if your project uses Vitest.
-See [conventions/java.md](references/conventions/java.md) for Java-specific conventions. Reference this from your project skill if your project uses Junit5.
+See [conventions/vitest.md](references/conventions/vitest.md) for Vitest-specific conventions — globals, vi.fn, vi.hoisted, MSW setup.
+See [conventions/java.md](references/conventions/java.md) for Java-specific conventions — JUnit 5.
 See [testing-anti-patterns.md](references/testing-anti-patterns.md) for guidance on what not to do with mocks and test structure.
 See [tdd-checklist.md](references/tdd-checklist.md) for the completion checklist and a "when stuck" reference.
 

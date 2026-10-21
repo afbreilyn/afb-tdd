@@ -67,6 +67,13 @@ else
   fail "writes manifest.json" "not found at $M"
 fi
 
+# the digest is transient, so it may name install paths; it must, or a plugin
+# install has no sanctioned way to find the conventions it says to adapt
+G="$D/.claude/afb-tdd/DIGEST.txt"
+CONV_LINE="$(grep -E -- '- .*/go\.md$' "$G" | head -1 | sed -E 's/^ *- //')"
+if [ -n "$CONV_LINE" ] && [ -f "$CONV_LINE" ]; then pass "digest names go.md by a path that exists"
+else fail "digest names go.md by a path that exists" "got: ${CONV_LINE:-nothing}"; fi
+
 # --- a Makefile repo ------------------------------------------------------
 echo "go repo with a Makefile:"
 D="$(new_repo go-make)"; cd "$D"

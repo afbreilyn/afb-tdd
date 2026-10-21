@@ -1,5 +1,7 @@
 # Test Patterns
 
+Contents: [Outside-In TDD](#outside-in-tdd) · [Fake + Contract Testing](#fake--contract-testing) · [Test Data](#test-data) · [Test Isolation](#test-isolation) · [When to Use Each Type of Double](#when-to-use-each-type-of-double) · [One Behaviour Per Test](#one-behaviour-per-test) · [Transparent Fakes](#transparent-fakes) · [Scenario Layering with Nested Describes](#scenario-layering-with-nested-describes) · [Exhaustive Error Enumeration](#exhaustive-error-enumeration) · [Resilience / Partial Failure Testing](#resilience--partial-failure-testing) · [Complex Setup Is a Design Smell](#complex-setup-is-a-design-smell)
+
 ## Outside-In TDD
 
 Start at the outermost layer that exercises the desired behaviour. Work inward only when the outer test forces you to.

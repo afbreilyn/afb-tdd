@@ -12,6 +12,8 @@ An adversarial reviewer that fires twice per TDD cycle — after Red and after G
 
 That is the path you just read this file from: the skill's base directory plus `references/sceptic.md`. It is the same rule under a symlinked or a plugin install, so never guess a fixed location or search for it.
 
+**Run it in the foreground** (`run_in_background: false`, or whatever your agent tool calls it) so its report comes back as the tool result. The checkpoint report can't be written without the findings, so there is nothing to do in parallel. If the tool says the agent went to the background anyway, keep working in the same turn and do not end the turn to wait for a notification: in `--auto` or headless runs, ending the turn ends the session and leaves the cycle half-done.
+
 **Context package — RED checkpoint:**
 - The called-shot declaration, verbatim (test name, behaviour, expected failure).
 - The path of the test file (the sceptic reads it — don't paste it).

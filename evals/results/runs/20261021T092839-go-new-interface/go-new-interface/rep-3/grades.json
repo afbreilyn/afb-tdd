@@ -1,0 +1,86 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "1b6e8d3c-445b-4d86-ac0d-6911f734fab6",
+  "cost_usd": 1.4160942,
+  "num_turns": 47,
+  "duration_s": 493,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 3,
+    "prod_edits_without_red": 2,
+    "test_runs": 11,
+    "first_prod_edit_file": "idgen/sequential.go",
+    "prod_edits_without_red_files": [
+      "idgen/sequential.go"
+    ]
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "interface_declared",
+        "pass": true,
+        "count": 1
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 4,
+    "paired": 4,
+    "matches": null,
+    "mismatches": null,
+    "hedges": null,
+    "accuracy": null,
+    "judge_calls": 0,
+    "judge_model": null,
+    "pairs": [
+      {
+        "prediction": "compile error, `undefined: idgen.NewSequential` (type doesn't exist yet).",
+        "outcome": "fail",
+        "verdict": null
+      },
+      {
+        "prediction": "assertion failure, got `\"u-1\"` want `\"u-2\"` on the second call (current hardcoded implementation always returns `\"u-1\"`).",
+        "outcome": "fail",
+        "verdict": null
+      },
+      {
+        "prediction": "none expected if instances are already independent (they should be, since state is per-struct) — so I expect this test to pass immediately. Let me verify that a",
+        "outcome": "pass",
+        "verdict": null
+      },
+      {
+        "prediction": "compile error, `undefined: idgen.IDGenerator`.",
+        "outcome": "fail",
+        "verdict": null
+      }
+    ]
+  }
+}

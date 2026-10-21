@@ -1,0 +1,79 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "4108750b-c0ac-47fc-b76e-20cf6636e9c3",
+  "cost_usd": 1.3415962999999997,
+  "num_turns": 7,
+  "duration_s": 481,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 3
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 2
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 8,
+    "first_prod_edit_file": "idgen/idgen.go",
+    "prod_edits_without_red_files": []
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "interface_declared",
+        "pass": true,
+        "count": 1
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": null,
+    "mismatches": null,
+    "hedges": null,
+    "accuracy": null,
+    "judge_calls": 0,
+    "judge_model": null,
+    "pairs": [
+      {
+        "prediction": "compile error — `undefined: idgen` (package doesn't exist yet)",
+        "outcome": "fail",
+        "verdict": null
+      },
+      {
+        "prediction": "assertion failure — expected `\"u-2\"`, got `\"u-1\"` (current impl always returns the hardcoded literal)",
+        "outcome": "fail",
+        "verdict": null
+      },
+      {
+        "prediction": "none predicted with confidence — the current per-instance `count` field may already satisfy this as a side effect of normal Go zero-value semantics (per the sce",
+        "outcome": "pass",
+        "verdict": null
+      }
+    ]
+  }
+}

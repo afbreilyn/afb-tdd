@@ -1,0 +1,558 @@
+{
+  "run_id": "20261021T092839-go-new-interface",
+  "label": "go-new-interface",
+  "date": "2026-10-21",
+  "skill_sha": "4c64349",
+  "skill_dirty": false,
+  "claude_code_version": "2.1.306 (Claude Code)",
+  "candidate": "afb-tdd",
+  "model": "claude-sonnet-5",
+  "judge_model": null,
+  "tasks": {
+    "go-new-interface": {
+      "reps": [
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "69c83d9a-872a-4b72-92c7-6af7c6a1c1df",
+          "cost_usd": 0.9223015000000001,
+          "num_turns": 34,
+          "duration_s": 252,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 3
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 3,
+            "test_runs": 8,
+            "first_prod_edit_file": "idgen/idgen.go",
+            "prod_edits_without_red_files": [
+              "idgen/sequential.go"
+            ]
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 3,
+            "paired": 3,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile error — `idgen` package doesn't exist yet, e.g. `no required module provides package evalfixture/idgen` / `undefined: idgen.NewSequential`",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "assertion failure — `Equal(\"u-2\", \"u-1\")` since the current hardcoded implementation always returns `\"u-1\"`",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "this would currently *pass* if independent instances already don't share state (they don't — `count` is per-instance). Let me check the implementation first — s",
+                "outcome": "pass",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "39a56468-fc92-42ac-a103-2cbf4308caa7",
+          "cost_usd": 0.8449987000000001,
+          "num_turns": 27,
+          "duration_s": 291,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6,
+            "first_prod_edit_file": "idgen/idgen.go",
+            "prod_edits_without_red_files": []
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 3,
+            "paired": 3,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile/build failure — `idgen` package doesn't exist yet, so `go test` reports something like `no required module provides package evalfixture/idgen` / `undefi",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "`assert.Equal` failure — expected `\"u-2\"`, got `\"u-1\"` (the second call)",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "this test should actually *pass* immediately given the current implementation (each `Sequential` has its own `count` field) — since the task requires this guara",
+                "outcome": "pass",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "1b6e8d3c-445b-4d86-ac0d-6911f734fab6",
+          "cost_usd": 1.4160942,
+          "num_turns": 47,
+          "duration_s": 493,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 4
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 3,
+            "cycle_commits": 3,
+            "prod_edits_without_red": 2,
+            "test_runs": 11,
+            "first_prod_edit_file": "idgen/sequential.go",
+            "prod_edits_without_red_files": [
+              "idgen/sequential.go"
+            ]
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 4,
+            "paired": 4,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile error, `undefined: idgen.NewSequential` (type doesn't exist yet).",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "assertion failure, got `\"u-1\"` want `\"u-2\"` on the second call (current hardcoded implementation always returns `\"u-1\"`).",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "none expected if instances are already independent (they should be, since state is per-struct) — so I expect this test to pass immediately. Let me verify that a",
+                "outcome": "pass",
+                "verdict": null
+              },
+              {
+                "prediction": "compile error, `undefined: idgen.IDGenerator`.",
+                "outcome": "fail",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "4108750b-c0ac-47fc-b76e-20cf6636e9c3",
+          "cost_usd": 1.3415962999999997,
+          "num_turns": 7,
+          "duration_s": 481,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 3
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 8,
+            "first_prod_edit_file": "idgen/idgen.go",
+            "prod_edits_without_red_files": []
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 0
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 3,
+            "paired": 3,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile error — `undefined: idgen` (package doesn't exist yet)",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "assertion failure — expected `\"u-2\"`, got `\"u-1\"` (current impl always returns the hardcoded literal)",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "none predicted with confidence — the current per-instance `count` field may already satisfy this as a side effect of normal Go zero-value semantics (per the sce",
+                "outcome": "pass",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "002034be-af56-41fd-93d4-e6ceec960142",
+          "cost_usd": 0.5415171400000001,
+          "num_turns": 28,
+          "duration_s": 160,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 2
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 1,
+            "test_runs": 6,
+            "first_prod_edit_file": "idgen/idgen.go",
+            "prod_edits_without_red_files": [
+              "idgen/sequential.go"
+            ]
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 4,
+            "paired": 4,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile error `undefined: Sequential` (and/or `undefined: idgen` package), since neither exists yet.",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "compile error due to missing `idgen` package.",
+                "outcome": "pass",
+                "verdict": null
+              },
+              {
+                "prediction": "assertion failure on the second call — `\"u-1\" != \"u-2\"` (expected `\"u-2\"`, got `\"u-1\"`), since the current implementation always returns `\"u-1\"`.",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "this should actually already pass, since each `Sequential` has its own `count` field. Let me verify this is true before writing it as a red test — if it already",
+                "outcome": "pass",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        },
+        {
+          "completed": true,
+          "reason": "ok",
+          "session_id": "9f5c9fbe-89d2-4f0e-bd2a-320004fac323",
+          "cost_usd": 0.6160052150000002,
+          "num_turns": 30,
+          "duration_s": 209,
+          "model_used": "claude-sonnet-5",
+          "suite": {
+            "green": true,
+            "pristine": true,
+            "new_test_count": 2
+          },
+          "revert": {
+            "pass": true,
+            "suite_failed_after_revert": true,
+            "new_test_named_in_failures": false,
+            "prod_files_reverted": 1
+          },
+          "process": {
+            "transcript_found": true,
+            "red_before_first_prod_edit": true,
+            "cycles": 2,
+            "cycle_commits": 2,
+            "prod_edits_without_red": 0,
+            "test_runs": 6,
+            "first_prod_edit_file": "idgen/sequential.go",
+            "prod_edits_without_red_files": []
+          },
+          "static": {
+            "pass": true,
+            "counts": {
+              "as_casts_in_tests": 0,
+              "testid_selectors": 0,
+              "and_in_test_name": 0,
+              "vitest_imports": 0,
+              "jest_usage": 0,
+              "foreach_in_tests": 0,
+              "wall_clock_in_prod": 0,
+              "raw_domain_structs_in_tests": 0,
+              "test_only_exported_funcs": 1
+            },
+            "extra_checks": [
+              {
+                "name": "interface_declared",
+                "pass": true,
+                "count": 1
+              }
+            ]
+          },
+          "shots": {
+            "transcript_found": true,
+            "called": 3,
+            "paired": 3,
+            "matches": null,
+            "mismatches": null,
+            "hedges": null,
+            "accuracy": null,
+            "judge_calls": 0,
+            "judge_model": null,
+            "pairs": [
+              {
+                "prediction": "compile error — `undefined: idgen` (the package doesn't exist yet)",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "assertion failure — expected `\"u-2\"`, got `\"u-1\"` (current Fake It always returns `\"u-1\"`)",
+                "outcome": "fail",
+                "verdict": null
+              },
+              {
+                "prediction": "this would currently pass — since `count` is per-instance already. Let me verify this before writing it as a \"red\" test, since the implementation already satisf",
+                "outcome": "pass",
+                "verdict": null
+              }
+            ]
+          },
+          "gates": {
+            "suite_green": true,
+            "revert_check": true,
+            "process_red_first": true,
+            "static_checks": true
+          }
+        }
+      ],
+      "rollup": {
+        "gate_pass_rate": 1,
+        "judge_mean": null,
+        "grader_errors": 0,
+        "mutation_mean": null,
+        "shot_accuracy_mean": null
+      }
+    }
+  },
+  "totals": {
+    "gate_pass_rate": 1,
+    "judge_mean": null,
+    "grader_errors": 0,
+    "mutation_mean": null,
+    "shot_accuracy_mean": null,
+    "cost_usd": 5.682513055
+  }
+}

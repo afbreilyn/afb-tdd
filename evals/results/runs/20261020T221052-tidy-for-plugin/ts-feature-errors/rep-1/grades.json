@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "57e8c692-7371-48ba-bc9c-adc7763fe4f5",
+  "cost_usd": 2.5445657000000006,
+  "num_turns": 63,
+  "duration_s": 2192,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 5,
+    "cycle_commits": 5,
+    "prod_edits_without_red": 4,
+    "test_runs": 17
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 5,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`unsubscribe is not a function` (or `TypeError: unsubscribe is not a function`), since `unsubscribe` doesn't exist yet in `src/newsletter.ts`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "thrown `Error: not implemented` propagating out of the awaited call (test fails with that unhandled rejection), not the expected `{ kind: \"topic_error\", ... }` ",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Error: not implemented` (falls through both guards into the stub)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion fails — actual `{ kind: \"unsubscribed\" }` vs expected `{ kind: \"not_subscribed_error\", message: ... }`, since the current implementation ignores the r",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "the test's `await unsubscribe(...)` rejects — the mocked `HttpResponse.error()` causes `fetch` to throw, and `unsubscribe` has no `try/catch`, so the error prop",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 5,
+      "minimality": 3,
+      "notes": "Tests use exact toEqual assertions and an MSW fake at the network boundary, and each test covers one behaviour with a precise name. Three things count against it. The connection_error test checks only `kind`. The extracted validateRecipient helper changes subscribe, which looks like refactoring bundled into Green. The implementation's error handling goes slightly past the tests: a malformed body or a body with a null `error` field is not tested."
+    },
+    "calls": 3
+  }
+}

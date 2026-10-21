@@ -1,0 +1,118 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "5ac8bbad-4de6-487a-b07c-e4a4a0046fc8",
+  "cost_usd": 3.1127786100000012,
+  "num_turns": 112,
+  "duration_s": 991,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 7
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 8,
+    "cycle_commits": 9,
+    "prod_edits_without_red": 4,
+    "test_runs": 27
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 5
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 9,
+    "paired": 9,
+    "matches": 8,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.8888888888888888,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `hashing.NewSHA256Hasher` doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Verify` method doesn't exist on `SHA256Hasher`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion failure — `Verify` currently hardcoded to `true`, so `assert.False` fails",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `fakes.NewFakeHasher` doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `domaintest.WithPasswordHash` and `domain.User.PasswordHash()` don't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Register` doesn't exist on `AccessService`, and `NewAccessService` doesn't yet accept a `Hasher`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Login` doesn't exist on `AccessService`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `service.ErrInvalidCredentials` doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion failure — `Login` currently ignores the password entirely, so it would return a valid session instead of an error",
+        "outcome": "pass",
+        "verdict": "mismatch"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Exact assertions, fakes validated by shared contract suites and no mocks; Login's non-NotFound repo-error path is unhandled and untested (a nil-user dereference risk), and the SHA256Hasher, the Login/Register split and the newSession extraction go beyond the minimum, with the extraction being scope creep bundled into Green."
+    },
+    "calls": 3
+  }
+}

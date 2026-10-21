@@ -1,0 +1,88 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "038a4dd1-e044-425d-b0ae-91c7b60de2cd",
+  "cost_usd": 0.9773352150000001,
+  "num_turns": 3,
+  "duration_s": 351,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 2,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 5
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "frozen_clock_used_in_tests",
+        "pass": true,
+        "count": 2
+      },
+      {
+        "name": "no_wall_clock_in_service",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile failure — `NewAccessService` doesn't yet accept a `clock.Clock` argument (we're adding it to the suite's shared `init()` so the new test can inject a fr",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion failure — `session.ExpiresAt` (derived from real `time.Now()`) will not equal `s.clock.Now().Add(time.Hour)` (derived from the frozen clock fixed at `",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Tests use a frozen clock fake with exact equality assertions and a boundary test, but the IsSessionValid change from !Before to Before(expiry) is a boundary semantic change that is pinned by a test, while the impl also swaps all time.Now calls in one go, with no declared plan; error path untouched."
+    },
+    "calls": 3
+  }
+}

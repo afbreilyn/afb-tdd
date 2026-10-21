@@ -1,0 +1,93 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "fe276363-2042-451b-8f58-cb0460276e95",
+  "cost_usd": 1.4267268999999991,
+  "num_turns": 48,
+  "duration_s": 508,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 3
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 3,
+    "prod_edits_without_red": 1,
+    "test_runs": 11
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 1,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "honours_practices_parallel",
+        "pass": true,
+        "count": 3
+      },
+      {
+        "name": "honours_practices_loop_var",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": 2,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.6666666666666666,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `report.Summary undefined (type *domain.Report has no field or method Summary)`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion mismatch — `expected \"Zero Tags Report [env=prod]\" but got \"Zero Tags Report\"` (not a compile error this time, since `Summary` already exists).",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "assertion mismatch against the current implementation, which arbitrarily returns only one of the tags (from Go's randomized map range) instead of all of them jo",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 4,
+      "notes": "Assertions are exact and the three tests map to the three branches (no tags, one tag, sorted multiple), but the 10-iteration loop in the multi-tag test is an odd map-ordering hack and the implementation is slightly more than a fake-it plan would require, though every line is exercised."
+    },
+    "calls": 3
+  }
+}

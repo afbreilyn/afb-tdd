@@ -1,0 +1,88 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "5818caa6-0fb1-4c86-a362-fdcd01c18f2a",
+  "cost_usd": 1.5507689000000002,
+  "num_turns": 5,
+  "duration_s": 596,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 3
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 8
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "multi_entry_map_test",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": 3,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `Report` has no method `Summary` (the method doesn't exist yet).",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion failure — got `\"Q1 Report\"`, want `\"Q1 Report [env=prod]\"` (current implementation ignores tags entirely).",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "flaky/non-deterministic — on most runs the test will fail because the unsorted map iteration won't match the expected sorted order (e.g. actual could be `\"Q1 Re",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Exact-value assertions and precise names, with a loop guarding against random map order; the implementation is slightly generalised (early return plus sorted join) but each branch is driven by a test, and the diff has no called-shot declaration or red-run output to compare against."
+    },
+    "calls": 3
+  }
+}

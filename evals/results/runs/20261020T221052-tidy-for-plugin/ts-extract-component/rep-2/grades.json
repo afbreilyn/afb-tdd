@@ -1,0 +1,78 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "9065f282-22a6-4125-bfef-77b9e991a86b",
+  "cost_usd": 0.7632602,
+  "num_turns": 2,
+  "duration_s": 1710,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 1
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 1,
+    "cycle_commits": 0,
+    "prod_edits_without_red": 0,
+    "test_runs": 2
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 1,
+    "paired": 1,
+    "matches": 1,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "test run fails because `./SubscriberList` module doesn't exist (`Cannot find module` / resolution error)",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 5,
+      "notes": "The test pins an exact accessible-name list and asserts it is empty, which is a precise check of one behaviour, but the name describes the empty-array case in a wordy way; the implementation is the bare minimum, with the unused `subscribers` prop being the only thing that remains for triangulation."
+    },
+    "calls": 3
+  }
+}

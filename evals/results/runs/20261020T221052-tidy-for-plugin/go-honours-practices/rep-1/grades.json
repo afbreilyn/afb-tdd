@@ -1,0 +1,93 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "bfbe0e20-529d-4a56-8dde-531d001cdc9e",
+  "cost_usd": 1.6019568000000006,
+  "num_turns": 4,
+  "duration_s": 1127,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 4
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 2,
+    "prod_edits_without_red": 0,
+    "test_runs": 8
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 1,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "honours_practices_parallel",
+        "pass": true,
+        "count": 4
+      },
+      {
+        "name": "honours_practices_loop_var",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": 3,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `report.Summary undefined (type *domain.Report has no field or method Summary)`.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`assert.Equal` fails — expected `\"Q1 Report [env=prod]\"`, got `\"Q1 Report\"`.",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`assert.Equal` fails on some runs — expected `\"Q1 Report [env=prod, team=payments]\"`, actual order varies because Go map iteration is randomized.",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 5,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 4,
+      "notes": "Exact-value assertions via real builders and no doubles; the 'multiple tags' test covers sorting and comma separation together, and the implementation is close to minimal, though the single-tag test doesn't force the sorting and join logic that was written up front."
+    },
+    "calls": 3
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "1f2a487b-60c3-4bac-8038-057d992a7d96",
+  "cost_usd": 1.4634255200000004,
+  "num_turns": 60,
+  "duration_s": 4056,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 6
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 6,
+    "cycle_commits": 6,
+    "prod_edits_without_red": 1,
+    "test_runs": 14
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 6,
+    "paired": 6,
+    "matches": 6,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "test runner errors because `unsubscribe` is not exported from `./newsletter` (TypeError: `unsubscribe` is not a function / not exported)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Error: not implemented` (the stub throw from cycle 1, since a valid-but-unknown topic falls past the email check)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Error: not implemented` (still hits the stub throw)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "the test throws/rejects uncaught (the mock's network error propagates out of `unsubscribe` since there's no try/catch), so the assertion never runs — Vitest rep",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Error: not implemented` (falls through the `removed === true` check into the stub throw)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`Error: not implemented` (hits the stub throw)",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 5,
+      "naming": 5,
+      "minimality": 4,
+      "notes": "Tests assert exact values for each outcome and every new error branch (email, topic, connection, not_subscribed, response_error) has a driving test, with MSW at the network boundary and no mock-testing. The deductions are for two connection_error and response_error assertions that check only `kind` and not the message, and for the implementation's defensive `record` null/object narrowing, which is only partly forced by the tests."
+    },
+    "calls": 3
+  }
+}

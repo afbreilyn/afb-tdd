@@ -1,0 +1,93 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "f10199b4-9a99-4446-8d0f-fa7a4bea8d48",
+  "cost_usd": 1.2773039,
+  "num_turns": 33,
+  "duration_s": 432,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 3,
+    "cycle_commits": 3,
+    "prod_edits_without_red": 0,
+    "test_runs": 7
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 1
+    },
+    "extra_checks": [
+      {
+        "name": "frozen_clock_used_in_tests",
+        "pass": true,
+        "count": 2
+      },
+      {
+        "name": "no_wall_clock_in_service",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 3,
+    "paired": 3,
+    "matches": 3,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `NewAccessService` called with 3 args but declared with 2 (`too many arguments in call`)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion `s.True(...)` fails — actual `false` — because `IsSessionValid` still compares against real `time.Now()` (~2026) while `ExpiresAt` is built from the f",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`s.False(...)` fails with \"Should be false\" — current code `!ExpiresAt.Before(now)` evaluates `!false = true` for the equal case",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Tests use exact time comparisons against a frozen fake clock and a hand-written fake repo, but the implementation changes the IsSessionValid boundary from Before to After, which is a small semantic change that is only pinned by the added equal-to-now test, and the injected-clock refactor bundles a behavior change with the seam introduction."
+    },
+    "calls": 3
+  }
+}

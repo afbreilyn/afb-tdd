@@ -1,0 +1,118 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "1418ac8f-def8-4610-8e0d-73d0fb23df9f",
+  "cost_usd": 3.685631340000002,
+  "num_turns": 118,
+  "duration_s": 1146,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 9
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 8,
+    "cycle_commits": 9,
+    "prod_edits_without_red": 2,
+    "test_runs": 23
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 1,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 5
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 9,
+    "paired": 9,
+    "matches": 9,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "compile error — `*service.AccessService` has no method `Login`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `hashing` package / `NewSha256Hasher` doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`hashing/fakes` fails to compile — `fakes.NewFakeHasher` doesn't exist; `hashing` package's own tests (Sha256Hasher) should still pass since sha256 already sati",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `domaintest.WithPasswordHash` undefined",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `*service.AccessService` has no method `Register`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`s.Require().NoError(err)` fails with `repository.ErrNotFound` — `Register` doesn't persist anything yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `service.NewAccessService` doesn't accept a `Hasher` argument yet (constructor signature change, affects whole suite's `init()`)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`s.Equal(\"new@example.com\", session.Email)` fails — current `Login` returns `Session{}` on success",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`s.ErrorIs(err, service.ErrInvalidCredentials)` fails because `err` is `nil` — `Login` currently ignores the password entirely",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 3,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Strong exact assertions, fakes with shared contract suites and no mocks, but Register has a redundant weak NoError test, Register/Login handle multiple concepts (Login's success test asserts email and expiry together), the constant-time compare and the collapse of every repo error into ErrInvalidCredentials are not driven by tests, and the Register error path is untested."
+    },
+    "calls": 3
+  }
+}

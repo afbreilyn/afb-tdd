@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "34528bbb-6067-4c19-b830-488450a4dcf5",
+  "cost_usd": 0.8184277999999998,
+  "num_turns": 7,
+  "duration_s": 2831,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": false,
+    "pristine": true,
+    "new_test_count": 2
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 1,
+    "cycle_commits": 1,
+    "prod_edits_without_red": 0,
+    "test_runs": 4
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "no_testid_in_parent",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 2,
+    "paired": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "hedges": 0,
+    "accuracy": 1,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "Cannot find module `./SubscriberList` (file doesn't exist yet).",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`TestingLibraryElementError: Unable to find an element with the text: Ada Lovelace` (the Fake It ignores `subscribers` entirely, so nothing is rendered).",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 3,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": null,
+      "error_path_coverage": null,
+      "naming": 4,
+      "minimality": 4,
+      "notes": "The empty-list test asserts only that the list exists, which is weak but fits a first slice, and the empty-`ul` implementation is the minimum for it; the second test (names shown) is not yet implemented, so it would fail Red as intended, and there is no declared called shot to compare against."
+    },
+    "calls": 3
+  }
+}

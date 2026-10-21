@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "88ce8c0a-8f4c-43b7-b6a0-ddbb8cc670f4",
+  "cost_usd": 2.9514569,
+  "num_turns": 66,
+  "duration_s": 5876,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 5
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 1
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": true,
+    "cycles": 4,
+    "cycle_commits": 4,
+    "prod_edits_without_red": 0,
+    "test_runs": 17
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 0
+    },
+    "extra_checks": [
+      {
+        "name": "unsubscribe_error_variants_enumerated",
+        "pass": true,
+        "count": 3
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 5,
+    "paired": 5,
+    "matches": 4,
+    "mismatches": 1,
+    "hedges": 0,
+    "accuracy": 0.8,
+    "judge_calls": 3,
+    "pairs": [
+      {
+        "prediction": "`unsubscribe is not a function` (or TS error) — function doesn't exist yet",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion fails because actual result is `{ kind: \"unsubscribed\" }`, not `{ kind: \"topic_error\", message: '\"gossip\" is not a known topic' }`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "`expected 'unsubscribed' to be 'connection_error'` — current implementation never calls `postApi`, so a simulated network failure has no effect",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "the shared default mock handler only recognizes `newsletter.subscribe` and throws for any other method, which MSW turns into a request failure — caught by our t",
+        "outcome": "pass",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "`expected { kind: 'unsubscribed' } to deeply equal { kind: 'not_subscribed', message: ... }` — current implementation never inspects the response body",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 5,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 4,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Assertions are mostly exact (toEqual on full results) and msw is used at the network boundary, but connection_error is checked by kind only, the not_subscribed test name is long, and the implementation copies subscribe's email/topic validation and error branches in one pass instead of one test-forced slice at a time, with no visible Fake It plan."
+    },
+    "calls": 3
+  }
+}

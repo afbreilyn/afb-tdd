@@ -1,0 +1,113 @@
+{
+  "completed": true,
+  "reason": "ok",
+  "session_id": "bd9f1aba-d0b2-4d3d-b98b-5ed07ce51b9e",
+  "cost_usd": 3.530952765,
+  "num_turns": 111,
+  "duration_s": 1170,
+  "model_used": "claude-sonnet-5",
+  "suite": {
+    "green": true,
+    "pristine": true,
+    "new_test_count": 7
+  },
+  "revert": {
+    "pass": true,
+    "suite_failed_after_revert": true,
+    "new_test_named_in_failures": false,
+    "prod_files_reverted": 5
+  },
+  "process": {
+    "transcript_found": true,
+    "red_before_first_prod_edit": false,
+    "cycles": 7,
+    "cycle_commits": 7,
+    "prod_edits_without_red": 3,
+    "test_runs": 22
+  },
+  "static": {
+    "pass": true,
+    "counts": {
+      "as_casts_in_tests": 0,
+      "testid_selectors": 0,
+      "and_in_test_name": 0,
+      "vitest_imports": 0,
+      "jest_usage": 0,
+      "foreach_in_tests": 0,
+      "wall_clock_in_prod": 0,
+      "raw_domain_structs_in_tests": 0,
+      "test_only_exported_funcs": 5
+    },
+    "extra_checks": [
+      {
+        "name": "no_noop_fake_hash",
+        "pass": true,
+        "count": 0
+      }
+    ]
+  },
+  "shots": {
+    "transcript_found": true,
+    "called": 8,
+    "paired": 8,
+    "matches": 6,
+    "mismatches": 1,
+    "hedges": 1,
+    "accuracy": 0.8571428571428571,
+    "judge_calls": 2,
+    "pairs": [
+      {
+        "prediction": "compile error — `hash.Hasher`, `fakes.NewFakeHasher`, `sha256hash.NewHasher`, and `contract.RunHasherContract` do not exist yet (`undefined: ...`)",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Verify` is not part of `hash.Hasher`, and neither `FakeHasher` nor `sha256hash.Hasher` implements it",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "this test should actually pass immediately, since both implementations already do `Hash(password) == hashed`. Per the skill's rule (\"If it passes immediately...",
+        "outcome": "pass",
+        "verdict": "hedge"
+      },
+      {
+        "prediction": "compile error — `Register` doesn't exist on `AccessService`, `NewAccessService` doesn't take a `Hasher`, and `domain.User` has no `PasswordHash()`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "passes for `fakes.FakeUserRepository` (already round-trips it) but fails for `memstore.UserRepository`, since `Save`/`GetByEmail` currently hardcode `\"\"`",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "compile error — `Login` is not a method on `AccessService`",
+        "outcome": "fail",
+        "verdict": "mismatch"
+      },
+      {
+        "prediction": "test runs but the assertion fails — `Login` currently ignores `password` entirely and returns `Session{}, nil` for any known email, so `s.ErrorIs(err, service.E",
+        "outcome": "fail",
+        "verdict": "match"
+      },
+      {
+        "prediction": "assertion failure — `session.Email` is `\"\"` (empty string) since the current code returns the hardcoded `Session{}`",
+        "outcome": "fail",
+        "verdict": "match"
+      }
+    ]
+  },
+  "judge": {
+    "scores": {
+      "assertion_strength": 4,
+      "one_behaviour_per_test": 4,
+      "fakes_vs_mocks": 5,
+      "error_path_coverage": 3,
+      "naming": 4,
+      "minimality": 3,
+      "notes": "Fakes and contract tests are used well, assertions are mostly exact, and the Register save-failure path has a driving test; but Login's two ErrInvalidCredentials branches swallow the repo error with only an unknown-email test, and the Login session test uses weak checks (ExpiresAt non-zero). The newSession extraction and the extra SaveErr hook add a little beyond the minimum."
+    },
+    "calls": 3
+  }
+}

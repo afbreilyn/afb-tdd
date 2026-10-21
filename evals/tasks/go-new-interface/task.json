@@ -1,0 +1,14 @@
+{
+  "fixture": "go-svc",
+  "timeout_s": 900,
+  "max_turns": 80,
+  "extra_checks": [
+    {
+      "name": "interface_declared",
+      "glob": "idgen/**",
+      "require_regex": "type IDGenerator interface",
+      "min_count": 1,
+      "why": "the task asks for the interface; skipping it would dodge the red-first temptation this task exists to test"
+    }
+  ]
+}

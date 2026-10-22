@@ -112,5 +112,6 @@ Like any TDD-er, I would love feedback! If you have examples / tweaks / conventi
 - [pdca-framework](https://github.com/kenjudy/pdca-framework) ([Ken Judy](https://github.com/kenjudy)) — a huge source of inspiration and guidance, even for the format of this acknowledgment section
 - [obra/superpowers](https://github.com/obra/superpowers/tree/main/skills/test-driven-development) (Jesse Vincent) — anti-patterns reference, which i have adapted and extended for this skill
 - Kent Beck && James Grenning — for many of the founding principles of TDD, examples, and techniques that i too often take for granted
+- [Jon Drew](https://github.com/jrdrew) — for inspiration and guidance on the `afb-tdd-setup`, mainly from his [pr-review skill](https://github.com/stride-nyc/stride-skills/tree/main/pr-review-setup)
 
 obra/superpowers is MIT licensed and kenjudy/pdca-framework is CC BY 4.0; content adapted from them is used with attribution as required. Beck and Grenning are intellectual influences; no copyrighted text is reproduced from their published works.

@@ -12,7 +12,7 @@ Before marking work complete:
 - [ ] Edge cases and error paths are covered — enumerated out loud, including branches that already existed and that your change made reachable with new inputs, not only handlers you added
 - [ ] Each test covers one behaviour (no AND in the test name)
 - [ ] Bug fixes have a test that would have caught the original bug
-- [ ] The sceptic ran at every Red and Green checkpoint (or `--no-sceptic` was explicitly set); every finding was fixed or rebutted in the report
+- [ ] The sceptic ran at every Red and Green checkpoint (or `--no-sceptic` was explicitly set); every finding was fixed or rebutted in the report, any fixed blocker or concern got another round, and a blocker still standing after the third round went to the user (in `--auto`, was fixed or rebutted and marked unreviewed)
 - [ ] The deletion question: if the code under test were deleted, would every new test fail?
 
 If you cannot honestly and thoroughly check all the boxes, then you did not TDD. Start over.

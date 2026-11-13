@@ -37,14 +37,14 @@ When starting a new behaviour, work in this order:
 3. Run the tests yourself. Check whether the test fails for the right reason (not due to a typo or syntax error).
    - If it passes immediately, or fails for the wrong reason, delete the test and start over with the same goal. Do not leave broken test code for the user to deal with.
 4. **Sceptic** (on by default; skipped only when the user invoked `/afb-tdd --no-sceptic` or asked to skip it — sticky for the session): launch one read-only subagent following the RED checkpoint in [sceptic.md](references/sceptic.md). Address every finding: fix blockers and rerun the test; rebut anything you disagree with. One round only — never re-sceptic a fix.
-5. Report the failure output and confirm it's failing correctly, then wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, or `SKIPPED (--no-sceptic)`.
+5. Report the failure output and confirm it's failing correctly, then wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, `SKIPPED (--no-sceptic)`, or `LAUNCHED, NO REPORT` with your own pass in its place.
 
 ## Green
 1. Write the minimum implementation to make the test pass. Hardcode if possible and don't handle future scenarios: anything the test doesn't force is untested code, and the next cycle's test is what earns the generalisation. State which you're doing: **Fake It** (will triangulate next cycle) or **Obvious Implementation**.
 2. Run the tests yourself. Check whether the new test passes and all other tests remain green.
    - If something unexpected is failing, fix it before reporting to the user.
 3. **Sceptic**: same as Red step 4, but the GREEN checkpoint in [sceptic.md](references/sceptic.md).
-4. Report the results and wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, or `SKIPPED (--no-sceptic)`.
+4. Report the results and wait for the user to confirm before continuing. The report must contain a `Sceptic:` section — findings verbatim with your response to each, `CLEAN`, `SKIPPED (--no-sceptic)`, or `LAUNCHED, NO REPORT` with your own pass in its place.
 
 ## Refactor
 1. Now that tests are green, clean up thoroughly — names, duplication, extraction of well-named helpers. Do it now rather than in a later cycle: the next Red builds on whatever is left here, and deferred refactors rarely happen.

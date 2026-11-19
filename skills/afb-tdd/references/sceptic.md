@@ -14,6 +14,8 @@ That is the path you just read this file from: the skill's base directory plus `
 
 **Run it in the foreground** (`run_in_background: false`, or whatever your agent tool calls it) so its report comes back as the tool result. The checkpoint report can't be written without the findings, so there is nothing to do in parallel. If the tool says the agent went to the background anyway, keep working in the same turn and do not end the turn to wait for a notification: in `--auto` or headless runs, ending the turn ends the session and leaves the cycle half-done.
 
+**If the sceptic never reports back** (it stalls, errors, or its report never arrives in this turn), do not carry on as though it came back clean. Run your own adversarial pass against the same checkpoint rubric and report it as `LAUNCHED, NO REPORT`, followed by your own findings and your response to each. A stalled sceptic is not a clean one, and a late report can still turn up after you've moved on, so whoever reads the report has to be able to tell the two apart.
+
 **Context package — RED checkpoint:**
 - The called-shot declaration, verbatim (test name, behaviour, expected failure).
 - The path of the test file (the sceptic reads it — don't paste it).

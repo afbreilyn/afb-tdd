@@ -1,14 +1,14 @@
 # The Sceptic
 
-An adversarial reviewer that fires twice per TDD cycle — after Red and after Green — before the report to the user. It exists to catch the failure modes the author is blind to in the moment: tautological tests, weak assertions, over-implementation, quiet cheating. It is **on by default**; `/afb-tdd --no-sceptic` (or the user asking to skip it) disables it for the session. Skipping is never silent — every report still carries a `Sceptic: SKIPPED (--no-sceptic)` line.
+An adversarial reviewer that fires at two checkpoints per TDD cycle — after Red and after Green — before the report to the user. It exists to catch the failure modes the author is blind to in the moment: tautological tests, weak assertions, over-implementation, quiet cheating. It is **on by default**; `/afb-tdd --no-sceptic` (or the user asking to skip it) disables it for the session. Skipping is never silent — every report still carries a `Sceptic: SKIPPED (--no-sceptic)` line.
 
 ## Part A — Invocation (instructions for the main agent)
 
-**When:** after Red step 3 (the failing run is verified) and after Green step 2 (the passing run is verified). Never during Refactor. Never twice at the same checkpoint.
+**When:** after Red step 3 (the failing run is verified) and after Green step 2 (the passing run is verified). Never during Refactor. A checkpoint runs again only as described under **Rounds** below.
 
-**How:** launch ONE read-only subagent (Explore type if available, otherwise general-purpose) on the cheapest available model tier (`haiku`) — the rubric is closed and the context package small, so the sceptic doesn't need the session model. The subagent must not modify any file. Prompt it with:
+**How:** launch ONE read-only subagent (Explore type if available, otherwise general-purpose) on the session's own model tier, passed explicitly (see **Model** below). The subagent must not modify any file. Prompt it with:
 
-> You are the TDD sceptic. Read ONLY Parts B and C of `<absolute path to this file>` (Part A is plumbing for the main agent — skip it) and apply the {RED|GREEN} checkpoint rubric to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric.
+> You are the TDD sceptic. Read ONLY Parts B and C of `<absolute path to this file>` (Part A is plumbing for the main agent — skip it) and apply the {RED|GREEN} checkpoint rubric to the context below. Output ONLY the report format in Part C. Do not modify any file. Do not invent checks outside the rubric. You may search the repo to settle a rubric check, but not to find new checks: use `rg` for existing tests, callers, and any path-scoped `.claude/rules/` files for the changed paths, and `qmd`, if it is installed, for earlier decisions or reviews that bear on a finding. Cite the `file:line` a search turned up. Do not take the author's coverage note on trust when a search can check it. If the context lists earlier rounds, do not re-raise a REBUTTED finding unless the new diff changes the reason it was rebutted.
 
 That is the path you just read this file from: the skill's base directory plus `references/sceptic.md`. It is the same rule under a symlinked or a plugin install, so never guess a fixed location or search for it.
 
@@ -21,9 +21,9 @@ That is the path you just read this file from: the skill's base directory plus `
 - The actual failure output from the test run.
 - The path to `.claude/afb-tdd/practices.md`, if it exists. That file is this team's own testing conventions and known deviations, and it outranks the built-in references wherever they disagree. Its absence is normal and is never itself a finding.
 - The absolute path to `references/testing-anti-patterns.md`, resolved the same way.
-- One line from you on existing coverage near this behaviour (feeds R7 — you know the suite; the sceptic does not explore it).
+- One line from you on existing coverage near this behaviour. It is where the sceptic starts on R7, not the evidence: the sceptic checks it with a search.
 
-The sceptic reads only the files named above — no exploration, no suite grepping.
+The sceptic starts from the files named above and may search beyond them to settle a rubric check, never to look for checks outside the rubric. R4, R7, G1 and G2 gain the most, because each turns on something the diff alone doesn't show: which layer the repo already tests this at, whether a test already pins the behaviour, whether any test forces a branch, whether any test exercises a changed line. A finding that rests on a search cites the `file:line` it found.
 
 **Context package — GREEN checkpoint:**
 - The production diff since red.
@@ -37,11 +37,13 @@ The sceptic reads only the files named above — no exploration, no suite greppi
 - **REBUT** — one or two sentences on why it's fine, citing a rule or context the sceptic lacked.
 - **DEFER** — genuinely the user's call; present it as a question. Blockers may not be deferred — fix or rebut. (In `--auto` mode there is no user to defer to: treat DEFER as REBUT-or-FIX, conservatively.)
 
-All findings and your responses appear verbatim in the user-facing report under a `Sceptic:` heading. **One round only** — the sceptic never reviews the fix; the user does, at the existing pause.
+All findings and your responses appear verbatim in the user-facing report under a `Sceptic:` heading.
+
+**Rounds:** a fix can be wrong too, and the checkpoint is a cheaper place to catch that than review. If you FIXED any blocker or concern, run the sceptic again at the same checkpoint on the updated diff and test output. Its context package is the checkpoint's usual one, rebuilt from the new state, plus every earlier round's findings with your `→ FIXED` / `→ REBUTTED` / `→ YOUR CALL` line for each. Stop when a round comes back `CLEAN`, finds only nits, or only repeats findings you already rebutted. Three rounds at most per checkpoint: a blocker still standing after the third goes to the user at the checkpoint pause as `→ YOUR CALL`, with what each round tried. That is the one case where a blocker reaches the user unresolved. In `--auto` mode there is no pause to hand it to, so fix or rebut it as for any other finding, without a fourth round, and say in the report that the response went unreviewed. The `Sceptic:` section lists every round, in order.
 
 **Skipping:** only on explicit user opt-out (`--no-sceptic` at invocation, or "skip the sceptic" at any point) — sticky for the rest of the session, always reported as `SKIPPED (--no-sceptic)`, never assumed and never silent.
 
-**Model:** `haiku` (the cheap tier), as above. If its findings prove too noisy — precision proxy = FIXED/(FIXED+REBUTTED) from the reports; the session-model reference point was ~43% on the 2026-07-06 eval run — escalate to the session model and re-measure with an eval run.
+**Model:** the session's own tier, set on the agent tool every time (`opus` on an Opus session, `sonnet` on Sonnet, and so on). The Explore type defaults to Haiku, so leaving the model unset does not get you the session model. A sceptic that searches has to weigh what it finds against the rubric, which is the judgment the session model is there for. Watch for noise with the precision proxy, FIXED/(FIXED+REBUTTED) from the reports (the session-model reference point was ~43% on the 2026-07-06 eval run), and re-measure with an eval run after any change to the model or to what the sceptic may search.
 
 ## Part B — Rubric
 
@@ -57,7 +59,7 @@ Severity semantics: **blocker** violates an Iron Law (testing-anti-patterns.md) 
 | R4 | **Wrong layer** — behaviour asserted where it can't genuinely be observed | violates the outside-in order in test-patterns.md; UI behaviour asserted in a unit test or vice versa | concern |
 | R5 | **Name/behaviour mismatch** — the name promises what the assertions don't verify | "and" in the name; name says "validates X" but asserts only truthiness | concern |
 | R6 | **Called-shot mismatch** — actual failure differs materially from the prediction | compare declaration vs run output; this is the enforcement of SKILL.md's stop condition | blocker |
-| R7 | **Duplicate coverage** — an existing test already pins this behaviour | compare against the coverage note in the context package | concern |
+| R7 | **Duplicate coverage** — an existing test already pins this behaviour | search the suite for a test that already pins it; the coverage note in the context package is where to start, not the evidence | concern |
 | R8 | **Not the smallest slice** — the test forces multiple behaviours/branches at once | more than one new concept must be implemented to go green | concern |
 
 ### GREEN checkpoint — critique the implementation
@@ -86,4 +88,4 @@ Checked: R1–R8 (or G1–G6)
 
 Rules: the explicit `Verdict:` and `Checked:` lines are required (they distinguish "no findings" from "didn't look"); every finding cites rule ID + `file:line`; at most 8 findings (keep the worst); no prose, no praise, nothing outside this format.
 
-The main agent's user-facing report then shows, under `Sceptic:`, each finding followed by one line: `→ FIXED: …` / `→ REBUTTED: …` / `→ YOUR CALL: …`.
+The main agent's user-facing report then shows, under `Sceptic:`, each finding followed by one line: `→ FIXED: …` / `→ REBUTTED: …` / `→ YOUR CALL: …`. When a checkpoint ran more than one round, the section lists each one in order under `Round 1:`, `Round 2:` and so on.

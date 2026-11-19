@@ -94,7 +94,7 @@ machines, so a `~/.claude/...` path in one is a bug.
 
 ## The Sceptic (the gremlins!)
 
-Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [sceptic.md](skills/afb-tdd/references/sceptic.md). Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
+Every cycle gets adversarially reviewed twice — after Red (is the test tautological, weak, mock-testing, mispredicted?) and after Green (over-implementation, untested code, cheating vs declared Fake It, tests bent to fit) — by a read-only subagent applying the closed rubric in [sceptic.md](skills/afb-tdd/references/sceptic.md). It runs on the session's model and may search the repo to settle a check, so "is this already tested?" gets answered by the suite rather than by the author's say-so. When a blocker or concern gets fixed, the sceptic reviews the fix in another round, up to three per checkpoint. Findings appear in the report at the existing pause points, each answered with `FIXED` / `REBUTTED` / `YOUR CALL`. On by default; `/afb-tdd --no-sceptic` turns it off for the session — skips are always visible in the report, never silent.
 
 ## Evals
 
